@@ -6,6 +6,4 @@ Q1–Q30 are answered. The complete implementation specification is ready for fi
 
 - [Implementation specification](SPEC.md)
 - [Decision record](decision-tree.md)
-- [Handy reference and screenshots](handy-reference.md)
-- [Current interactive prototype](../prototypes/handy-reader.html)
 - [Research and artifact provenance](research.md)

@@ -28,7 +28,7 @@ pub enum Icon {
 impl Icon {
     fn path(self) -> &'static str {
         match self {
-            Self::General => "icons/hand-general.svg",
+            Self::General => "icons/sliders-horizontal.svg",
             Self::Models => "icons/cpu.svg",
             Self::Voices => "icons/audio-lines.svg",
             Self::Advanced => "icons/cog.svg",
@@ -54,7 +54,7 @@ impl Icon {
     pub fn element(self, size: f32) -> Svg {
         svg()
             .path(self.path())
-            .text_color(rgb(0xfbfbfb))
+            .text_color(rgb(0xf2f4f7))
             .size(px(size))
             .flex_shrink_0()
     }
@@ -82,7 +82,6 @@ impl AssetSource for UiAssets {
         )* _=>None}}}
         Ok(icons!(
             "sliders-horizontal",
-            "hand-general",
             "book-open",
             "cpu",
             "audio-lines",

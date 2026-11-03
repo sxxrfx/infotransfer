@@ -4,8 +4,8 @@ use gpui::{
 };
 use std::time::{Duration, Instant};
 
-/// Tailwind v4's default timing function, used by Handy v0.9.8.
-pub fn handy_ease(x: f32) -> f32 {
+/// Tailwind v4's default timing function.
+pub fn standard_ease(x: f32) -> f32 {
     cubic_bezier(x, [0.4, 0., 0.2, 1.])
 }
 pub fn cubic_bezier(x: f32, curve: [f32; 4]) -> f32 {
@@ -38,7 +38,7 @@ pub enum Curve {
 impl Curve {
     fn apply(self, value: f32) -> f32 {
         match self {
-            Self::Standard => handy_ease(value),
+            Self::Standard => standard_ease(value),
             Self::Linear => value,
             Self::Compact => cubic_bezier(value, [0.22, 1., 0.36, 1.]),
         }

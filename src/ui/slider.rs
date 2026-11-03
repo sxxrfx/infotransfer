@@ -109,7 +109,7 @@ impl Desktop {
             .flex_1()
             .h(px(22.5))
             .cursor_pointer()
-            .focus_visible(|style| style.rounded_lg().border_1().border_color(rgb(PINK)))
+            .focus_visible(|style| style.rounded_lg().border_1().border_color(rgb(ACCENT)))
             .child(
                 canvas(move |rect, _, _| measured.set(rect), |_, _, _, _| {})
                     .absolute()
@@ -128,7 +128,7 @@ impl Desktop {
                             .w(gpui::relative(progress))
                             .h_full()
                             .rounded_lg()
-                            .bg(rgb(0xda5893)),
+                            .bg(rgb(0x2f9e8f)),
                     ),
             )
             .child(
