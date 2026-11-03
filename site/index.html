@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InfoTransfer: hear any text on your Mac</title>
+  <meta name="description" content="Select text anywhere on your Mac, tap one key, hear it read aloud. Free, open-source, private text-to-speech that runs locally. Built for dyslexia, low vision and reading fatigue.">
+  <meta property="og:title" content="InfoTransfer: hear any text on your Mac">
+  <meta property="og:description" content="Select text. Tap one key. Listen. Local, private, open-source text-to-speech for macOS.">
+  <meta property="og:image" content="https://sxxrfx.github.io/infotransfer/media/settings-general.png">
+  <meta name="theme-color" content="#f7f6f2">
+  <link rel="icon" href="media/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="InfoTransfer home">
+      <img src="media/icon.svg" width="28" height="28" alt="">
+      <span>InfoTransfer</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#screens">Screens</a>
+      <a href="#install">Install</a>
+      <a class="nav-cta" href="https://github.com/sxxrfx/infotransfer">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <p class="eyebrow reveal">Free · Open source · Runs on your Mac</p>
+      <h1 class="reveal">
+        <span class="word">Select.</span>
+        <span class="word">Tap.</span>
+        <span class="word accent">Listen.</span>
+      </h1>
+      <p class="lede reveal">
+        InfoTransfer reads any text on your Mac aloud the moment you tap one key.
+        Built for people with dyslexia, low vision or reading fatigue, and anyone who understands better by listening.
+      </p>
+      <div class="cta reveal">
+        <a class="button primary" href="#install">Install</a>
+        <a class="button" href="https://github.com/sxxrfx/infotransfer">View source</a>
+      </div>
+
+      <!-- Animated demo: selection sweeps, key is tapped, words are spoken -->
+      <div class="demo reveal" aria-hidden="true">
+        <div class="window">
+          <div class="window-bar"><i></i><i></i><i></i><span>article.txt</span></div>
+          <p class="demo-text" id="demo-text">Reading a long paragraph can feel like climbing a hill. Listening while you follow along makes it a gentle walk instead.</p>
+        </div>
+        <div class="demo-controls">
+          <div class="key" id="demo-key"><small>right</small>⌥</div>
+          <div class="pill" id="demo-pill">
+            <span class="dot"></span>
+            <span class="bars"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></span>
+            <span class="pill-label" id="demo-label">Ready</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Audience -->
+    <section class="audience">
+      <h2 class="reveal">Made for people who read differently</h2>
+      <div class="chips">
+        <span class="chip reveal">Dyslexia</span>
+        <span class="chip reveal">Low vision</span>
+        <span class="chip reveal">Eye strain</span>
+        <span class="chip reveal">ADHD</span>
+        <span class="chip reveal">Reading fatigue</span>
+        <span class="chip reveal">Language learners</span>
+        <span class="chip reveal">Anyone who finds the computer hard to use</span>
+      </div>
+      <p class="reveal muted center">One key to read. One key to stop. No menus to learn and no app to switch to.</p>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features">
+      <h2 class="reveal">Everything happens on your Mac</h2>
+      <div class="grid">
+        <article class="card reveal">
+          <div class="icon">⌘</div>
+          <h3>Open source</h3>
+          <p>Every line is public under Apache-2.0. Read it, change it, build it yourself.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon">◐</div>
+          <h3>Local and private</h3>
+          <p>Speech is generated on your computer. Your text never leaves it. No account, no tracking, no subscription.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon">↯</div>
+          <h3>Fast</h3>
+          <p>Speech starts in about 0.4 seconds with the default voices, so you don't wait to start listening.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon">✈</div>
+          <h3>Works offline</h3>
+          <p>Voices download once. After that, it works on a plane, on a train, or anywhere without Wi-Fi.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon">▤</div>
+          <h3>Any app</h3>
+          <p>Browsers, PDFs and documents: if you can select it, it can be read. Anything else can be read from the clipboard.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon">Aa</div>
+          <h3>Your dictionary</h3>
+          <p>Teach it names and words it gets wrong. It reads them your way every time.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon">{ }</div>
+          <h3>Reads code sensibly</h3>
+          <p>Numbers and units are read as words, and decorative symbols such as <code>---</code> are skipped instead of read aloud.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon">♪</div>
+          <h3>Nine voices</h3>
+          <p>Eight quick, light voices, plus Heart, a slower and more natural voice. Speed and pauses are adjustable.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Sticky scroll: how it works -->
+    <section id="how" class="how">
+      <h2 class="reveal">How it works</h2>
+      <div class="how-layout">
+        <div class="steps">
+          <div class="step" data-step="0">
+            <span class="step-n">01</span>
+            <h3>Select text</h3>
+            <p>Highlight a sentence, a paragraph or a whole page in any app, the way you normally would.</p>
+          </div>
+          <div class="step" data-step="1">
+            <span class="step-n">02</span>
+            <h3>Tap right Option</h3>
+            <p>Or Fn. You can also hold the key, select with the mouse, and let go to read.</p>
+          </div>
+          <div class="step" data-step="2">
+            <span class="step-n">03</span>
+            <h3>Listen</h3>
+            <p>A small player at the bottom of the screen shows the voice is speaking. Keep reading along, or close your eyes.</p>
+          </div>
+          <div class="step" data-step="3">
+            <span class="step-n">04</span>
+            <h3>Press Esc to stop</h3>
+            <p>The player disappears. Pause, resume and read clipboard are in the menu bar.</p>
+          </div>
+        </div>
+        <div class="stage" aria-hidden="true">
+          <div class="stage-inner" id="stage">
+            <div class="window small">
+              <div class="window-bar"><i></i><i></i><i></i><span>notes</span></div>
+              <p class="stage-text"><span class="sel">Listening while you follow along makes long text easier to take in.</span></p>
+            </div>
+            <div class="stage-key">⌥</div>
+            <div class="pill stage-pill">
+              <span class="dot"></span>
+              <span class="bars"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></span>
+            </div>
+            <div class="stage-esc">esc</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real recording -->
+    <section class="recording">
+      <h2 class="reveal">See it in the app</h2>
+      <figure class="frame zoom">
+        <img src="media/usage.gif" width="720" loading="lazy" alt="Selecting a paragraph in TextEdit and tapping right Option. A small player appears at the bottom of the screen showing Preparing, then a live audio meter while the text is read, and closes after pressing Escape.">
+        <figcaption>A real recording from macOS: select, tap, listen, Esc. (No sound in the recording.)</figcaption>
+      </figure>
+    </section>
+
+    <!-- Screenshots -->
+    <section id="screens" class="screens">
+      <h2 class="reveal">Simple settings, big controls</h2>
+      <p class="muted center reveal">Readable labels, high contrast, and nothing you don't need.</p>
+      <div class="gallery">
+        <figure class="shot reveal"><img src="media/settings-general.png" loading="lazy" alt="General settings: read key, Accessibility status, clipboard reading, speed and sentence pause"><figcaption>General</figcaption></figure>
+        <figure class="shot reveal"><img src="media/settings-voices.png" loading="lazy" alt="Voices: searchable list with preview buttons"><figcaption>Voices</figcaption></figure>
+        <figure class="shot reveal"><img src="media/settings-dictionary.png" loading="lazy" alt="Dictionary: custom word replacements"><figcaption>Dictionary</figcaption></figure>
+        <figure class="shot reveal"><img src="media/settings-advanced.png" loading="lazy" alt="Advanced: open at login, memory saver, repair voices"><figcaption>Advanced</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- Numbers -->
+    <section class="numbers">
+      <div class="stat reveal"><strong data-count="0.4" data-decimals="1">0</strong><span>seconds to first word</span></div>
+      <div class="stat reveal"><strong data-count="0">0</strong><span>bytes of your text sent anywhere</span></div>
+      <div class="stat reveal"><strong data-count="9">0</strong><span>voices</span></div>
+      <div class="stat reveal"><strong data-count="100" data-suffix="%">0</strong><span>open source</span></div>
+    </section>
+
+    <!-- Install -->
+    <section id="install" class="install">
+      <h2 class="reveal">Install</h2>
+      <p class="muted center reveal">Mac with Apple Silicon (M1 or newer), macOS 14 Sonoma or later.</p>
+
+      <div class="tabs reveal" role="tablist" aria-label="Install method">
+        <button role="tab" aria-selected="true" aria-controls="tab-source" id="t-source">Build from source (recommended)</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-quick" id="t-quick">Quick install</button>
+      </div>
+
+      <div class="panel reveal" id="tab-source" role="tabpanel" aria-labelledby="t-source">
+        <p>The most secure option: you can read the code you run. It takes about 10 minutes and needs Xcode Command Line Tools and <a href="https://rustup.rs">Rust</a>. No Apple developer account is needed.</p>
+        <div class="code"><pre><code>git clone https://github.com/sxxrfx/infotransfer.git
+cd infotransfer
+python3 scripts/prepare_runtime.py
+python3 scripts/prepare_pronunciation.py
+python3 scripts/local_signing.py --setup
+python3 scripts/package_app.py --install</code></pre><button class="copy" type="button">Copy</button></div>
+      </div>
+
+      <div class="panel reveal" id="tab-quick" role="tabpanel" aria-labelledby="t-quick" hidden>
+        <div class="warning">
+          <strong>This is an unsigned app.</strong>
+          It is not signed with an Apple Developer ID or notarized by Apple, so macOS has not checked it.
+          Downloading the source and compiling your own copy is more secure.
+          The script shows this warning, asks before installing, and verifies the download's checksum.
+        </div>
+        <div class="code"><pre><code>curl -fsSL https://github.com/sxxrfx/infotransfer/releases/latest/download/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
+      </div>
+
+      <ol class="after reveal">
+        <li>Open InfoTransfer and click <b>Download voices</b>.</li>
+        <li>Click <b>Open settings</b> next to Accessibility and turn InfoTransfer on.</li>
+        <li>Select text anywhere and tap <b>right Option</b>.</li>
+      </ol>
+    </section>
+
+    <!-- Thanks -->
+    <section class="thanks reveal">
+      <h2>Thank you, Handy</h2>
+      <p>
+        InfoTransfer was inspired by <a href="https://github.com/cjpais/Handy">Handy</a> by
+        <a href="https://github.com/cjpais">CJ Pais</a>, a free, open-source, offline speech-to-text app.
+        Handy showed that private, local voice tools can be simple and pleasant to use. InfoTransfer is the other direction, text to speech.
+        If you need speech-to-text, try Handy.
+      </p>
+      <p class="muted small">
+        Also built on <a href="https://github.com/k2-fsa/sherpa-onnx">sherpa-onnx</a>,
+        <a href="https://onnxruntime.ai">ONNX Runtime</a>, <a href="https://github.com/KittenML/KittenTTS">Kitten TTS</a>,
+        <a href="https://huggingface.co/hexgrad/Kokoro-82M">Kokoro</a>, <a href="https://github.com/espeak-ng/espeak-ng">eSpeak NG</a>,
+        <a href="https://github.com/zed-industries/zed">GPUI</a> and <a href="https://lucide.dev">Lucide</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>InfoTransfer · Apache-2.0</span>
+    <a href="https://github.com/sxxrfx/infotransfer">GitHub</a>
+    <a href="https://github.com/sxxrfx/infotransfer/releases">Releases</a>
+    <a href="https://github.com/sxxrfx/infotransfer/issues">Report a problem</a>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
