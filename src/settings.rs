@@ -9,6 +9,8 @@ pub struct Settings {
     pub speech: Preferences,
     pub activation_key: crate::activation::KeyPreference,
     pub sound_defaults_version: u8,
+    /// Look for signed updates on GitHub once a day.
+    pub check_updates: bool,
 }
 impl Default for Settings {
     fn default() -> Self {
@@ -16,6 +18,7 @@ impl Default for Settings {
             speech: Default::default(),
             activation_key: Default::default(),
             sound_defaults_version: 1,
+            check_updates: true,
         }
     }
 }

@@ -165,50 +165,12 @@ impl Desktop {
     }
 
     fn advanced(&self, cx: &mut Context<Self>) -> Div {
-        let saver = self.settings.speech.memory_saver;
-        let toggle = div()
-            .id("memory-saver")
-            .role(Role::Switch)
-            .focusable()
-            .tab_stop(true)
-            .aria_label("Memory saver")
-            .aria_toggled(if saver {
-                gpui::Toggled::True
-            } else {
-                gpui::Toggled::False
-            })
-            .w(px(41.25))
-            .h(px(22.5))
-            .relative()
-            .rounded_full()
-            .bg(if saver {
-                rgb(0x2f9e8f)
-            } else {
-                rgb(0x808080).opacity(0.2)
-            })
-            .cursor_pointer()
-            .focus_visible(|style| style.border_1().border_color(rgb(TEXT)))
+        let toggle = switch("memory-saver", "Memory saver", self.settings.speech.memory_saver)
             .on_click(cx.listener(|this, _, _, cx| {
                 this.settings.speech.memory_saver = !this.settings.speech.memory_saver;
                 this.preferences_changed();
                 cx.notify();
-            }))
-            .child(motion::tween(
-                "memory-saver-thumb",
-                div()
-                    .absolute()
-                    .top(px(2.))
-                    .left(px(2.))
-                    .size(px(18.75))
-                    .rounded_full()
-                    .border_1()
-                    .border_color(rgb(0xd1d5db))
-                    .bg(rgb(0xffffff)),
-                if saver { 18.75f32 } else { 0. },
-                150,
-                false,
-                |view, offset| view.ml(px(offset)),
-            ));
+            }));
         let login = native::open_at_login();
         div().flex().flex_col().gap_6()
             .child(div().child(section("Startup")).child(group().child(row("Open at login").border_b_0().child(
@@ -226,6 +188,120 @@ impl Desktop {
                 button("repair-voices", "Repair voices").on_click(cx.listener(|this, _, _, cx| this.download(cx))),
             ))))
     }
+}
+
+impl Desktop {
+    fn updates(&self, cx: &mut Context<Self>) -> Div {
+        let installed = update::running_bundle().is_some();
+        let (status, action): (String, Option<&str>) = match &self.update {
+            _ if !installed => ("Updates apply to the installed app".into(), None),
+            UpdateState::Idle => ("Not checked yet".into(), Some("Check now")),
+            UpdateState::Checking => ("Checking…".into(), None),
+            UpdateState::Current => ("InfoTransfer is up to date".into(), Some("Check now")),
+            UpdateState::Available(release) => (
+                format!("Version {} is available", release.version),
+                Some("Install and restart"),
+            ),
+            UpdateState::Downloading {
+                version,
+                done,
+                total,
+            } => (
+                format!("Installing {version} · {}%", done * 100 / (*total).max(1)),
+                None,
+            ),
+            UpdateState::Failed(error) => (error.clone(), Some("Try again")),
+        };
+        let mut status_row = row(&status);
+        if let Some(action) = action {
+            status_row = status_row.child(button("update-action", action).on_click(cx.listener(
+                |this, _, _, cx| {
+                    if matches!(this.update, UpdateState::Available(_)) {
+                        this.install_update(cx);
+                    } else {
+                        this.check_for_update(true, cx);
+                    }
+                },
+            )));
+        }
+        let automatic = switch(
+            "check-updates",
+            "Check for updates automatically",
+            self.settings.check_updates,
+        )
+        .on_click(cx.listener(|this, _, _, cx| {
+            this.settings.check_updates = !this.settings.check_updates;
+            this.writer.save(&this.settings);
+            cx.notify();
+        }));
+        let mut content = div().child(section("Updates")).child(
+            group()
+                .child(status_row)
+                .child(row("Check automatically").border_b_0().child(automatic)),
+        );
+        let note = |text: String| {
+            div()
+                .px_4()
+                .mt_2()
+                .text_size(px(12.))
+                .line_height(px(18.))
+                .text_color(rgb(TEXT).opacity(0.6))
+                .child(text)
+        };
+        content = match &self.update {
+            UpdateState::Available(release) if !release.notes.is_empty() => {
+                content.child(note(release.notes.clone()))
+            }
+            _ => content.child(note(
+                "Updates come from GitHub Releases. Each one is signed, and InfoTransfer installs \
+                 it only after checking the signature and that it was built by the same identity."
+                    .into(),
+            )),
+        };
+        content
+    }
+}
+
+/// An on/off switch; the caller adds the click handler.
+fn switch(id: &'static str, label: &'static str, on: bool) -> Stateful<Div> {
+    div()
+        .id(id)
+        .role(Role::Switch)
+        .focusable()
+        .tab_stop(true)
+        .aria_label(label)
+        .aria_toggled(if on {
+            gpui::Toggled::True
+        } else {
+            gpui::Toggled::False
+        })
+        .w(px(41.25))
+        .h(px(22.5))
+        .relative()
+        .rounded_full()
+        .bg(if on {
+            rgb(0x2f9e8f)
+        } else {
+            rgb(0x808080).opacity(0.2)
+        })
+        .cursor_pointer()
+        .focus_visible(|style| style.border_1().border_color(rgb(TEXT)))
+        .child(motion::tween(
+            SharedString::from(format!("{id}-thumb")),
+            div()
+                .absolute()
+                .top(px(2.))
+                .left(px(2.))
+                .size(px(18.75))
+                .rounded_full()
+                .border_1()
+                .border_color(rgb(0xd1d5db))
+                .bg(rgb(0xffffff)),
+            if on { 18.75f32 } else { 0. },
+            150,
+            false,
+            |view, offset| view.ml(px(offset)),
+        ))
 }
 
 impl Render for Desktop {
@@ -322,9 +398,10 @@ impl Render for Desktop {
                 .child(section("About"))
                 .child(
                     group()
-                        .child(row("InfoTransfer").child("0.1.0"))
+                        .child(row("InfoTransfer").child(update::current_version()))
                         .child(row("License").border_b_0().child("Apache-2.0")),
                 )
+                .child(self.updates(cx))
                 .child(
                     button("source", "Source code")
                         .on_click(|_, _, cx| cx.open_url("https://github.com/sxxrfx/infotransfer")),

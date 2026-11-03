@@ -9,6 +9,7 @@ import plistlib
 import shutil
 import subprocess
 import tempfile
+import tomllib
 
 from local_signing import identity as local_identity
 
@@ -95,10 +96,12 @@ def main():
             ('assets/AppIcon.icns', 'AppIcon.icns'),
         ]:
             shutil.copy2(ROOT / source, resources / name)
+        # The updater compares this with each release's signed version.
+        version = tomllib.loads((ROOT / 'Cargo.toml').read_text())['package']['version']
         preview_id = 'dev.infotransfer.reader.preview'
         info = {'CFBundleIdentifier': preview_id if args.ui_preview else 'dev.infotransfer.reader', 'CFBundleName': 'InfoTransfer Preview' if args.ui_preview else 'InfoTransfer',
                 'CFBundleDisplayName': 'InfoTransfer', 'CFBundleExecutable': 'infotransfer',
-                'CFBundlePackageType': 'APPL', 'CFBundleShortVersionString': '0.1.0',
+                'CFBundlePackageType': 'APPL', 'CFBundleShortVersionString': version,
                 'CFBundleVersion': args.build_number, 'LSMinimumSystemVersion': '14.0',
                 'LSUIElement': True, 'NSHighResolutionCapable': True, 'CFBundleIconFile': 'AppIcon',
                 'NSAccessibilityUsageDescription': 'Read selected text when you tap Fn or right Option.'}

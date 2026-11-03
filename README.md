@@ -153,7 +153,15 @@ Optional: turn on **Settings → Advanced → Open at login**.
 
 ### Update
 
-Run the quick install command again, or, for a source build:
+The prebuilt app updates itself. It checks GitHub Releases once a day (turn this off in **Settings → About**). When a new version is available, a short notice appears; click **Install and restart** in **Settings → About**.
+
+Each update is checked before it is installed:
+
+- The release information is signed with the project's Ed25519 key, and the app accepts only a newer version with a valid signature.
+- The download must match the signed size and SHA-256.
+- The new app must be signed by the same identity as the copy you have. This also keeps your Accessibility permission.
+
+A copy you built from source has your own signing identity, so it never installs prebuilt updates. Update it by rebuilding:
 
 ```sh
 git pull
@@ -192,7 +200,7 @@ cargo run --release --features visual-test --bin render-check
 ```
 
 - `package_app.py --ui-preview` builds an ad-hoc preview at `.cache/ui-preview/InfoTransfer.app`. This build loses Accessibility access each time you rebuild.
-- `package_app.py --experimental` adds optional Python-based voices (Qwen3, VoxCPM2, CosyVoice3 and others) that run a locally configured program. See `scripts/prepare_advanced_tts.py`.
+- `release.py` publishes a release: the zip, the install script and a signed `latest.json` for the updater. Bump `version` in `Cargo.toml` first. It signs with the Ed25519 key at `~/Library/Application Support/InfoTransfer/signing/update-ed25519.key` (or `INFOTRANSFER_UPDATE_KEY`). Keep a backup of that key: installed copies only accept updates signed with it. To create a new key, run `cargo run --release --bin update-sign -- keygen <file>` and put the printed public key in `resources/update-public-key.txt`.
 - The pronunciation helper bundles a separate eSpeak NG executable under GPL-3.0-or-later, with its license and full source. See [speech notices](resources/SPEECH-NOTICES.txt).
 
 Further documentation:
@@ -208,7 +216,6 @@ Further documentation:
 - A notarized download, so no security warning appears.
 - Optional reading history, kept private on your Mac.
 - Highlighting each word as it is read.
-- Automatic updates.
 
 ## Acknowledgements
 
