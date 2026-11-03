@@ -160,10 +160,7 @@ impl SpeechSource {
         }
     }
     fn speaker(&self, voice: u32) -> u32 {
-        match self {
-            Self::Fixed(_) => voice,
-            Self::Catalog { .. } => VOICES[voice as usize].speaker,
-        }
+        VOICES[voice as usize].speaker
     }
 }
 struct SpeechMailbox {
@@ -196,9 +193,11 @@ pub struct RuntimeOptions {
 impl Default for RuntimeOptions {
     fn default() -> Self {
         Self {
-            threads: 2,
+            threads: SpeechModel::Paradee.threads(),
             warm_start: true,
             output_device: None,
+            // Paradee synthesizes 180 characters in about 0.1 s, so the opening chunk
+            // keeps whole sentences for better intonation.
             first_chunk: 180,
             following_chunk: 180,
         }
@@ -242,15 +241,7 @@ impl Reader {
     }
     pub fn with_catalog(paths: AssetPaths, options: RuntimeOptions) -> Self {
         let mut models = vec![paths];
-        for model in [
-            SpeechModel::KittenCpu,
-            SpeechModel::KokoroHeart,
-            SpeechModel::Qwen3,
-            SpeechModel::VoxCpm2,
-            SpeechModel::CosyVoice3,
-            SpeechModel::Sopro,
-            SpeechModel::Phonon,
-        ] {
+        for model in [SpeechModel::Paradee] {
             if !models.iter().any(|paths| paths.model == model) {
                 models
                     .push(AssetPaths::discover_model(model).expect("locate optional model assets"));
@@ -301,6 +292,14 @@ impl Reader {
         let speech_thread = std::thread::Builder::new()
             .name("speech".into())
             .spawn(move || {
+                // Spoken output answers a key press. At the default QoS, warm Heart
+                // readings on an M4 sometimes took 3.2 s instead of 0.8 s to start.
+                unsafe {
+                    libc::pthread_set_qos_class_self_np(
+                        libc::qos_class_t::QOS_CLASS_USER_INITIATED,
+                        0,
+                    )
+                };
                 speech_worker(
                     worker_paths,
                     job_rx,
@@ -414,6 +413,10 @@ impl Reader {
     }
     pub fn level(&self) -> f32 {
         self.handle.bus.current().level()
+    }
+    /// Keeps the real output path and its timing, but plays silence (benchmarks only).
+    pub fn set_silent_output(&self, silent: bool) {
+        self.handle.bus.silent.store(silent, Ordering::Relaxed);
     }
     pub fn is_synthesizing(&self) -> bool {
         self.handle.shared.synthesizing.load(Ordering::Acquire)
@@ -700,8 +703,7 @@ fn speech_worker(
         if paths.ready() && options.warm_start && job.is_none() {
             if let Ok(speech) = load_engine(&mut engine, paths, &options, &commands, || {
                 shared.quitting.load(Ordering::Acquire)
-            }) && paths.model.local_key().is_none()
-                && warmed != Some(paths.model)
+            }) && warmed != Some(paths.model)
             {
                 // ONNX Runtime allocates during its first inference. Pay for that here,
                 // silently, rather than on the first reading after launch.
@@ -786,7 +788,7 @@ fn speech_worker(
                     });
                     break;
                 }
-                audio.finish_chunk(chunks.boundary(), !chunks.has_more(), &mut processed);
+                audio.finish_chunk(&mut processed);
                 for part in processed.chunks(1024) {
                     if !bus.push(&run, part) {
                         break;
@@ -933,10 +935,9 @@ mod tests {
 
     fn reader() -> Reader {
         let paths = AssetPaths {
-            model: SpeechModel::KittenCpu,
+            model: SpeechModel::Paradee,
             speech: "/nonexistent".into(),
             library: "/nonexistent".into(),
-            local: None,
         };
         Reader::with_options(paths, RuntimeOptions::default())
     }

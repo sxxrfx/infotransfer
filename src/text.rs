@@ -41,7 +41,7 @@ impl<'a> Chunks<'a> {
     }
 
     pub fn new(text: &'a str) -> Self {
-        Self::with_limits(text, 180, 180)
+        Self::with_limits(text, 100, 180)
     }
     pub fn with_limits(text: &'a str, first: usize, following: usize) -> Self {
         Self {
@@ -54,33 +54,33 @@ impl<'a> Chunks<'a> {
     }
 }
 
-/// First speech waits for the whole first chunk. A long opening sentence ends early,
-/// preferring punctuation, then a word that starts a clause, then any word break.
-fn opening_clause(sentence: &str) -> Option<usize> {
-    const SHORTEST: usize = 40;
-    const LONGEST: usize = 100;
+/// First speech waits for the whole first chunk. An opening sentence longer than
+/// `longest` ends early, preferring punctuation, then a word that starts a clause,
+/// then any word break.
+fn opening_clause(sentence: &str, longest: usize) -> Option<usize> {
+    let shortest = longest * 2 / 5;
     const JOINERS: [&str; 10] = [
         "and ", "but ", "or ", "because ", "which ", "that ", "when ", "while ", "so ", "if ",
     ];
-    if sentence.chars().count() <= LONGEST {
+    if sentence.chars().count() <= longest {
         return None;
     }
     let (mut punctuation, mut joiner, mut space) = (None, None, None);
     let mut chars = sentence.char_indices().enumerate().peekable();
     while let Some((count, (index, ch))) = chars.next() {
-        if count >= LONGEST {
+        if count >= longest {
             break;
         }
         let spaced = chars
             .peek()
             .is_some_and(|(_, (_, next))| next.is_whitespace());
-        if count >= SHORTEST && spaced && matches!(ch, ',' | ':' | '—') {
+        if count >= shortest && spaced && matches!(ch, ',' | ':' | '—') {
             punctuation = Some(index + ch.len_utf8());
         }
         if ch.is_whitespace() {
             let rest = &sentence[index + ch.len_utf8()..];
             space = Some(index);
-            if count >= SHORTEST && JOINERS.iter().any(|word| rest.starts_with(word)) {
+            if count >= shortest && JOINERS.iter().any(|word| rest.starts_with(word)) {
                 joiner = Some(index);
             }
         }
@@ -95,11 +95,8 @@ impl<'a> Iterator for Chunks<'a> {
         if self.remaining.is_empty() {
             return None;
         }
-        let limit = if self.first {
-            self.first_limit
-        } else {
-            self.following_limit
-        };
+        // The opening chunk is scanned like any other, then shortened at a clause break.
+        let limit = self.following_limit.max(self.first_limit);
         let opening = std::mem::take(&mut self.first);
         let mut end = self.remaining.len();
         let mut whitespace = None;
@@ -147,7 +144,8 @@ impl<'a> Iterator for Chunks<'a> {
                 }
             }
         }
-        if opening && let Some(clause) = opening_clause(&self.remaining[..end]) {
+        if opening && let Some(clause) = opening_clause(&self.remaining[..end], self.first_limit)
+        {
             end = clause;
         }
         let (chunk, tail) = self.remaining.split_at(end);
@@ -203,6 +201,15 @@ mod tests {
         );
         let unbroken = "word ".repeat(60);
         assert!(Chunks::new(&unbroken).next().unwrap().chars().count() <= 100);
+    }
+    #[test]
+    fn a_shorter_opening_limit_still_prefers_clause_breaks() {
+        let text = "After the long report finally arrives, read the summary first and then the details.";
+        let mut chunks = Chunks::with_limits(text, 60, 180);
+        assert_eq!(chunks.next(), Some("After the long report finally arrives,"));
+        assert_eq!(chunks.next(), Some("read the summary first and then the details."));
+        let short = "Short opening sentences stay whole.";
+        assert_eq!(Chunks::with_limits(short, 60, 180).next(), Some(short));
     }
     #[test]
     fn short_sentences_remain_separate() {

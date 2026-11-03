@@ -1,0 +1,7 @@
+{
+  "source": "https://github.com/microsoft/onnxruntime",
+  "tag": "v1.28.2",
+  "commit": "33ca9628233dc8f002435e868d4c2e9f82766ca1",
+  "files": ["include/onnxruntime/core/session/onnxruntime_c_api.h", "include/onnxruntime/core/session/onnxruntime_error_code.h", "include/onnxruntime/core/session/onnxruntime_ep_c_api.h", "LICENSE"],
+  "note": "Headers only. The runtime library is the libonnxruntime.dylib bundled with the pinned sherpa-onnx v2.0.1 archive, which reports 1.28.2."
+}

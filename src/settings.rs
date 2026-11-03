@@ -114,7 +114,8 @@ mod tests {
     fn legacy_shortcuts_are_removed_without_losing_speech_preferences() {
         let saved = r#"{"speech":{"voice":8,"speed":1.25,"memory_saver":true},"bindings":[{"key":11,"modifiers":8},{"key":0,"modifiers":3},{"key":49,"modifiers":8},{"key":53,"modifiers":8}]}"#;
         let settings: Settings = serde_json::from_str(saved).unwrap();
-        assert_eq!(settings.speech.voice, 8);
+        // Index 8 was Heart in the old catalog; removed voices and indexes load as Heart.
+        assert_eq!(settings.speech.voice, 0);
         assert_eq!(settings.speech.speed, 1.25);
         assert!(settings.speech.memory_saver);
         assert_eq!(

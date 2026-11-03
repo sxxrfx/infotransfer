@@ -10,6 +10,13 @@ use std::{
     time::{Duration, Instant},
 };
 
+/// Ten seconds at 24 kHz. Synthesis of the next chunk starts once its audio fits,
+/// so this must cover the slowest chunk's generation time or playback gaps.
+const QUEUE_SAMPLES: usize = 240_000;
+/// Taps of the band-limited resampler; half of them, 1 ms at 24 kHz, is its delay.
+const TAPS: usize = 48;
+const PHASES: usize = 256;
+
 const STOPPED: u8 = 0;
 const PLAYING: u8 = 1;
 const PAUSED: u8 = 2;
@@ -51,7 +58,7 @@ impl PlaybackRun {
             rendered_frames: AtomicU64::new(0),
             underrun_frames: AtomicU64::new(0),
             level: AtomicU32::new(0f32.to_bits()),
-            queue: ArrayQueue::new(48_000),
+            queue: ArrayQueue::new(QUEUE_SAMPLES),
         }
     }
     pub fn active(&self) -> bool {
@@ -73,6 +80,8 @@ impl PlaybackRun {
 
 pub struct AudioBus {
     current: ArcSwap<PlaybackRun>,
+    /// Benchmarks render and measure normally but send silence to the device.
+    pub silent: AtomicBool,
 }
 
 /// One owner serializes transport commands; producers and the callback never lock it.
@@ -94,6 +103,7 @@ impl AudioControl {
         Self {
             bus: Arc::new(AudioBus {
                 current: ArcSwap::from_pointee(PlaybackRun::new(0, 24_000, false)),
+                silent: AtomicBool::new(false),
             }),
             next_id: 0,
             retired: Vec::new(),
@@ -205,19 +215,124 @@ impl AudioOutput {
     }
 }
 
+/// Windowed-sinc interpolation. Linear interpolation mirrors speech energy above
+/// 12 kHz when 24 kHz speech is played at 44.1 or 48 kHz, heard as a thin hiss.
+struct Resampler {
+    input_rate: u32,
+    output_rate: u32,
+    step: f64,
+    /// (PHASES + 1) kernels of TAPS each; empty when the rates match.
+    table: Vec<f32>,
+    history: [f32; TAPS],
+    position: f64,
+    flushed: usize,
+}
+impl Resampler {
+    fn new(input_rate: u32, output_rate: u32) -> Self {
+        Self {
+            input_rate,
+            output_rate,
+            step: input_rate as f64 / output_rate as f64,
+            table: if input_rate == output_rate {
+                Vec::new()
+            } else {
+                kernel(input_rate, output_rate)
+            },
+            history: [0.; TAPS],
+            position: 1.,
+            flushed: 0,
+        }
+    }
+    fn reset(&mut self) {
+        self.history = [0.; TAPS];
+        self.position = 1.;
+        self.flushed = 0;
+    }
+    /// The next output sample, or None while no input is available. A finished
+    /// run first plays out the filter's tail.
+    fn next(&mut self, run: &PlaybackRun) -> Option<f32> {
+        if self.table.is_empty() {
+            return run.queue.pop();
+        }
+        while self.position >= 1. {
+            let value = match run.queue.pop() {
+                Some(value) => value,
+                None if self.flushed < TAPS && run.finished.load(Ordering::Acquire) => {
+                    self.flushed += 1;
+                    0.
+                }
+                None => return None,
+            };
+            self.history.copy_within(1.., 0);
+            self.history[TAPS - 1] = value;
+            self.position -= 1.;
+        }
+        let scaled = self.position * PHASES as f64;
+        let phase = (scaled as usize).min(PHASES - 1);
+        let blend = (scaled - phase as f64) as f32;
+        let a = &self.table[phase * TAPS..][..TAPS];
+        let b = &self.table[(phase + 1) * TAPS..][..TAPS];
+        let mut sum = 0.;
+        for ((sample, a), b) in self.history.iter().zip(a).zip(b) {
+            sum += sample * (a + (b - a) * blend);
+        }
+        self.position += self.step;
+        Some(sum)
+    }
+}
+
+/// Kaiser-windowed sinc kernels, one per fractional position, each with unity DC gain.
+fn kernel(input_rate: u32, output_rate: u32) -> Vec<f32> {
+    // Cutoff in cycles per input sample, just below the lower Nyquist frequency.
+    let cutoff = 0.46 * (output_rate as f64 / input_rate as f64).min(1.);
+    let beta = 8.;
+    let center = (TAPS / 2 - 1) as f64;
+    let half = (TAPS / 2) as f64;
+    let mut table = Vec::with_capacity((PHASES + 1) * TAPS);
+    for phase in 0..=PHASES {
+        let start = table.len();
+        let offset = phase as f64 / PHASES as f64;
+        for tap in 0..TAPS {
+            let x = tap as f64 - center - offset;
+            let edge = x / half;
+            let window = if edge.abs() >= 1. {
+                0.
+            } else {
+                bessel_i0(beta * (1. - edge * edge).sqrt()) / bessel_i0(beta)
+            };
+            let sinc = if x == 0. {
+                2. * cutoff
+            } else {
+                (std::f64::consts::TAU * cutoff * x).sin() / (std::f64::consts::PI * x)
+            };
+            table.push((sinc * window) as f32);
+        }
+        let sum: f32 = table[start..].iter().sum();
+        for value in &mut table[start..] {
+            *value /= sum;
+        }
+    }
+    table
+}
+fn bessel_i0(x: f64) -> f64 {
+    let (mut sum, mut term, mut k) = (1., 1., 1.);
+    while term > 1e-12 * sum {
+        term *= (x / (2. * k)).powi(2);
+        sum += term;
+        k += 1.;
+    }
+    sum
+}
+
 struct Renderer {
     request: u64,
-    current: Option<f32>,
-    next: Option<f32>,
-    phase: f64,
+    resampler: Resampler,
 }
 impl Renderer {
-    fn new() -> Self {
+    fn new(output_rate: u32) -> Self {
         Self {
             request: 0,
-            current: None,
-            next: None,
-            phase: 0.,
+            resampler: Resampler::new(24_000, output_rate),
         }
     }
     fn render<T: cpal::SizedSample + cpal::FromSample<f32>>(
@@ -241,11 +356,14 @@ impl Renderer {
         }
         if self.request != run.id {
             self.request = run.id;
-            self.current = None;
-            self.next = None;
-            self.phase = 0.;
+            if (self.resampler.input_rate, self.resampler.output_rate)
+                != (run.sample_rate, output_rate)
+            {
+                // All speech is 24 kHz, so the stream's prebuilt kernel normally applies.
+                self.resampler = Resampler::new(run.sample_rate, output_rate);
+            }
+            self.resampler.reset();
         }
-        let ratio = run.sample_rate as f64 / output_rate as f64;
         let mut energy = 0f32;
         let mut count = 0u64;
         for (frame_index, frame) in data.chunks_mut(channels).enumerate() {
@@ -259,21 +377,7 @@ impl Renderer {
                 );
                 continue;
             }
-            if self.current.is_none() {
-                self.current = run.queue.pop();
-            }
-            if self.next.is_none() {
-                self.next = run.queue.pop();
-            }
-            let value = if let Some(current) = self.current {
-                let next = self.next.unwrap_or(current);
-                let sample = current + (next - current) * self.phase as f32;
-                self.phase += ratio;
-                while self.phase >= 1. {
-                    self.phase -= 1.;
-                    self.current = self.next.take();
-                    self.next = run.queue.pop();
-                }
+            let value = if let Some(sample) = self.resampler.next(&run) {
                 sample.clamp(-1., 1.)
             } else {
                 if run.finished.load(Ordering::Acquire) {
@@ -307,7 +411,11 @@ impl Renderer {
                     Ordering::Relaxed,
                 );
             }
-            frame.fill(T::from_sample(value));
+            frame.fill(T::from_sample(if bus.silent.load(Ordering::Relaxed) {
+                0.
+            } else {
+                value
+            }));
             energy += value * value;
             count += 1;
         }
@@ -327,7 +435,7 @@ fn stream<T: cpal::SizedSample + cpal::FromSample<f32>>(
 ) -> Result<cpal::Stream> {
     let channels = config.channels as usize;
     let rate = config.sample_rate.0;
-    let mut renderer = Renderer::new();
+    let mut renderer = Renderer::new(rate);
     Ok(device.build_output_stream(
         config,
         move |data: &mut [T], info| {
@@ -363,7 +471,7 @@ mod tests {
         let next = control.begin(24_000);
         assert!(!bus.push(&old, &[0.9]));
         assert!(bus.push(&next, &[-0.25; 32]));
-        let mut renderer = Renderer::new();
+        let mut renderer = Renderer::new(24_000);
         let mut output = [0f32; 16];
         renderer.render(&mut output, 1, 24_000, &bus, clock_ns());
         assert!(output.iter().all(|sample| *sample == -0.25));
@@ -377,7 +485,7 @@ mod tests {
         let bus = control.bus();
         let run = control.begin(24_000);
         bus.push(&run, &[0.25; 32]);
-        let mut renderer = Renderer::new();
+        let mut renderer = Renderer::new(24_000);
         let mut output = [0f32; 8];
         renderer.render(&mut output, 1, 24_000, &bus, clock_ns());
         let level = run.level();
@@ -388,6 +496,52 @@ mod tests {
         control.resume();
         renderer.render(&mut output, 1, 24_000, &bus, clock_ns());
         assert!(output.iter().all(|sample| *sample == 0.25));
+    }
+    #[test]
+    fn upsampling_keeps_level_and_rejects_mirrored_hiss() {
+        let mut control = AudioControl::new();
+        let bus = control.bus();
+        let run = control.begin(24_000);
+        let tone = |frequency: f64, rate: f64, i: usize| {
+            (std::f64::consts::TAU * frequency * i as f64 / rate).sin() as f32 * 0.5
+        };
+        let input: Vec<f32> = (0..4_800).map(|i| tone(9_000., 24_000., i)).collect();
+        assert!(bus.push(&run, &input));
+        run.finish();
+        let mut renderer = Renderer::new(48_000);
+        let mut output = vec![0f32; 9_800];
+        for block in output.chunks_mut(512) {
+            renderer.render(block, 1, 48_000, &bus, clock_ns());
+        }
+        assert!(run.is_drained());
+        // Correlate a steady middle section with the tone and with its 15 kHz image.
+        let section = &output[2_000..8_000];
+        let energy = |frequency: f64| {
+            let (mut re, mut im) = (0f64, 0f64);
+            for (i, sample) in section.iter().enumerate() {
+                let angle = std::f64::consts::TAU * frequency * i as f64 / 48_000.;
+                re += *sample as f64 * angle.cos();
+                im += *sample as f64 * angle.sin();
+            }
+            (re * re + im * im).sqrt() / section.len() as f64
+        };
+        let (signal, image) = (energy(9_000.), energy(15_000.));
+        assert!((signal - 0.25).abs() < 0.03, "tone level {signal}");
+        assert!(20. * (image / signal).log10() < -60., "image {image}");
+    }
+    #[test]
+    fn silent_output_still_measures_the_render_path() {
+        let mut control = AudioControl::new();
+        let bus = control.bus();
+        bus.silent.store(true, Ordering::Relaxed);
+        let run = control.begin(24_000);
+        bus.push(&run, &[0.5; 32]);
+        let mut renderer = Renderer::new(24_000);
+        let mut output = [1f32; 16];
+        renderer.render(&mut output, 1, 24_000, &bus, clock_ns());
+        assert!(output.iter().all(|sample| *sample == 0.));
+        assert!(run.first_signal_ns.load(Ordering::Acquire) > 0);
+        assert_eq!(run.level(), 0.5);
     }
     #[test]
     fn a_late_completion_cannot_finish_the_next_reading() {

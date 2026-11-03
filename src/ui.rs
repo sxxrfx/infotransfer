@@ -647,12 +647,6 @@ impl Desktop {
         self.download_voice(self.settings.speech.voice, cx);
     }
     fn download_voice(&mut self, voice: u32, cx: &mut Context<Self>) {
-        if VOICES[voice as usize].model.local_key().is_some() {
-            self.reader
-                .notice("Set up this voice with scripts/prepare_advanced_tts.py".into());
-            return;
-        }
-
         let paths = self.reader.assets_for_voice(voice);
         if let Some(progress) = &self.downloading {
             if progress.model == paths.model {

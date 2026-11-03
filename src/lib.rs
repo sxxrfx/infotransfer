@@ -1,12 +1,10 @@
 pub mod activation;
-pub mod advanced;
 pub mod assets;
 pub mod audio;
 #[cfg(feature = "desktop")]
 pub mod design;
 pub mod dictionary;
 pub mod instance;
-pub mod model;
 #[cfg(feature = "desktop")]
 pub mod native;
 mod phonemes;

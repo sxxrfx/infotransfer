@@ -495,9 +495,6 @@ impl Desktop {
             .flex()
             .flex_col()
             .gap_3();
-        if self.voice_filter == VoiceFilter::ReferenceStyle {
-            cards = cards.child(div().text_size(px(12.)).text_color(rgb(TEXT).opacity(0.6)).child("Style follows the reference voice. CosyVoice and Sopro couple style to identity."));
-        }
         if ids.is_empty() {
             cards =
                 cards.child(
@@ -507,11 +504,7 @@ impl Desktop {
                         .flex_col()
                         .items_center()
                         .gap_3()
-                        .child(if self.voice_filter == VoiceFilter::JointDialogue {
-                            "No models support joint dialogue"
-                        } else {
-                            "No voices match"
-                        })
+                        .child("No voices match")
                         .child(button("clear-voice-filters", "Clear filters").on_click(
                             cx.listener(|this, _, _, cx| {
                                 this.voice_filter = VoiceFilter::All;
@@ -574,8 +567,6 @@ impl Desktop {
             "Cancel".into()
         } else if installed {
             "Preview".into()
-        } else if paths.model.local_key().is_some() {
-            "Set up".into()
         } else {
             format!("Download · {download_mb:.0} MB")
         };
@@ -583,8 +574,6 @@ impl Desktop {
             format!("Cancel {} download", descriptor.name)
         } else if installed {
             format!("Preview {}", descriptor.name)
-        } else if paths.model.local_key().is_some() {
-            format!("Set up {}", descriptor.name)
         } else {
             format!("Download {} · {download_mb:.0} MB", descriptor.name)
         };
@@ -761,10 +750,8 @@ impl Desktop {
                     .child(action)
                     .on_click(on_preview),
             );
-            let model_name = if descriptor.model == SpeechModel::KokoroHeart {
-                "Kokoro"
-            } else {
-                "Kitten nano"
+            let model_name = match descriptor.model {
+                SpeechModel::Paradee => "Paradee",
             };
             let (footer_action, progress_action) = if fraction.is_some() {
                 (None, Some(action_button))

@@ -7,7 +7,7 @@ pub enum Gender {
     Unspecified,
 }
 
-/// Kitten names are application aliases; Heart retains its upstream name.
+/// Paradee v1.2 voices, distilled from the Kokoro presets of the same names.
 pub struct Voice {
     pub name: &'static str,
     pub info: &'static str,
@@ -17,126 +17,18 @@ pub struct Voice {
     pub speaker: u32,
 }
 
-pub const VOICES: [Voice; 14] = [
-    Voice {
-        name: "Arthur",
-        info: "English · Male",
-        source_id: "expr-voice-2-m",
-        gender: Gender::Male,
-        model: SpeechModel::KittenCpu,
-        speaker: 0,
-    },
-    Voice {
-        name: "Clara",
-        info: "English · Female",
-        source_id: "expr-voice-2-f",
-        gender: Gender::Female,
-        model: SpeechModel::KittenCpu,
-        speaker: 1,
-    },
-    Voice {
-        name: "Elliot",
-        info: "English · Male",
-        source_id: "expr-voice-3-m",
-        gender: Gender::Male,
-        model: SpeechModel::KittenCpu,
-        speaker: 2,
-    },
-    Voice {
-        name: "Maya",
-        info: "English · Female",
-        source_id: "expr-voice-3-f",
-        gender: Gender::Female,
-        model: SpeechModel::KittenCpu,
-        speaker: 3,
-    },
-    Voice {
-        name: "Theo",
-        info: "English · Male",
-        source_id: "expr-voice-4-m",
-        gender: Gender::Male,
-        model: SpeechModel::KittenCpu,
-        speaker: 4,
-    },
-    Voice {
-        name: "Nora",
-        info: "English · Female",
-        source_id: "expr-voice-4-f",
-        gender: Gender::Female,
-        model: SpeechModel::KittenCpu,
-        speaker: 5,
-    },
-    Voice {
-        name: "Owen",
-        info: "English · Male",
-        source_id: "expr-voice-5-m",
-        gender: Gender::Male,
-        model: SpeechModel::KittenCpu,
-        speaker: 6,
-    },
-    Voice {
-        name: "Ruby",
-        info: "English · Female",
-        source_id: "expr-voice-5-f",
-        gender: Gender::Female,
-        model: SpeechModel::KittenCpu,
-        speaker: 7,
-    },
-    Voice {
-        name: "Heart",
-        info: "American English · Female",
-        source_id: "af_heart",
-        gender: Gender::Female,
-        model: SpeechModel::KokoroHeart,
-        speaker: 3,
-    },
-    Voice {
-        name: "Ryan",
-        info: "English · Qwen3 · 2.3 GB · Experimental",
-        source_id: "Qwen3-TTS-1.7B-CustomVoice-4bit",
-        gender: Gender::Male,
-        model: SpeechModel::Qwen3,
-        speaker: 0,
-    },
-    Voice {
-        name: "VoxCPM2",
-        info: "English · Reference voice · Experimental",
-        source_id: "VoxCPM2-4bit",
-        gender: Gender::Unspecified,
-        model: SpeechModel::VoxCpm2,
-        speaker: 0,
-    },
-    Voice {
-        name: "CosyVoice3",
-        info: "English · Reference voice · Experimental",
-        source_id: "Fun-CosyVoice3-0.5B-2512-4bit",
-        gender: Gender::Unspecified,
-        model: SpeechModel::CosyVoice3,
-        speaker: 0,
-    },
-    Voice {
-        name: "Sopro",
-        info: "English · Reference voice · Experimental",
-        source_id: "sopro-v2-turbo",
-        gender: Gender::Unspecified,
-        model: SpeechModel::Sopro,
-        speaker: 0,
-    },
-    Voice {
-        name: "Phonon",
-        info: "English · Default voice · Experimental",
-        source_id: "phonon-31m-en-q8",
-        gender: Gender::Unspecified,
-        model: SpeechModel::Phonon,
-        speaker: 0,
-    },
-];
+/// Isabella (speaker 1) was removed after listening: robotic through the app.
+pub const VOICES: [Voice; 1] = [Voice {
+    name: "Heart",
+    info: "American English · Female",
+    source_id: "af_heart",
+    gender: Gender::Female,
+    model: SpeechModel::Paradee,
+    speaker: 0,
+}];
 pub const VOICE_COUNT: u32 = VOICES.len() as u32;
-/// Python model voices run a configured program, so they need an opt-in build.
 pub fn available(voice: u32) -> bool {
-    VOICES.get(voice as usize).is_some_and(|voice| {
-        cfg!(feature = "experimental-voices") || voice.model.local_key().is_none()
-    })
+    voice < VOICE_COUNT
 }
 /// Saved by stable source ID, so catalog changes cannot silently change a voice.
 pub mod persisted {
@@ -153,7 +45,9 @@ pub mod persisted {
             Id(String),
         }
         Ok(match Saved::deserialize(deserializer)? {
-            Saved::Index(index) => index,
+            // Older settings saved catalog indexes, which may name a removed voice.
+            Saved::Index(index) if index < super::VOICE_COUNT => index,
+            Saved::Index(_) => 0,
             Saved::Id(id) => VOICES
                 .iter()
                 .position(|voice| voice.source_id == id)
@@ -168,46 +62,17 @@ pub enum VoiceFilter {
     All,
     Female,
     Male,
-    EmotionInstructions,
-    ReferenceStyle,
-    NonverbalSounds,
-    VoiceDesign,
-    JointDialogue,
 }
 impl VoiceFilter {
     pub fn short_label(self) -> &'static str {
-        match self {
-            Self::EmotionInstructions => "Emotion",
-            Self::ReferenceStyle => "Reference style",
-            Self::NonverbalSounds => "Nonverbal",
-            Self::JointDialogue => "Dialogue",
-            _ => self.label(),
-        }
+        self.label()
     }
-    pub const ALL: &'static [Self] = if cfg!(feature = "experimental-voices") {
-        &[
-            Self::All,
-            Self::Female,
-            Self::Male,
-            Self::EmotionInstructions,
-            Self::ReferenceStyle,
-            Self::NonverbalSounds,
-            Self::VoiceDesign,
-            Self::JointDialogue,
-        ]
-    } else {
-        &[Self::All, Self::Female, Self::Male]
-    };
+    pub const ALL: &'static [Self] = &[Self::All, Self::Female, Self::Male];
     pub fn label(self) -> &'static str {
         match self {
             Self::All => "All voices",
             Self::Female => "Female",
             Self::Male => "Male",
-            Self::EmotionInstructions => "Emotion instructions",
-            Self::ReferenceStyle => "Reference-style imitation",
-            Self::NonverbalSounds => "Nonverbal sounds",
-            Self::VoiceDesign => "Voice design",
-            Self::JointDialogue => "Joint dialogue generation",
         }
     }
 }
@@ -263,17 +128,6 @@ pub fn visible_voices(
                 VoiceFilter::All => true,
                 VoiceFilter::Female => voice.gender == Gender::Female,
                 VoiceFilter::Male => voice.gender == Gender::Male,
-                VoiceFilter::EmotionInstructions => matches!(
-                    voice.model,
-                    SpeechModel::Qwen3 | SpeechModel::VoxCpm2 | SpeechModel::CosyVoice3
-                ),
-                VoiceFilter::ReferenceStyle => matches!(
-                    voice.model,
-                    SpeechModel::VoxCpm2 | SpeechModel::CosyVoice3 | SpeechModel::Sopro
-                ),
-                VoiceFilter::NonverbalSounds => voice.model == SpeechModel::CosyVoice3,
-                VoiceFilter::VoiceDesign => voice.model == SpeechModel::VoxCpm2,
-                VoiceFilter::JointDialogue => false,
             };
             (matches && available(id as u32) && (!installed_only || installed(id as u32)))
                 .then_some(id as u32)
@@ -312,61 +166,31 @@ pub fn visible_voices(
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[cfg(feature = "experimental-voices")]
     #[test]
-    fn capability_filters_use_the_selected_checkpoint() {
-        let filtered = |filter| visible_voices(filter, false, VoiceSort::Name, &[], |_| true);
-        assert_eq!(filtered(VoiceFilter::EmotionInstructions), [11, 9, 10]);
-        assert_eq!(filtered(VoiceFilter::ReferenceStyle), [11, 12, 10]);
-        assert_eq!(filtered(VoiceFilter::NonverbalSounds), [11]);
-        assert_eq!(filtered(VoiceFilter::VoiceDesign), [10]);
-        assert!(filtered(VoiceFilter::JointDialogue).is_empty());
-        assert!(!filtered(VoiceFilter::VoiceDesign).contains(&9));
-    }
-    #[test]
-    fn voices_are_saved_by_stable_id_and_old_indexes_still_load() {
+    fn voices_are_saved_by_stable_id_and_removed_voices_fall_back_to_heart() {
         #[derive(serde::Serialize, serde::Deserialize)]
         struct Saved(#[serde(with = "persisted")] u32);
-        assert_eq!(serde_json::to_string(&Saved(8)).unwrap(), "\"af_heart\"");
-        assert_eq!(serde_json::from_str::<Saved>("\"af_heart\"").unwrap().0, 8);
-        assert_eq!(serde_json::from_str::<Saved>("3").unwrap().0, 3);
-        assert_eq!(serde_json::from_str::<Saved>("\"gone\"").unwrap().0, 0);
+        assert_eq!(serde_json::to_string(&Saved(0)).unwrap(), "\"af_heart\"");
+        assert_eq!(serde_json::from_str::<Saved>("\"af_heart\"").unwrap().0, 0);
+        assert_eq!(serde_json::from_str::<Saved>("\"expr-voice-2-m\"").unwrap().0, 0);
+        assert_eq!(serde_json::from_str::<Saved>("8").unwrap().0, 0);
+        assert_eq!(serde_json::from_str::<Saved>("\"bf_isabella\"").unwrap().0, 0);
+        assert!(VOICES.iter().all(|voice| voice.speaker < voice.model.speakers()));
     }
     #[test]
     fn filtering_and_sorting_keep_catalog_identity_and_unknowns_last() {
-        let ratings = [
-            Rating {
-                voice: 3,
-                startup_p95_ms: Some(110.),
-                naturalness_median: Some(3.2),
-            },
-            Rating {
-                voice: 1,
-                startup_p95_ms: Some(223.),
-                naturalness_median: Some(4.1),
-            },
-        ];
-        let ids = visible_voices(
-            VoiceFilter::Female,
-            true,
-            VoiceSort::Fastest,
-            &ratings,
-            |id| id < 8,
-        );
-        assert_eq!(ids, [3, 1, 5, 7]);
-        assert_eq!(VOICES[ids[0] as usize].name, "Maya");
-        assert_eq!(
-            visible_voices(
-                VoiceFilter::Female,
-                true,
-                VoiceSort::Quality,
-                &ratings,
-                |id| id < 8
-            ),
-            [1, 3, 5, 7]
-        );
-        assert!(
-            visible_voices(VoiceFilter::Male, true, VoiceSort::Name, &[], |_| false).is_empty()
-        );
+        let ratings = [Rating {
+            voice: 0,
+            startup_p95_ms: Some(110.),
+            naturalness_median: Some(3.2),
+        }];
+        for sort in VoiceSort::ALL {
+            assert_eq!(
+                visible_voices(VoiceFilter::Female, true, sort, &ratings, |_| true),
+                [0]
+            );
+        }
+        assert!(visible_voices(VoiceFilter::Male, false, VoiceSort::Name, &[], |_| true).is_empty());
+        assert!(visible_voices(VoiceFilter::All, true, VoiceSort::Name, &[], |_| false).is_empty());
     }
 }

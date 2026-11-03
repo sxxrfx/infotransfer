@@ -44,7 +44,6 @@ def main():
     parser.add_argument('--skip-build', action='store_true')
     parser.add_argument('--build-number', default='1')
     parser.add_argument('--ui-preview', action='store_true', help='Isolated ad-hoc UI build; does not replace the permission-approved app')
-    parser.add_argument('--experimental', action='store_true', help='Include Python model voices, which run a locally configured program')
     parser.add_argument('--install', action='store_true', help='Also install to /Applications')
     args = parser.parse_args()
     destination = ROOT / ('.cache/ui-preview/InfoTransfer.app' if args.ui_preview else 'dist/InfoTransfer.app')
@@ -53,8 +52,7 @@ def main():
     if running.returncode == 0:
         raise RuntimeError('Quit InfoTransfer before packaging. The installed bundle has not been changed.')
     if not args.skip_build:
-        features = ['--features', 'experimental-voices'] if args.experimental else []
-        subprocess.run(['cargo', 'build', '--release', '--bin', 'infotransfer', *features], cwd=ROOT, check=True)
+        subprocess.run(['cargo', 'build', '--release', '--bin', 'infotransfer'], cwd=ROOT, check=True)
     configured = os.environ.get('INFOTRANSFER_SIGNING_IDENTITY')
     local = None if configured or args.ui_preview else local_identity()
     signer = '-' if args.ui_preview else configured or local['sha1']
@@ -72,8 +70,9 @@ def main():
         shutil.copy2(Path(metadata['target_directory']) / 'release/infotransfer', macos / 'infotransfer')
         runtime = resources / 'runtime'
         runtime.mkdir()
-        libraries = list((ROOT / 'resources/runtime').rglob('*.dylib'))
-        if len(libraries) != 3:
+        # Paradee runs on ONNX Runtime directly; the sherpa-onnx libraries are not shipped.
+        libraries = list((ROOT / 'resources/runtime').rglob('libonnxruntime.dylib'))
+        if len(libraries) != 1:
             raise RuntimeError('Prepare the verified sherpa-onnx 2.0.1 arm64 runtime first')
         for library in libraries:
             shutil.copy2(library, runtime / library.name)
@@ -89,6 +88,7 @@ def main():
         shutil.copytree(pronunciation, resources / 'phonemizer')
         for source, name in [
             ('vendor/sherpa-onnx/LICENSE', 'LICENSE-APACHE-2.0'),
+            ('vendor/onnxruntime/LICENSE', 'ONNXRUNTIME-LICENSE'),
             ('resources/SPEECH-NOTICES.txt', 'SPEECH-NOTICES.txt'),
             ('assets/icons/LICENSE', 'LUCIDE-LICENSE'),
             ('vendor/sonic/LICENSE', 'SONIC-LICENSE'),
