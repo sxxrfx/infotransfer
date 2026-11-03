@@ -1,43 +1,23 @@
 InfoTransfer speech assets
 
-Default speech configuration: Kitten nano v0.1 CPU
+Speech configuration: Paradee v1.2, Heart voice, int8
 
-Original model: KittenML/kitten-tts-nano-0.1, Apache-2.0.
-https://huggingface.co/KittenML/kitten-tts-nano-0.1
-Pinned sherpa-compatible conversion: csukuangfj/kitten-nano-en-v0_1-fp16,
-revision 2f82cb5390e25056d71ef39f076e9dec727e3113, Apache-2.0.
-https://huggingface.co/csukuangfj/kitten-nano-en-v0_1-fp16
-Model, eight-entry voice table and token file retain the upstream terms.
-InfoTransfer offers all eight voice IDs from this table.
-
-InfoTransfer's modified CPU graph replaces 74 ConvInteger operators with
-float32 convolutions over the same integer-valued inputs and weights.
-Quantization, zero points and output scales are preserved. The conversion
-runs locally during setup; source and derived hashes are recorded in code
-and the asset manifests. English lexicons additionally expand Misaki's
-shorthand diphthong symbols to the IPA components expected by Kitten.
-
-Optional Heart voice (explicit download, not installed by default):
-
-Kokoro v1.0: hexgrad/Kokoro-82M, Apache-2.0 code and model weights.
+Paradee v1.2: sahilmahendrakar/Paradee-8M-v1.2, revision
+ed2934d4df8a4fd891e29584c5e1104649409765, Apache-2.0.
+https://huggingface.co/sahilmahendrakar/Paradee-8M-v1.2
+https://github.com/sahilmahendrakar/paradee
+Paradee is a 7.88M-parameter model distilled from Kokoro-82M. Its af_heart
+voice is learned from Kokoro's Heart preset; it is not Kokoro's own output.
+The graph contains four voices; InfoTransfer offers only Heart.
+The author reports WikiText-103 training sentences (CC BY-SA 3.0).
+Teacher model: Kokoro v1.0, hexgrad/Kokoro-82M, Apache-2.0.
 https://huggingface.co/hexgrad/Kokoro-82M
-Pinned conversion: csukuangfj/kokoro-int8-multi-lang-v1_0, revision
-57adb37fc0e8d4bd430cfc1b8f8c2294945b9af2, Apache-2.0.
-https://huggingface.co/csukuangfj/kokoro-int8-multi-lang-v1_0
-Heart is the original af_heart style, native preset 3. It is not a Kitten alias
-or a distilled approximation. The download includes the complete upstream
-54-preset style table, although only Heart is exposed from it by this app.
-The upstream model card credits Koniwa CC BY 3.0 and SIWIS CC BY 4.0 data:
+Kokoro's model card credits Koniwa CC BY 3.0 and SIWIS CC BY 4.0 data:
 https://github.com/koniwa/koniwa
 https://datashare.ed.ac.uk/handle/10283/2353
 These source-data terms and credits are distinct from the model-weight license.
-
-Legacy benchmark configuration (not exposed in the app):
-
-Kokoro model: hexgrad/Kokoro-82M-v1.1-zh, Apache-2.0.
-ONNX conversion: csukuangfj/kokoro-int8-multi-lang-v1_1, revision
-1355334be009ccce397060ee639a874137a128fa, Apache-2.0.
-Model and voice data are redistributed under their upstream terms.
+Model data is redistributed under its upstream terms. tokens.txt is generated
+locally from the model's config.json vocabulary.
 
 English pronunciation data: hexgrad/misaki dataset, Apache-2.0, revision
 7a6093fd11124188077f2dc16397cc465466d59a.
@@ -47,8 +27,9 @@ This transformation follows the Apache-2.0 sherpa-onnx v2.0.1 generator by
 Xiaomi Corp. / Fangjun Kuang. The generated files are modified derivatives.
 The generic lexicon-en-us.txt release asset is not used.
 
-Runtime: sherpa-onnx v2.0.1, Apache-2.0; its bundled ONNX Runtime reports
-version 1.28.2 and uses the MIT license.
+Runtime: ONNX Runtime 1.28.2, MIT license, taken from the pinned sherpa-onnx
+v2.0.1 arm64 release archive. InfoTransfer calls its C API directly and ships
+no sherpa-onnx library. Headers: microsoft/onnxruntime v1.28.2.
 See the application third-party notices and exact artifact manifest.
 
 Offline pronunciation utility:

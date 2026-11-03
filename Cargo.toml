@@ -9,7 +9,6 @@ default-run = "infotransfer"
 [features]
 default = ["desktop"]
 desktop = ["dep:gpui", "dep:gpui_platform", "dep:raw-window-handle", "dep:accesskit", "gpui_platform/font-kit"]
-experimental-voices = []
 visual-test = ["desktop", "gpui/test-support", "gpui_platform/test-support"]
 
 [dependencies]
@@ -26,8 +25,6 @@ async-channel = "2.5"
 cpal = "0.16"
 libc = "0.2"
 regex = "1"
-onnx-protobuf = "=0.2.3"
-protobuf = "=3.4.0"
 raw-window-handle = {version = "0.6", optional = true}
 accesskit = { version = "=0.24.1", optional = true }
 gpui = { git = "https://github.com/zed-industries/zed", rev = "33156f0d81f3a90854626f7286869a7edc6234a0", default-features = false, optional = true }

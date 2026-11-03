@@ -80,18 +80,18 @@ fn main() -> Result<()> {
         .position(|arg| arg == "--device")
         .and_then(|i| args.get(i + 1))
         .cloned();
+    let model = match value("--engine", "paradee").as_str() {
+        "paradee" => SpeechModel::Paradee,
+        other => anyhow::bail!("Unsupported engine: {other}"),
+    };
+    let defaults = RuntimeOptions::default();
     let options = RuntimeOptions {
-        threads: value("--threads", "2").parse()?,
-        first_chunk: value("--first-chunk", "180").parse()?,
-        following_chunk: value("--following-chunk", "180").parse()?,
+        threads: value("--threads", &model.threads().to_string()).parse()?,
+        first_chunk: value("--first-chunk", &defaults.first_chunk.to_string()).parse()?,
+        following_chunk: value("--following-chunk", &defaults.following_chunk.to_string())
+            .parse()?,
         output_device: device,
         warm_start: !cold,
-    };
-    let model = match value("--engine", "kitten").as_str() {
-        "kitten-cpu" => SpeechModel::KittenCpu,
-        "kokoro" => SpeechModel::Kokoro,
-        "kokoro-heart" => SpeechModel::KokoroHeart,
-        _ => SpeechModel::Kitten,
     };
     let paths = AssetPaths::discover_model(model)?;
     let catalog_check = args.iter().any(|arg| arg == "--catalog-check");
@@ -101,6 +101,9 @@ fn main() -> Result<()> {
     } else {
         Reader::with_options(paths, options.clone())
     };
+    // --silent measures the same render path without anyone hearing it; the system
+    // volume and mute setting are left alone.
+    reader.set_silent_output(args.iter().any(|arg| arg == "--silent"));
     reader.prewarm();
     let mut prefs = reader.preferences();
     prefs.voice = value("--voice", "0").parse()?;
@@ -132,7 +135,7 @@ fn main() -> Result<()> {
         "threads":options.threads,"first_chunk":options.first_chunk,"following_chunk":options.following_chunk,
         "voice":prefs.voice,"speed":prefs.speed,"device":reader.snapshot().output_device,
         "method":"request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
-        "ready_resident_bytes":unsafe {it_resident_bytes()},"cold":cold,"replacement":replace,
+        "ready_resident_bytes":unsafe {it_resident_bytes()},"cold":cold,"replacement":replace,"silent_output":args.iter().any(|arg| arg == "--silent"),
         "includes":"validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
         "excludes":"selection_capture, GPUI, physical_device_latency"})
     );
@@ -208,7 +211,7 @@ fn main() -> Result<()> {
 
 fn catalog_behavior_check(reader: &Reader) -> Result<()> {
     let selected = reader.preferences().voice;
-    reader.preview(8);
+    reader.preview(0);
     wait(
         || reader.snapshot().phase == Phase::Preparing,
         Duration::from_secs(5),
@@ -220,7 +223,7 @@ fn catalog_behavior_check(reader: &Reader) -> Result<()> {
         "Preview changed saved selection"
     );
     anyhow::ensure!(
-        reader.snapshot().loaded_model == Some(SpeechModel::KokoroHeart),
+        reader.snapshot().loaded_model == Some(SpeechModel::Paradee),
         "Preview loaded wrong model"
     );
     reader.stop();
@@ -235,7 +238,7 @@ fn catalog_behavior_check(reader: &Reader) -> Result<()> {
     reader.pause_or_resume();
     std::thread::sleep(Duration::from_millis(50));
     anyhow::ensure!(!run.active(), "Cancelled preview resumed");
-    for voice in [8, 0, 8, 0] {
+    for voice in [0, 0] {
         reader.prewarm();
         let mut prefs = reader.preferences();
         prefs.voice = voice;
@@ -245,7 +248,7 @@ fn catalog_behavior_check(reader: &Reader) -> Result<()> {
         || {
             reader.preferences().voice == 0
                 && reader.snapshot().model_ready
-                && reader.snapshot().loaded_model == Some(SpeechModel::KittenCpu)
+                && reader.snapshot().loaded_model == Some(SpeechModel::Paradee)
         },
         bench_timeout(),
     )?;
@@ -258,7 +261,7 @@ fn catalog_behavior_check(reader: &Reader) -> Result<()> {
     println!(
         "{}",
         json!({"event":"catalog_check","success":true,
-        "preview_preserved_voice":selected,"heart_model":true,"stop_cancelled":true,"rapid_switch_returned_to_kitten":true})
+        "preview_preserved_voice":selected,"heart_model":true,"stop_cancelled":true,"repeated_selection_kept_heart":true})
     );
     Ok(())
 }

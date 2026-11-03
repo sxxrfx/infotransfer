@@ -45,14 +45,8 @@ fn main() -> Result<()> {
             .and_then(|i| args.get(i + 1))
             .map_or(default.to_owned(), Clone::clone)
     };
-    let mut model = match value("--engine", "kitten-cpu").as_str() {
-        "kitten-cpu" => SpeechModel::KittenCpu,
-        "kokoro-heart" => SpeechModel::KokoroHeart,
-        "qwen3" => SpeechModel::Qwen3,
-        "voxcpm2" => SpeechModel::VoxCpm2,
-        "cosyvoice3" => SpeechModel::CosyVoice3,
-        "sopro" => SpeechModel::Sopro,
-        "phonon" => SpeechModel::Phonon,
+    let mut model = match value("--engine", "paradee").as_str() {
+        "paradee" => SpeechModel::Paradee,
         other => anyhow::bail!("Unsupported engine: {other}"),
     };
     let mut speaker = value("--voice", "0").parse()?;
@@ -85,7 +79,7 @@ fn main() -> Result<()> {
         "docs/performance/voice-corpus.json",
     ))?)?;
     let load = Instant::now();
-    let mut engine = Speech::load(&AssetPaths::discover_model(model)?, 2)?;
+    let mut engine = Speech::load(&AssetPaths::discover_model(model)?, model.threads())?;
     let dictionary = if let Some(index) = args.iter().position(|arg| arg == "--dictionary") {
         let path = args.get(index + 1).context("Dictionary file is missing")?;
         serde_json::from_slice::<Vec<infotransfer::dictionary::WordReplacement>>(&fs::read(path)?)?
@@ -138,11 +132,7 @@ fn main() -> Result<()> {
                     })?;
                     ensure!(!generated.canceled, "Generation canceled");
                     times.push(generated.elapsed.as_secs_f64() * 1000.);
-                    audio.finish_chunk(
-                        policy.boundary(),
-                        index + 1 == chunks.len(),
-                        &mut processed,
-                    );
+                    audio.finish_chunk(&mut processed);
                     samples.extend_from_slice(&processed);
                     if index + 1 < chunks.len() {
                         let count = audio.pause_samples(policy.boundary());

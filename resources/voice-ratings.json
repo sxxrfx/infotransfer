@@ -1,107 +1,7 @@
 {
-  "detail": "Startup measurements are being refreshed for the developer-text frontend and natural pacing.",
-  "voices": [
-    {
-      "voice": 0,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        3.3079971075057983,
-        3.6479559540748596
-      ],
-      "asr_wer": 0.17793594306049823,
-      "quality_samples": 12
-    },
-    {
-      "voice": 1,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        2.927267372608185,
-        3.213753342628479
-      ],
-      "asr_wer": 0.16725978647686832,
-      "quality_samples": 12
-    },
-    {
-      "voice": 2,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        3.363628387451172,
-        3.552009165287018
-      ],
-      "asr_wer": 0.18861209964412812,
-      "quality_samples": 12
-    },
-    {
-      "voice": 3,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        3.17275208234787,
-        3.618119776248932
-      ],
-      "asr_wer": 0.23487544483985764,
-      "quality_samples": 12
-    },
-    {
-      "voice": 4,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        3.1499974727630615,
-        3.390222907066345
-      ],
-      "asr_wer": 0.17793594306049823,
-      "quality_samples": 12
-    },
-    {
-      "voice": 5,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        3.0965149998664856,
-        3.4612613916397095
-      ],
-      "asr_wer": 0.17437722419928825,
-      "quality_samples": 12
-    },
-    {
-      "voice": 6,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        3.1374406218528748,
-        3.329714596271515
-      ],
-      "asr_wer": 0.1708185053380783,
-      "quality_samples": 12
-    },
-    {
-      "voice": 7,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        2.610748767852783,
-        2.7809795141220093
-      ],
-      "asr_wer": 0.18505338078291814,
-      "quality_samples": 12
-    },
-    {
-      "voice": 8,
-      "startup_p95_ms": null,
-      "naturalness_median": null,
-      "naturalness_iqr": [
-        3.652936279773712,
-        3.8522124886512756
-      ],
-      "asr_wer": 0.11743772241992882,
-      "quality_samples": 12
-    }
-  ],
-  "quality_detail": "The sentence chunking and pause policy changed. Previous naturalness predictions do not rate this playback pipeline.",
+  "detail": "Startup has not yet been measured for the Paradee engine in this app.",
+  "voices": [],
+  "quality_detail": "Naturalness predictions have not been rerun for the Paradee engine.",
   "quality_method": {
     "kind": "predicted_naturalness",
     "predictor": "UTMOS22 strong / SpeechMOS v1.2.0",
@@ -112,5 +12,5 @@
     "speed": 1,
     "human_listener_study": false
   },
-  "status": "startup_refreshed_quality_unrated_after_pacing_change"
+  "status": "paradee_unrated"
 }

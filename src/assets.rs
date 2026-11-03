@@ -9,56 +9,40 @@ use std::{
     time::Duration,
 };
 
+/// Paradee v1.2 is the only engine for now. The enum keeps a single place to add models.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SpeechModel {
-    Kokoro,
-    KokoroHeart,
-    Kitten,
-    KittenCpu,
-    Qwen3,
-    VoxCpm2,
-    CosyVoice3,
-    Sopro,
-    Phonon,
+    Paradee,
 }
 impl SpeechModel {
     pub fn filename(self) -> &'static str {
         match self {
-            Self::Kokoro | Self::KokoroHeart => "model.int8.onnx",
-            Self::Kitten => "model.fp16.onnx",
-            Self::KittenCpu => "model.cpu.onnx",
-            Self::Phonon => "model.q8.gguf",
-            Self::Qwen3 | Self::VoxCpm2 | Self::CosyVoice3 | Self::Sopro => "model.safetensors",
+            // The user heard no difference from the 35 MB float32 file.
+            Self::Paradee => "paradee_int8.onnx",
         }
     }
     pub fn label(self) -> &'static str {
         match self {
-            Self::Kokoro => "Kokoro",
-            Self::KokoroHeart => "Kokoro Heart",
-            Self::Kitten => "Kitten",
-            Self::KittenCpu => "Kitten CPU",
-            Self::Qwen3 => "Qwen3 Ryan",
-            Self::VoxCpm2 => "VoxCPM2",
-            Self::CosyVoice3 => "CosyVoice3",
-            Self::Sopro => "Sopro v2 Turbo",
-            Self::Phonon => "Phonon 31M",
+            Self::Paradee => "Paradee",
         }
     }
-    pub fn native_kind(self) -> i32 {
+    /// Inference threads. On an M4, a 68-character sentence reached first audio in
+    /// 100 ms with one thread, 63 ms with two and 49 ms with four.
+    pub fn threads(self) -> u32 {
         match self {
-            Self::Kokoro | Self::KokoroHeart => 0,
-            Self::Kitten | Self::KittenCpu => 1,
-            _ => unreachable!("Local models use their registered runtime"),
+            Self::Paradee => 2,
         }
     }
-    pub fn local_key(self) -> Option<&'static str> {
+    /// Voices in the graph's order: af_heart, bf_isabella, am_puck, bm_fable.
+    pub fn speakers(self) -> u32 {
         match self {
-            Self::Qwen3 => Some("qwen3"),
-            Self::VoxCpm2 => Some("voxcpm2"),
-            Self::CosyVoice3 => Some("cosyvoice3"),
-            Self::Sopro => Some("sopro"),
-            Self::Phonon => Some("phonon"),
-            _ => None,
+            Self::Paradee => 4,
+        }
+    }
+    /// British voices read with British pronunciations, as in training.
+    pub fn british(self, speaker: u32) -> bool {
+        match self {
+            Self::Paradee => matches!(speaker, 1 | 3),
         }
     }
 }
@@ -68,7 +52,6 @@ pub struct AssetPaths {
     pub model: SpeechModel,
     pub speech: PathBuf,
     pub library: PathBuf,
-    pub local: Option<crate::advanced::LocalRuntime>,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -81,12 +64,7 @@ pub struct Asset {
 
 pub fn manifest(model: SpeechModel) -> Vec<Asset> {
     let data = match model {
-        SpeechModel::Kokoro => include_str!("../resources/speech-manifest.json"),
-        SpeechModel::KokoroHeart => include_str!("../resources/kokoro-heart-manifest.json"),
-        SpeechModel::Kitten | SpeechModel::KittenCpu => {
-            include_str!("../resources/kitten-manifest.json")
-        }
-        _ => return Vec::new(),
+        SpeechModel::Paradee => include_str!("../resources/paradee-manifest.json"),
     };
     serde_json::from_str(data).expect("embedded speech manifest is valid")
 }
@@ -98,22 +76,10 @@ pub fn data_dir() -> PathBuf {
 
 impl AssetPaths {
     pub fn discover() -> Result<Self> {
-        Self::discover_model(SpeechModel::KittenCpu)
+        Self::discover_model(SpeechModel::Paradee)
     }
 
     pub fn discover_model(model: SpeechModel) -> Result<Self> {
-        if let Some(key) = model.local_key() {
-            let local = crate::advanced::LocalRuntime::discover(key);
-            return Ok(Self {
-                model,
-                speech: local
-                    .as_ref()
-                    .map(|r| r.model_dir.clone())
-                    .unwrap_or_else(|| data_dir().join(key)),
-                library: local.as_ref().map(|r| r.python.clone()).unwrap_or_default(),
-                local,
-            });
-        }
         let executable = std::env::current_exe()?;
         let project = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let development = executable
@@ -133,104 +99,73 @@ impl AssetPaths {
             .unwrap_or_else(|| {
                 if development {
                     resources.join(match model {
-                        SpeechModel::Kokoro => "speech",
-                        SpeechModel::KokoroHeart => "speech-heart",
-                        SpeechModel::Kitten => "speech-kitten",
-                        SpeechModel::KittenCpu => "speech-kitten-cpu",
-                        _ => unreachable!(),
+                        SpeechModel::Paradee => "speech-paradee-v1",
                     })
                 } else {
                     data_dir().join(match model {
-                        SpeechModel::Kokoro => "speech-kokoro-v1",
-                        SpeechModel::KokoroHeart => "speech-heart-v1",
-                        SpeechModel::Kitten => "speech-kitten-v1",
-                        SpeechModel::KittenCpu => "speech-kitten-cpu-v1",
-                        _ => unreachable!(),
+                        SpeechModel::Paradee => "speech-paradee-v1",
                     })
                 }
             });
         let runtime = resources.join("runtime");
         let library =
-            find_library(&runtime).unwrap_or_else(|| runtime.join("libsherpa-onnx-c-api.dylib"));
+            find_library(&runtime).unwrap_or_else(|| runtime.join("libonnxruntime.dylib"));
         Ok(Self {
             model,
             speech,
             library,
-            local: None,
         })
     }
 
     pub fn ready(&self) -> bool {
-        if self.model.local_key().is_some() {
-            return self.local.as_ref().is_some_and(|r| r.ready());
-        }
         self.library.is_file()
-            && [
-                self.model.filename(),
-                "voices.bin",
-                "tokens.txt",
-                "lexicon-us-en.txt",
-            ]
-            .iter()
-            .all(|name| self.speech.join(name).is_file())
+            && GENERATED
+                .iter()
+                .map(|(name, _)| *name)
+                .chain([self.model.filename()])
+                .all(|name| self.speech.join(name).is_file())
     }
 
     pub fn verify_active_assets(&self) -> Result<()> {
-        if let Some(runtime) = &self.local {
-            return runtime.verify();
-        }
         let entries = manifest(self.model);
-        for name in [
-            self.model.filename(),
-            "voices.bin",
-            "tokens.txt",
-            "lexicon-us-en.txt",
-        ] {
-            let expected = if self.model == SpeechModel::KittenCpu {
-                match name {
-                    "model.cpu.onnx" => {
-                        Some("264b48c18257cc172960c9321b233b249e215879b5d295766baeace33f5eb5b1")
-                    }
-                    "lexicon-us-en.txt" => {
-                        Some("f2c7716d24cd2be2b27694083148b454c14c2d6b65e811898ecf1085c5b2ad06")
-                    }
-                    _ => entries
-                        .iter()
-                        .find(|asset| asset.name == name)
-                        .map(|asset| asset.sha256.as_str()),
-                }
-            } else if self.model == SpeechModel::KokoroHeart {
-                match name {
-                    "lexicon-us-en.txt" => {
-                        Some("1a417ecd9d2044fc564fc30861ea6d5a4ce555147e34bfddc0440c492c617177")
-                    }
-                    _ => entries
-                        .iter()
-                        .find(|asset| asset.name == name)
-                        .map(|asset| asset.sha256.as_str()),
-                }
-            } else {
-                // Experimental legacy engines are only exposed by the benchmark CLI.
-                None
-            };
-            if let Some(expected) = expected {
-                let (actual, _) = hash_file(&self.speech.join(name))?;
-                ensure!(
-                    actual == expected,
-                    "Speech assets failed verification. Repair voices in settings."
-                );
-            }
+        let expected = entries
+            .iter()
+            .filter(|asset| asset.name == self.model.filename())
+            .map(|asset| (asset.name.as_str(), asset.sha256.as_str()))
+            .chain(GENERATED);
+        for (name, hash) in expected {
+            let (actual, _) = hash_file(&self.speech.join(name))?;
+            ensure!(
+                actual == hash,
+                "Speech assets failed verification. Repair voices in settings."
+            );
         }
         Ok(())
     }
 }
+
+/// Files built locally during setup from the pinned downloads, with their expected hashes.
+const GENERATED: [(&str, &str); 3] = [
+    (
+        "tokens.txt",
+        "6ebb6bb288f20f3ae8d004d3c2ca27697da27c037d75e81a60e2a6a663f95425",
+    ),
+    (
+        "lexicon-us-en.txt",
+        "1a417ecd9d2044fc564fc30861ea6d5a4ce555147e34bfddc0440c492c617177",
+    ),
+    (
+        "lexicon-gb-en.txt",
+        "04a7621a5bd02915002e9847f2e9a291038cdabcef52d602e933e53422b065b4",
+    ),
+];
 
 fn find_library(directory: &Path) -> Option<PathBuf> {
     for entry in fs::read_dir(directory).ok()?.flatten() {
         let path = entry.path();
         if path
             .file_name()
-            .is_some_and(|name| name == "libsherpa-onnx-c-api.dylib")
+            .is_some_and(|name| name == "libonnxruntime.dylib")
         {
             return Some(path);
         }
@@ -264,10 +199,6 @@ pub fn prepare(
     destination: &Path,
     mut progress: impl FnMut(&str, u64, u64) -> bool,
 ) -> Result<()> {
-    ensure!(
-        model.local_key().is_none(),
-        "Use local model setup for experimental voices"
-    );
     let entries = manifest(model);
     let total = entries.iter().map(|asset| asset.bytes).sum();
     ensure!(
@@ -330,18 +261,9 @@ pub fn prepare(
         done += asset.bytes;
     }
     for dialect in ["us", "gb"] {
-        generate_lexicon(&staging, dialect, model)?;
+        generate_lexicon(&staging, dialect)?;
     }
-    if model == SpeechModel::KittenCpu {
-        ensure!(
-            progress("Preparing voices", total, total),
-            "Download canceled"
-        );
-        crate::model::prepare_cpu_model(
-            &staging.join("model.fp16.onnx"),
-            &staging.join(model.filename()),
-        )?;
-    }
+    generate_tokens(&staging)?;
     ensure!(progress("Finishing", total, total), "Download canceled");
     fs::write(
         staging.join("PROVENANCE.txt"),
@@ -371,7 +293,27 @@ pub fn prepare(
     Ok(())
 }
 
-fn generate_lexicon(directory: &Path, dialect: &str, model: SpeechModel) -> Result<()> {
+/// The phone alphabet from the model's config, one "symbol id" pair per line.
+fn generate_tokens(directory: &Path) -> Result<()> {
+    let config: serde_json::Value =
+        serde_json::from_slice(&fs::read(directory.join("config.json"))?)?;
+    let vocab = config["vocab"]
+        .as_object()
+        .context("Speech model config has no vocabulary")?;
+    let mut entries = vocab
+        .iter()
+        .map(|(symbol, id)| Ok((id.as_u64().context("Invalid token id")?, symbol)))
+        .collect::<Result<Vec<_>>>()?;
+    entries.sort();
+    let mut output = String::new();
+    for (id, symbol) in entries {
+        output.push_str(&format!("{symbol} {id}\n"));
+    }
+    fs::write(directory.join("tokens.txt"), output)?;
+    Ok(())
+}
+
+fn generate_lexicon(directory: &Path, dialect: &str) -> Result<()> {
     let mut words: BTreeMap<String, serde_json::Value> =
         serde_json::from_slice(&fs::read(directory.join(format!("{dialect}_silver.json")))?)?;
     let gold: BTreeMap<String, serde_json::Value> =
@@ -393,28 +335,7 @@ fn generate_lexicon(directory: &Path, dialect: &str, model: SpeechModel) -> Resu
     for (word, phones) in normalized {
         write!(output, "{word}")?;
         for phone in phones.chars() {
-            let expanded = if matches!(model, SpeechModel::Kitten | SpeechModel::KittenCpu) {
-                match phone {
-                    'A' => "eɪ",
-                    'I' => "aɪ",
-                    'O' => "oʊ",
-                    'Q' => "əʊ",
-                    'W' => "aʊ",
-                    'Y' => "ɔɪ",
-                    'T' => "ɾ",
-                    'ᵊ' => "ə",
-                    _ => "",
-                }
-            } else {
-                ""
-            };
-            if expanded.is_empty() {
-                write!(output, " {phone}")?;
-            } else {
-                for component in expanded.chars() {
-                    write!(output, " {component}")?;
-                }
-            }
+            write!(output, " {phone}")?;
         }
         writeln!(output)?;
     }

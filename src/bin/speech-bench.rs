@@ -17,11 +17,9 @@ fn main() -> Result<()> {
             .cloned()
             .unwrap_or_else(|| default.to_owned())
     };
-    let model = match value("--engine", "kokoro").as_str() {
-        "kitten" => SpeechModel::Kitten,
-        "kitten-cpu" => SpeechModel::KittenCpu,
-        "kokoro-heart" => SpeechModel::KokoroHeart,
-        _ => SpeechModel::Kokoro,
+    let model = match value("--engine", "paradee").as_str() {
+        "paradee" => SpeechModel::Paradee,
+        other => anyhow::bail!("Unsupported engine: {other}"),
     };
     let paths = AssetPaths::discover_model(model)?;
     if args.iter().any(|arg| arg == "--prepare") {
@@ -37,7 +35,16 @@ fn main() -> Result<()> {
         println!("{}", json!({"event":"assets_ready","path":paths.speech}));
         return Ok(());
     }
-    let threads = value("--threads", "2").parse::<u32>()?;
+    let threads = value("--threads", &model.threads().to_string()).parse::<u32>()?;
+    if let Some(index) = args.iter().position(|arg| arg == "--phonemes") {
+        let text = args.get(index + 1).context("--phonemes needs text")?;
+        let voice = value("--voice", "0").parse::<u32>()?;
+        let mut engine = Speech::load(&paths, threads)?;
+        for chunk in Chunks::new(text) {
+            println!("{}", engine.pronunciation(chunk, voice)?);
+        }
+        return Ok(());
+    }
     let runs = value("--runs", "5").parse::<usize>()?;
     let speed = value("--speed", "1").parse::<f32>()?;
     let voice = value("--voice", "0").parse::<u32>()?;

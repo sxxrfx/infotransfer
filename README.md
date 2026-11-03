@@ -86,12 +86,9 @@ You can choose the key in **Settings → General**: Fn, right Option, or Auto.
 
 ## Voices
 
-| Voice | Speed | Notes |
-| --- | --- | --- |
-| Arthur, Clara, Elliot, Maya, Theo, Nora, Owen, Ruby (Kitten nano) | Fast. Speech starts in about 0.4 s on an M4. | Default. Small download, light on battery. |
-| Heart (Kokoro) | Slower. Speech starts in about 3 s on an M4. | Most natural voice. Larger download. |
+InfoTransfer reads with one voice for now: **Heart**, from [Paradee](https://github.com/sahilmahendrakar/paradee) v1.2, a small model distilled from Kokoro's Heart voice. The model prepares a sentence in about 0.1 s on an M4. Light cleanup EQ removes rumble, softens harsh "s" sounds and quiets hiss between words.
 
-Voices are downloaded once from pinned, checksum-verified sources, and then work fully offline.
+The voice is downloaded once (about 21 MB) from pinned, checksum-verified sources, and then works fully offline.
 
 ## Install
 
@@ -134,7 +131,7 @@ The steps below take about 10 minutes on a fresh Mac. **You do not need an Apple
 git clone https://github.com/sxxrfx/infotransfer.git
 cd infotransfer
 
-python3 scripts/prepare_runtime.py         # once: speech runtime (sherpa-onnx), checksum-verified
+python3 scripts/prepare_runtime.py         # once: ONNX Runtime (from the sherpa-onnx release), checksum-verified
 python3 scripts/prepare_pronunciation.py   # once: offline pronunciation helper, built from source
 python3 scripts/local_signing.py --setup   # once: a private signing identity for your Mac
 python3 scripts/package_app.py --install   # build and copy InfoTransfer.app to /Applications
@@ -181,7 +178,7 @@ Also remove its entry in **System Settings → Privacy & Security → Accessibil
 | Nothing happens when I tap the key | Check that Accessibility is **Allowed** in Settings → General. Try right Option if Fn is used by dictation or the emoji picker. |
 | "No text selected" | Some apps do not share their selection. Copy the text and use **Read clipboard** from the menu bar. |
 | "Protected field" | Password and secure fields cannot be read, by design. |
-| The first reading is slow | The first reading loads the voice. Later readings start quickly. Heart is slower than the Kitten voices. |
+| The first reading is slow | The first reading loads the voice. Later readings start quickly. |
 | A word is pronounced wrongly | Add it in **Settings → Dictionary**. |
 | Packaging hangs on codesign | Run `python3 scripts/local_signing.py --setup` again. It uses its own keychain, so codesign does not wait on a Keychain prompt. |
 
@@ -219,8 +216,8 @@ InfoTransfer was inspired by **[Handy](https://github.com/cjpais/Handy)** by **[
 
 InfoTransfer also builds on:
 
-- [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) and [ONNX Runtime](https://onnxruntime.ai) for running the speech models.
-- [Kitten TTS](https://github.com/KittenML/KittenTTS) and [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M) voices.
+- [ONNX Runtime](https://onnxruntime.ai), from the [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) release, for running the speech model.
+- The [Paradee](https://github.com/sahilmahendrakar/paradee) Heart voice, distilled from [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M).
 - [eSpeak NG](https://github.com/espeak-ng/espeak-ng) for pronouncing new words.
 - [GPUI](https://github.com/zed-industries/zed) from Zed Industries.
 - [Lucide](https://lucide.dev) icons.
