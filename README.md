@@ -95,16 +95,40 @@ Voices are downloaded once from pinned, checksum-verified sources, and then work
 
 ## Install
 
-InfoTransfer is not yet distributed as a signed download, so for now you build it from source. **You do not need an Apple developer account.** The steps below take about 10 minutes on a fresh Mac.
+You need a Mac with Apple Silicon (M1 or newer) running macOS 14 Sonoma or later.
 
-### Requirements
+### Quick install (prebuilt, unsigned)
 
-- A Mac with Apple Silicon (M1 or newer) running macOS 14 Sonoma or later.
+```sh
+curl -fsSL https://github.com/sxxrfx/infotransfer/releases/latest/download/install.sh | sh
+```
+
+> [!WARNING]
+> **This is an unsigned app.** InfoTransfer is not signed with an Apple Developer ID and is not notarized by Apple, so macOS has not checked it. The script shows this warning and asks before installing. It verifies the download's SHA256 checksum, installs the app to `/Applications` and opens it.
+>
+> **Building from source (below) is more secure**, because you can read the code you run and you don't have to trust a prebuilt binary.
+
+If you download the zip from [Releases](https://github.com/sxxrfx/infotransfer/releases) in a browser instead, macOS refuses to open it. Move the app to Applications, then run `xattr -dr com.apple.quarantine /Applications/InfoTransfer.app`, or click **Open Anyway** in System Settings → Privacy & Security.
+
+<details>
+<summary>Why is it unsigned, and what does that change?</summary>
+
+Apple only notarizes apps from paid developer accounts. When you download an app in a browser, macOS marks it as "quarantined", and Gatekeeper refuses to open a quarantined app that Apple has not notarized. `curl` does not add the quarantine mark, so the install script avoids the warning. Removing the mark with `xattr` has the same effect for that one app. It does not turn off Gatekeeper for anything else.
+
+Each release is signed with the same self-signed certificate, so macOS keeps your Accessibility permission when you update.
+</details>
+
+### Build from source
+
+The steps below take about 10 minutes on a fresh Mac. **You do not need an Apple developer account.**
+
+#### Requirements
+
 - Xcode Command Line Tools: `xcode-select --install`
 - Rust, installed from [rustup.rs](https://rustup.rs). The pinned toolchain installs automatically.
 - Python 3 and git. Both come with the Command Line Tools.
 
-### Build and install
+#### Build and install
 
 ```sh
 git clone https://github.com/sxxrfx/infotransfer.git
@@ -131,6 +155,8 @@ python3 scripts/package_app.py --install   # build and copy InfoTransfer.app to 
 Optional: turn on **Settings → Advanced → Open at login**.
 
 ### Update
+
+Run the quick install command again, or, for a source build:
 
 ```sh
 git pull
@@ -182,7 +208,7 @@ Further documentation:
 
 ## Roadmap
 
-- A signed and notarized download, so you won't need to build from source.
+- A notarized download, so no security warning appears.
 - Optional reading history, kept private on your Mac.
 - Highlighting each word as it is read.
 - Automatic updates.
