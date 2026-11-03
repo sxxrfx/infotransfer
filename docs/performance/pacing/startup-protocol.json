@@ -1,0 +1,15 @@
+{
+  "binary_sha256": "9af05b7320bc4c285cbedc1945783bba15b17748ac1a31bdef03790ccec99e37",
+  "source": {
+    "src/reader.rs": "a2cad11d879c80cec2d6c06671819325d207fa3ba0b9fbc92838be78d6bfc4dc",
+    "src/text.rs": "5c8cff0bb763284cfe0336caac2340dd67f228d1b97e3fdc2aa7600a780bb521",
+    "src/sound.rs": "3f4dd122ec6ec6cf6d604c35b44e8bc5793f4b915bb359edc72abb0d6a7df084",
+    "native/speech.c": "7fb80aa2abe27e4979227a7841774b2b2592291f9122c7b4c6494faacce16547",
+    "src/bin/reading-bench.rs": "8a71e0a5343c6494809686dac6fb8a19bf058b8c30c71cde33f9c526d6f1e3ac"
+  },
+  "rounds": 5,
+  "runs_per_round": 5,
+  "warm_per_voice": 20,
+  "claim": "Request to actual CPAL callback with the current native sentence policy on M4 at 1x. Excludes selection, UI, and physical output. No concurrent model evaluation is intended.",
+  "load_average": "21:09  up 8 days,  3:52, 1 user, load averages: 3.09 4.95 5.56"
+}

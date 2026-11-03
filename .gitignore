@@ -1,0 +1,14 @@
+/target/
+/dist/
+/.cache/
+/resources/runtime/
+/resources/phonemizer/
+/resources/speech*/
+*.dSYM/
+.DS_Store
+__pycache__/
+*.pyc
+/docs/performance/**/*.wav
+/docs/performance/**/*.stderr
+/docs/performance/**/*.stdout
+/docs/performance/**/*.log

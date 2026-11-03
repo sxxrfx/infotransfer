@@ -1,0 +1,1276 @@
+{
+  "scope": "real_audio_callback; excludes_capture_GPUI_physical_device_latency",
+  "started": 1793295022.507731,
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "hardware": "Apple M4",
+  "load": "23:00  up 7 days,  5:43, 1 user, load averages: 5.49 5.14 5.82",
+  "binary_sha256": "f3fdfd63b0b4f56d78ebbf65d9bea7b8b7a59c84c5f34d6697d6e3b6af08cc2a",
+  "model_sha256": {
+    "float_conv": "264b48c18257cc172960c9321b233b249e215879b5d295766baeace33f5eb5b1"
+  },
+  "bucket": "typical",
+  "replacement": false,
+  "cold": true,
+  "runs": [
+    {
+      "round": 0,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35987,
+          "ready_resident_bytes": 18481152,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.16225,
+          "event": "trial",
+          "first_pcm_ms": 754.119625,
+          "first_playback_estimate_ms": 771.715458,
+          "first_render_ms": 761.050334,
+          "first_signal_playback_estimate_ms": 776.965458,
+          "first_signal_render_ms": 761.0555,
+          "peak_resident_bytes": 232603648,
+          "phase": "cold",
+          "resident_bytes": 232603648,
+          "stop_silence_estimate_ms": 20.761832,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 1,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35988,
+          "ready_resident_bytes": 18513920,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.12875,
+          "event": "trial",
+          "first_pcm_ms": 734.477458,
+          "first_playback_estimate_ms": 748.785208,
+          "first_render_ms": 738.120167,
+          "first_signal_playback_estimate_ms": 754.035208,
+          "first_signal_render_ms": 738.122542,
+          "peak_resident_bytes": 232718336,
+          "phase": "cold",
+          "resident_bytes": 232718336,
+          "stop_silence_estimate_ms": 20.753125,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 2,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35989,
+          "ready_resident_bytes": 18497536,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.098125,
+          "event": "trial",
+          "first_pcm_ms": 747.887959,
+          "first_playback_estimate_ms": 764.474541,
+          "first_render_ms": 753.809167,
+          "first_signal_playback_estimate_ms": 769.724541,
+          "first_signal_render_ms": 753.811584,
+          "peak_resident_bytes": 201523200,
+          "phase": "cold",
+          "resident_bytes": 191086592,
+          "stop_silence_estimate_ms": 20.533499,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 3,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35990,
+          "ready_resident_bytes": 18497536,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.160125,
+          "event": "trial",
+          "first_pcm_ms": 799.500708,
+          "first_playback_estimate_ms": 814.910916,
+          "first_render_ms": 804.245792,
+          "first_signal_playback_estimate_ms": 820.160916,
+          "first_signal_render_ms": 804.247917,
+          "peak_resident_bytes": 181125120,
+          "phase": "cold",
+          "resident_bytes": 173064192,
+          "stop_silence_estimate_ms": 20.164999,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 4,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35991,
+          "ready_resident_bytes": 18513920,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.154791,
+          "event": "trial",
+          "first_pcm_ms": 802.704666,
+          "first_playback_estimate_ms": 818.355791,
+          "first_render_ms": 807.690416,
+          "first_signal_playback_estimate_ms": 823.605791,
+          "first_signal_render_ms": 807.694166,
+          "peak_resident_bytes": 189906944,
+          "phase": "cold",
+          "resident_bytes": 189923328,
+          "stop_silence_estimate_ms": 19.173166,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 5,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35992,
+          "ready_resident_bytes": 18530304,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.104083,
+          "event": "trial",
+          "first_pcm_ms": 785.173208,
+          "first_playback_estimate_ms": 802.618416,
+          "first_render_ms": 791.953708,
+          "first_signal_playback_estimate_ms": 807.868416,
+          "first_signal_render_ms": 791.95875,
+          "peak_resident_bytes": 190267392,
+          "phase": "cold",
+          "resident_bytes": 190283776,
+          "stop_silence_estimate_ms": 17.280832,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 6,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35993,
+          "ready_resident_bytes": 18530304,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.125041,
+          "event": "trial",
+          "first_pcm_ms": 733.710541,
+          "first_playback_estimate_ms": 754.481457,
+          "first_render_ms": 743.815958,
+          "first_signal_playback_estimate_ms": 759.731457,
+          "first_signal_render_ms": 743.818333,
+          "peak_resident_bytes": 232669184,
+          "phase": "cold",
+          "resident_bytes": 229326848,
+          "stop_silence_estimate_ms": 14.065499,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 7,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35994,
+          "ready_resident_bytes": 18513920,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.10425,
+          "event": "trial",
+          "first_pcm_ms": 784.206459,
+          "first_playback_estimate_ms": 803.159666,
+          "first_render_ms": 792.494417,
+          "first_signal_playback_estimate_ms": 808.409666,
+          "first_signal_render_ms": 792.499542,
+          "peak_resident_bytes": 187219968,
+          "phase": "cold",
+          "resident_bytes": 172359680,
+          "stop_silence_estimate_ms": 18.576749,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 8,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35995,
+          "ready_resident_bytes": 18497536,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.103875,
+          "event": "trial",
+          "first_pcm_ms": 740.59675,
+          "first_playback_estimate_ms": 751.546499,
+          "first_render_ms": 740.881,
+          "first_signal_playback_estimate_ms": 756.796499,
+          "first_signal_render_ms": 740.884708,
+          "peak_resident_bytes": 190054400,
+          "phase": "cold",
+          "resident_bytes": 190087168,
+          "stop_silence_estimate_ms": 17.371208,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 9,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35996,
+          "ready_resident_bytes": 18464768,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.092,
+          "event": "trial",
+          "first_pcm_ms": 748.741083,
+          "first_playback_estimate_ms": 766.587957,
+          "first_render_ms": 755.9225,
+          "first_signal_playback_estimate_ms": 806.978624,
+          "first_signal_render_ms": 787.945916,
+          "peak_resident_bytes": 195575808,
+          "phase": "cold",
+          "resident_bytes": 195575808,
+          "stop_silence_estimate_ms": 20.492666,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 10,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35997,
+          "ready_resident_bytes": 18513920,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.0925,
+          "event": "trial",
+          "first_pcm_ms": 751.488,
+          "first_playback_estimate_ms": 767.495833,
+          "first_render_ms": 756.830917,
+          "first_signal_playback_estimate_ms": 808.395291,
+          "first_signal_render_ms": 788.842167,
+          "peak_resident_bytes": 232439808,
+          "phase": "cold",
+          "resident_bytes": 232439808,
+          "stop_silence_estimate_ms": 20.399166,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 11,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35998,
+          "ready_resident_bytes": 18513920,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.099625,
+          "event": "trial",
+          "first_pcm_ms": 721.770125,
+          "first_playback_estimate_ms": 735.078124,
+          "first_render_ms": 724.412958,
+          "first_signal_playback_estimate_ms": 775.981124,
+          "first_signal_render_ms": 756.427417,
+          "peak_resident_bytes": 231194624,
+          "phase": "cold",
+          "resident_bytes": 219906048,
+          "stop_silence_estimate_ms": 20.222666,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 12,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 35999,
+          "ready_resident_bytes": 18530304,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.151792,
+          "event": "trial",
+          "first_pcm_ms": 704.546917,
+          "first_playback_estimate_ms": 725.594708,
+          "first_render_ms": 714.930084,
+          "first_signal_playback_estimate_ms": 765.950625,
+          "first_signal_render_ms": 746.914334,
+          "peak_resident_bytes": 231784448,
+          "phase": "cold",
+          "resident_bytes": 219758592,
+          "stop_silence_estimate_ms": 20.492375,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 13,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 36000,
+          "ready_resident_bytes": 18513920,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.10775,
+          "event": "trial",
+          "first_pcm_ms": 778.951416,
+          "first_playback_estimate_ms": 790.524374,
+          "first_render_ms": 779.859208,
+          "first_signal_playback_estimate_ms": 795.774374,
+          "first_signal_render_ms": 779.865208,
+          "peak_resident_bytes": 192413696,
+          "phase": "cold",
+          "resident_bytes": 192413696,
+          "stop_silence_estimate_ms": 10.805083,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 14,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 36001,
+          "ready_resident_bytes": 18481152,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.13975,
+          "event": "trial",
+          "first_pcm_ms": 726.376417,
+          "first_playback_estimate_ms": 740.558083,
+          "first_render_ms": 729.892708,
+          "first_signal_playback_estimate_ms": 745.808083,
+          "first_signal_render_ms": 729.89775,
+          "peak_resident_bytes": 232751104,
+          "phase": "cold",
+          "resident_bytes": 232751104,
+          "stop_silence_estimate_ms": 18.899374,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 15,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 36002,
+          "ready_resident_bytes": 18497536,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.087875,
+          "event": "trial",
+          "first_pcm_ms": 725.607583,
+          "first_playback_estimate_ms": 737.826166,
+          "first_render_ms": 727.161208,
+          "first_signal_playback_estimate_ms": 743.076166,
+          "first_signal_render_ms": 727.16625,
+          "peak_resident_bytes": 229687296,
+          "phase": "cold",
+          "resident_bytes": 188252160,
+          "stop_silence_estimate_ms": 18.131374,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 16,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 36003,
+          "ready_resident_bytes": 18448384,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.087583,
+          "event": "trial",
+          "first_pcm_ms": 754.087292,
+          "first_playback_estimate_ms": 770.203333,
+          "first_render_ms": 759.5385,
+          "first_signal_playback_estimate_ms": 775.453333,
+          "first_signal_render_ms": 759.543417,
+          "peak_resident_bytes": 190300160,
+          "phase": "cold",
+          "resident_bytes": 187138048,
+          "stop_silence_estimate_ms": 19.075082,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 17,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 36004,
+          "ready_resident_bytes": 18513920,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.148791,
+          "event": "trial",
+          "first_pcm_ms": 790.559541,
+          "first_playback_estimate_ms": 811.738957,
+          "first_render_ms": 801.074041,
+          "first_signal_playback_estimate_ms": 816.988957,
+          "first_signal_render_ms": 801.076458,
+          "peak_resident_bytes": 179863552,
+          "phase": "cold",
+          "resident_bytes": 167297024,
+          "stop_silence_estimate_ms": 20.507166,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 18,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 36006,
+          "ready_resident_bytes": 18546688,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.107333,
+          "event": "trial",
+          "first_pcm_ms": 795.098791,
+          "first_playback_estimate_ms": 809.237207,
+          "first_render_ms": 798.57175,
+          "first_signal_playback_estimate_ms": 850.160749,
+          "first_signal_render_ms": 830.607291,
+          "peak_resident_bytes": 190578688,
+          "phase": "cold",
+          "resident_bytes": 190267392,
+          "stop_silence_estimate_ms": 17.047458,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    },
+    {
+      "round": 19,
+      "configuration": "float_conv",
+      "command": [
+        "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+        "--engine",
+        "kitten-cpu",
+        "--runs",
+        "1",
+        "--bucket",
+        "typical",
+        "--cold",
+        "--device",
+        "MacBook Air Speakers"
+      ],
+      "exit": 0,
+      "failures": 0,
+      "rows": [
+        {
+          "cold": true,
+          "device": "MacBook Air Speakers",
+          "engine": "Kitten CPU",
+          "event": "configuration",
+          "excludes": "selection_capture, GPUI, physical_device_latency",
+          "first_chunk": 32,
+          "following_chunk": 180,
+          "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+          "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+          "pid": 36007,
+          "ready_resident_bytes": 18497536,
+          "replacement": false,
+          "speed": 1.0,
+          "threads": 2,
+          "voice": 0
+        },
+        {
+          "bucket": "typical",
+          "control_feedback_ms": 0.10275,
+          "event": "trial",
+          "first_pcm_ms": 789.391666,
+          "first_playback_estimate_ms": 807.803874,
+          "first_render_ms": 797.138708,
+          "first_signal_playback_estimate_ms": 813.053874,
+          "first_signal_render_ms": 797.143583,
+          "peak_resident_bytes": 189431808,
+          "phase": "cold",
+          "resident_bytes": 189448192,
+          "stop_silence_estimate_ms": 15.402416,
+          "success": true,
+          "trial": 0,
+          "underrun_frames": 0
+        },
+        {
+          "event": "summary",
+          "failures": 0,
+          "trials": 1
+        }
+      ],
+      "stderr": ""
+    }
+  ],
+  "summary": {
+    "float_conv": {
+      "samples": 20,
+      "failures": 0,
+      "control_feedback_ms": {
+        "p50": 0.10425,
+        "p95": 0.160125,
+        "min": 0.087583,
+        "max": 0.16225
+      },
+      "first_pcm_ms": {
+        "p50": 751.488,
+        "p95": 799.500708,
+        "min": 704.546917,
+        "max": 802.704666
+      },
+      "first_render_ms": {
+        "p50": 756.830917,
+        "p95": 804.245792,
+        "min": 714.930084,
+        "max": 807.690416
+      },
+      "first_signal_render_ms": {
+        "p50": 761.0555,
+        "p95": 807.694166,
+        "min": 727.16625,
+        "max": 830.607291
+      },
+      "first_signal_playback_estimate_ms": {
+        "p50": 776.965458,
+        "p95": 823.605791,
+        "min": 743.076166,
+        "max": 850.160749
+      },
+      "first_playback_estimate_ms": {
+        "p50": 767.495833,
+        "p95": 814.910916,
+        "min": 725.594708,
+        "max": 818.355791
+      },
+      "stop_silence_estimate_ms": {
+        "p50": 19.075082,
+        "p95": 20.753125,
+        "min": 10.805083,
+        "max": 20.761832
+      },
+      "resident_bytes": {
+        "p50": 190283776,
+        "p95": 232718336,
+        "min": 167297024,
+        "max": 232751104
+      },
+      "peak_resident_bytes": {
+        "p50": 192413696,
+        "p95": 232718336,
+        "min": 179863552,
+        "max": 232751104
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "run": "docs/performance/developer-reading/run-20261031T094337Z-c08357",
+  "successful_recordings": 56,
+  "clipped_samples": 0,
+  "inserted_pause_samples": 0,
+  "transcripts": 56,
+  "all_waveform_hashes_verified": true,
+  "no_backend_OOV_omission_logs": true
+}

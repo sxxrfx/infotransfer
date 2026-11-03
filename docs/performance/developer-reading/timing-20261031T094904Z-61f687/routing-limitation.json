@@ -1,0 +1,4 @@
+{
+  "use_for_acceptance": false,
+  "reason": "System default output changed from MacBook Air Speakers to Rockerz 113 between voices. Retained for audit; rerun pins the built-in device."
+}

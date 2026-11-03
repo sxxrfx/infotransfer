@@ -1,0 +1,44 @@
+[
+  {
+    "name": "model.int8.onnx",
+    "url": "https://huggingface.co/csukuangfj/kokoro-int8-multi-lang-v1_0/resolve/57adb37fc0e8d4bd430cfc1b8f8c2294945b9af2/model.int8.onnx",
+    "bytes": 114202993,
+    "sha256": "75635ea3b85a32d00094dcdd61a258aba87c160f7c264c304a7b3ae9d734195e"
+  },
+  {
+    "name": "tokens.txt",
+    "url": "https://huggingface.co/csukuangfj/kokoro-int8-multi-lang-v1_0/resolve/57adb37fc0e8d4bd430cfc1b8f8c2294945b9af2/tokens.txt",
+    "bytes": 687,
+    "sha256": "6ebb6bb288f20f3ae8d004d3c2ca27697da27c037d75e81a60e2a6a663f95425"
+  },
+  {
+    "name": "voices.bin",
+    "url": "https://huggingface.co/csukuangfj/kokoro-int8-multi-lang-v1_0/resolve/57adb37fc0e8d4bd430cfc1b8f8c2294945b9af2/voices.bin",
+    "bytes": 28200960,
+    "sha256": "1c5a5b983d3d50d8586d437a51f3faa2da7919ce76a013c081e65671a3447c29"
+  },
+  {
+    "name": "gb_gold.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/gb_gold.json",
+    "bytes": 2841062,
+    "sha256": "090cdecbe6bda9516a2cdc21563d62def0b91f5b55ea74fe6ef729eef682785f"
+  },
+  {
+    "name": "gb_silver.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/gb_silver.json",
+    "bytes": 3677750,
+    "sha256": "cb8655f5e614e6306146e0da1bf93522ac542ebd39dcd9892afcf51c9aa52e1a"
+  },
+  {
+    "name": "us_gold.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/us_gold.json",
+    "bytes": 3001196,
+    "sha256": "8507f89840f0813b10cf584740942f58e9cc9ad3660e24088b442ab0a6b126be"
+  },
+  {
+    "name": "us_silver.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/us_silver.json",
+    "bytes": 3105352,
+    "sha256": "ea0e1abca0c9b18fb0d3402034633a337154a3153e9a9f49f97d668c908e140c"
+  }
+]

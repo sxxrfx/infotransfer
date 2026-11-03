@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>InfoTransfer UI study</title>
+<style>
+:root{color-scheme:light dark;--background:transparent;--foreground:#23272f;--muted:#626a78;--card:#fff;--popover:#fff;--secondary:#eceef2;--border:#dfe3e9;--ring:#1664d9;--primary:#1664d9;--primary-foreground:#fff;--accent:#e9f0fc;--accent-foreground:#124eac;--destructive:#bd3232;--warning:#8b5b00;--success:#18714c;--info:#1664d9;--radius:14px;--font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--font-mono:ui-monospace,monospace}
+*{box-sizing:border-box}body{margin:0;color:var(--foreground);font:15px/1.5 var(--font-sans);-webkit-font-smoothing:antialiased}button,input,select{font:inherit}button,select{cursor:pointer}button{color:inherit}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--ring);outline-offset:3px}svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}button{border:0;background:none}button:disabled{opacity:.5;cursor:default}h1,h2,h3,p{margin:0}h2{font-size:18px;font-weight:620;letter-spacing:-.3px}h3{font-size:15px;font-weight:600}small{font-size:12px}.study{display:grid;gap:24px}.review-note{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:13px}.review-note p{max-width:64ch}.review-note span{white-space:nowrap}.window{border:1px solid var(--border);background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 10px 28px color-mix(in srgb,var(--foreground) 7%,transparent)}.titlebar{display:flex;align-items:center;justify-content:center;position:relative;height:42px;background:var(--card);border-bottom:1px solid var(--border);font-size:13px;font-weight:600}.lights{position:absolute;left:16px;display:flex;gap:7px}.lights i{width:11px;height:11px;border-radius:50%;background:var(--secondary);border:1px solid var(--border)}.settings-layout{display:grid;grid-template-columns:156px 1fr;min-height:336px}.sidebar{background:color-mix(in srgb,var(--secondary) 70%,var(--card));padding:16px 10px;display:flex;flex-direction:column;gap:5px}.nav-button{display:flex;align-items:center;gap:9px;text-align:left;padding:8px 10px;border-radius:7px;font-size:13px}.nav-button svg{width:17px;height:17px}.nav-button[aria-pressed=true]{background:var(--accent);color:var(--accent-foreground);font-weight:600}.nav-button:hover{background:var(--secondary)}.nav-button[aria-pressed=true]:hover{background:var(--accent)}.nav-footer{margin-top:auto;font-size:12px;padding:24px 10px 0;color:var(--muted);display:flex;align-items:center;gap:7px}.dot{height:6px;width:6px;border-radius:50%;background:var(--success);display:inline-block;flex:none}.settings-panel{padding:23px 25px}.settings-panel h2{margin-bottom:16px}.settings-panel[hidden]{display:none}.row{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:55px;padding:10px 0;border-bottom:1px solid var(--border)}.row:last-child{border-bottom:0}.row label{font-size:14px}.row select,.player-select{max-width:195px;padding:5px 26px 5px 9px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--foreground);font-size:13px}.speed-control{display:flex;align-items:center;gap:10px}.speed-control input{width:95px;accent-color:var(--primary)}.speed-value{font-size:13px;min-width:37px;text-align:right;font-variant-numeric:tabular-nums}.switch{position:relative;display:inline-flex}.switch input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;margin:0;width:100%;height:100%}.switch span{display:block;width:32px;height:20px;background:var(--secondary);border:1px solid var(--border);border-radius:20px;transition:background .15s}.switch span:after{content:"";display:block;background:var(--card);width:16px;height:16px;border-radius:50%;margin:1px;box-shadow:0 1px 3px #0003;transition:transform .15s}.switch input:checked+span{background:var(--primary);border-color:var(--primary)}.switch input:checked+span:after{transform:translateX(12px)}.switch input:focus-visible+span{outline:3px solid var(--ring);outline-offset:3px}kbd{font-family:var(--font-sans);font-size:13px;border:1px solid var(--border);background:var(--secondary);padding:3px 7px;border-radius:5px;white-space:nowrap}.secondary-button{padding:5px 10px;font-size:13px;border:1px solid var(--border);border-radius:6px;background:var(--card)}.secondary-button:hover{background:var(--secondary)}.model-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}.model-summary p{font-size:12px;color:var(--muted)}.voice-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}.voice-row:last-child{border:0}.voice-name{flex:1}.voice-name p{font-size:12px;color:var(--muted)}.voice-preview{width:29px;height:29px;border-radius:50%;background:var(--secondary);display:grid;place-items:center}.voice-preview svg{width:13px;height:13px}.use-voice{padding:4px 9px;border:1px solid var(--border);border-radius:6px;font-size:12px}.use-voice[aria-pressed=true]{border-color:var(--primary);color:var(--primary);background:var(--accent)}.state-tag{font-size:12px;color:var(--success);display:flex;gap:6px;align-items:center}.shortcut-row{margin-top:4px}.small-notice{font-size:12px;color:var(--muted);margin-top:14px}.shortcut-editor{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.shortcut-editor select{font-size:12px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.section-title h2{font-size:17px}.section-title span{font-size:12px;color:var(--muted)}.concept{padding:18px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}.concept-header{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:18px}.concept-header p{font-size:13px;color:var(--muted);margin-top:3px}.choose{font-size:12px;white-space:nowrap;padding:5px 10px;border:1px solid var(--border);border-radius:20px}.choose[aria-pressed=true]{background:var(--accent);border-color:var(--primary);color:var(--primary)}.stage{padding:23px 10px;border-radius:10px;background:color-mix(in srgb,var(--secondary) 60%,var(--card));display:flex;justify-content:center;align-items:center;min-height:110px}.pill{width:352px;border-radius:28px;background:var(--popover);color:var(--foreground);border:1px solid var(--border);box-shadow:0 6px 20px #0002;display:flex;align-items:center;gap:10px;padding:10px 12px}.speaker{width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--primary);display:grid;place-items:center;flex:none}.pill-body{min-width:0;flex:1}.pill-meta{display:flex;align-items:center;gap:7px;font-size:12px;line-height:1.3}.time{font-variant-numeric:tabular-nums;color:var(--muted);font-size:11px}.track{height:3px;background:var(--secondary);border-radius:3px;margin-top:6px;overflow:hidden}.track span{height:100%;width:24%;display:block;background:var(--primary);border-radius:3px}.icon-button{padding:5px;display:flex;align-items:center;justify-content:center;border-radius:6px;min-width:30px;min-height:30px}.icon-button:hover{background:var(--secondary)}.icon-button svg{width:17px;height:17px}.icon-button.stop{color:var(--muted)}.expand-reading{padding:0;display:flex;align-items:center;gap:5px}.expand-reading svg{width:12px;height:12px}.card-reader{width:456px;border:1px solid var(--border);border-radius:15px;background:var(--popover);box-shadow:0 6px 20px #0002;padding:18px}.reading-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.reading-head span{font-size:12px;color:var(--muted)}.reading-text{font-size:20px;line-height:1.6;letter-spacing:.1px}.reading-text mark{color:var(--foreground);background:var(--accent);box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:2px 0}.reading-text .following{color:var(--muted)}.reading-controls{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);margin-top:16px;padding-top:12px;gap:12px}.transport{display:flex;align-items:center;gap:9px}.play-large{width:36px;height:36px;border-radius:50%;background:var(--primary);color:var(--primary-foreground);display:grid;place-items:center}.play-large:hover{filter:brightness(.93)}.rate-button{font-size:12px;min-width:40px}.menu-panel{width:310px;border:1px solid var(--border);border-radius:12px;background:var(--popover);box-shadow:0 6px 20px #0002;overflow:hidden}.menu-top{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding:13px 15px;font-size:13px}.menu-body{padding:15px}.menu-body p{font-size:15px;line-height:1.6;margin:12px 0 15px}.menu-controls{display:flex;align-items:center;justify-content:space-between;gap:12px}.menu-bottom{border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:10px 15px;font-size:12px}.text-button{color:var(--primary);padding:2px}.choices{display:grid;gap:14px}.current-choice{font-size:12px;color:var(--muted)}.pill-expansion{margin-top:12px;width:352px;background:var(--popover);border:1px solid var(--border);border-radius:12px;padding:15px;font-size:18px;line-height:1.6}.pill-stage{flex-direction:column}.study-status{font-size:12px;color:var(--muted);min-height:18px}.config-hint{color:var(--muted);font-size:12px}.voice-preview.is-previewing{background:var(--accent);color:var(--primary)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:560px){.settings-layout{grid-template-columns:1fr}.sidebar{flex-direction:row;flex-wrap:wrap;padding:8px;gap:4px;border-bottom:1px solid var(--border)}.nav-footer{display:none}.nav-button{padding:7px 9px}.settings-panel{padding:18px 16px}.row{gap:10px}.row label{font-size:13px}.row select{max-width:165px;font-size:12px}.speed-control input{width:75px}.concept{padding:14px}.concept-header p{max-width:25ch}.stage{padding:18px 7px}.pill{max-width:100%;gap:6px;padding:9px}.speaker{width:27px;height:27px}.pill-meta{font-size:11px}.time{font-size:10px}.icon-button{min-width:27px;padding:4px}.pill-expansion{max-width:100%}.reading-text{font-size:18px}.card-reader{padding:14px}.review-note{align-items:start}.review-note span{display:none}.section-title{align-items:start;flex-direction:column;gap:4px}.menu-panel{max-width:100%}.reading-controls{gap:8px}.player-select{max-width:140px}}
+.study,.choices{grid-template-columns:minmax(0,1fr)}.study>*,.choices>*,.stage>*{min-width:0}.review-note p{min-width:0}.stage{min-width:0}.card-reader{max-width:100%;min-width:0}.concept-header>div{min-width:0}.settings-panel{min-width:0}
+</style>
+</head>
+<body>
+<svg aria-hidden="true" style="display:none"><defs>
+<symbol id="speaker" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+<symbol id="pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14" stroke-width="3.4"/></symbol>
+<symbol id="play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor" stroke="none"/></symbol>
+<symbol id="sliders" viewBox="0 0 24 24"><path d="M4 7h7m4 0h5M4 17h3m4 0h9M11 4v6M7 14v6"/></symbol>
+<symbol id="keyboard" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M7 10h.1M11 10h.1M15 10h.1M18 10h.1M7 13h.1M11 13h.1M15 13h.1M18 13h.1M8 16h8"/></symbol>
+<symbol id="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="previous" viewBox="0 0 24 24"><path d="M6 5v14m13-14L8 12l11 7z"/></symbol>
+<symbol id="next" viewBox="0 0 24 24"><path d="M18 5v14M5 5l11 7-11 7z"/></symbol>
+<symbol id="close" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></symbol>
+</defs></svg>
+<main class="study">
+  <div class="review-note"><p>UI study. Controls simulate playback; no text is captured or spoken.</p><span>Settings + 3 player options</span></div>
+  <section class="window" aria-label="Settings mockup">
+    <div class="titlebar"><div class="lights" aria-hidden="true"><i></i><i></i><i></i></div>InfoTransfer</div>
+    <div class="settings-layout">
+      <nav class="sidebar" aria-label="Settings">
+        <button class="nav-button" aria-pressed="true" aria-controls="playback-panel" data-tab="playback"><svg><use href="#sliders"/></svg>Playback</button>
+        <button class="nav-button" aria-pressed="false" aria-controls="voices-panel" data-tab="voices"><svg><use href="#speaker"/></svg>Voices</button>
+        <button class="nav-button" aria-pressed="false" aria-controls="shortcuts-panel" data-tab="shortcuts"><svg><use href="#keyboard"/></svg>Shortcuts</button>
+        <div class="nav-footer"><span class="dot"></span>Local speech</div>
+      </nav>
+      <section class="settings-panel" id="playback-panel" aria-label="Playback settings">
+        <h2>Playback</h2>
+        <div class="row"><label for="voice">Voice</label><select id="voice"><option value="Heart">Heart · English (US)</option><option value="Bella">Bella · English (US)</option><option value="Michael">Michael · English (US)</option></select></div>
+        <div class="row"><label for="speed">Speed</label><div class="speed-control"><input id="speed" type="range" min="0.75" max="2" step="0.05" value="1.15"><output id="speed-value" for="speed" class="speed-value">1.15×</output></div></div>
+        <div class="row"><div><label for="keep-ready">Keep speech ready</label><p class="config-hint">Uses memory while idle.</p></div><label class="switch"><input id="keep-ready" type="checkbox" checked><span aria-hidden="true"></span></label></div>
+        <div class="row"><label for="login">Open at login</label><label class="switch"><input id="login" type="checkbox"><span aria-hidden="true"></span></label></div>
+        <div class="row"><span>Read selection</span><kbd id="shortcut-display">⌥ Space</kbd></div>
+      </section>
+      <section class="settings-panel" id="voices-panel" aria-label="Voice settings" hidden>
+        <h2>Voices</h2>
+        <div class="model-summary"><div><h3>Kokoro</h3><p>English (US)</p></div><span class="state-tag"><span class="dot"></span>Ready</span></div>
+        <div class="voice-row"><button class="voice-preview" aria-label="Preview Heart"><svg><use href="#play"/></svg></button><div class="voice-name">Heart</div><button class="use-voice" data-voice="Heart" aria-pressed="true">Selected</button></div>
+        <div class="voice-row"><button class="voice-preview" aria-label="Preview Bella"><svg><use href="#play"/></svg></button><div class="voice-name">Bella</div><button class="use-voice" data-voice="Bella" aria-pressed="false">Use voice</button></div>
+        <div class="voice-row"><button class="voice-preview" aria-label="Preview Michael"><svg><use href="#play"/></svg></button><div class="voice-name">Michael</div><button class="use-voice" data-voice="Michael" aria-pressed="false">Use voice</button></div>
+        <p class="small-notice">Sample voices for this study. The speech engine is still being evaluated.</p>
+      </section>
+      <section class="settings-panel" id="shortcuts-panel" aria-label="Shortcut settings" hidden>
+        <h2>Shortcuts</h2>
+        <div class="row shortcut-row"><label for="shortcut">Read selection</label><select id="shortcut"><option>⌥ Space</option><option>⌃ ⌥ R</option><option>⌘ ⇧ S</option></select></div>
+        <div class="row"><span>Pause or resume</span><kbd>Same shortcut</kbd></div>
+        <div class="row"><span>Stop</span><kbd>⌃ ⌥ .</kbd></div>
+        <p class="small-notice">Example shortcuts. Conflict checking and key recording belong in the native app.</p>
+      </section>
+    </div>
+  </section>
+  <div class="section-title"><h2>Playback controls</h2><span id="current-choice" class="current-choice">Preferred: compact player</span></div>
+  <div class="choices">
+    <section class="concept" data-concept="compact player">
+      <div class="concept-header"><div><h3>Compact player</h3><p>For listening while working.</p></div><button class="choose" aria-pressed="true">Preferred</button></div>
+      <div class="stage pill-stage">
+        <div class="pill" aria-label="Compact playback mockup">
+          <div class="speaker"><svg aria-hidden="true"><use href="#speaker"/></svg></div>
+          <div class="pill-body"><div class="pill-meta"><button class="expand-reading" id="expand-reading" aria-expanded="false" aria-controls="pill-reading"><span class="play-state">Reading</span><svg aria-hidden="true"><use href="#chevron"/></svg></button><span class="time" data-time>0:12 / 0:48</span></div><div class="track" role="progressbar" aria-label="Sample playback position" aria-valuemin="0" aria-valuemax="48" aria-valuenow="12"><span></span></div></div>
+          <button class="icon-button toggle-play" aria-label="Pause reading"><svg aria-hidden="true"><use href="#pause"/></svg></button>
+          <button class="icon-button stop" data-stop aria-label="Stop reading"><svg aria-hidden="true"><use href="#stop"/></svg></button>
+        </div>
+        <p class="pill-expansion" id="pill-reading" hidden>Reading at your own pace can make a long paragraph easier to follow.</p>
+      </div>
+    </section>
+    <section class="concept" data-concept="sentence reader">
+      <div class="concept-header"><div><h3>Sentence reader</h3><p>For following the text as you listen.</p></div><button class="choose" aria-pressed="false">Prefer this</button></div>
+      <div class="stage"><article class="card-reader" aria-label="Sentence playback mockup">
+        <div class="reading-head"><span class="sentence-label">Sentence 2 of 4</span><button class="icon-button" data-stop aria-label="Stop reading"><svg aria-hidden="true"><use href="#close"/></svg></button></div>
+        <p class="reading-text"><mark id="sentence-text">Reading at your own pace can make a long paragraph easier to follow.</mark> <span class="following" id="following-text">You can pause whenever you need.</span></p>
+        <div class="reading-controls"><div class="transport"><button class="icon-button" id="previous-sentence" aria-label="Previous sentence"><svg aria-hidden="true"><use href="#previous"/></svg></button><button class="play-large toggle-play" aria-label="Pause reading"><svg aria-hidden="true"><use href="#pause"/></svg></button><button class="icon-button" id="next-sentence" aria-label="Next sentence"><svg aria-hidden="true"><use href="#next"/></svg></button></div><button class="rate-button" id="cycle-speed" aria-label="Change speed, currently 1.15 times">1.15×</button><button class="text-button" id="reader-voice">Voice</button></div>
+      </article></div>
+    </section>
+    <section class="concept" data-concept="menu bar panel">
+      <div class="concept-header"><div><h3>Menu bar panel</h3><p>For keeping the page unobstructed.</p></div><button class="choose" aria-pressed="false">Prefer this</button></div>
+      <div class="stage"><article class="menu-panel" aria-label="Menu bar playback mockup">
+        <div class="menu-top"><span class="play-state">Reading</span><span class="time" data-time>0:12 / 0:48</span></div>
+        <div class="menu-body"><div class="track" role="progressbar" aria-label="Sample playback position" aria-valuemin="0" aria-valuemax="48" aria-valuenow="12"><span></span></div><p>Reading at your own pace can make a long paragraph easier to follow.</p><div class="menu-controls"><select class="player-select" id="menu-voice" aria-label="Voice"><option>Heart</option><option>Bella</option><option>Michael</option></select><div class="transport"><button class="icon-button toggle-play" aria-label="Pause reading"><svg aria-hidden="true"><use href="#pause"/></svg></button><button class="icon-button" data-stop aria-label="Stop reading"><svg aria-hidden="true"><use href="#stop"/></svg></button></div></div></div>
+        <div class="menu-bottom"><span class="menu-speed">1.15×</span><button class="text-button" id="open-settings">Settings…</button></div>
+      </article></div>
+    </section>
+  </div>
+  <p class="study-status" id="study-status" role="status" aria-live="polite"></p>
+</main>
+<script>
+(()=>{
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const state={playing:true,stopped:false,voice:'Heart',speed:1.15,sentence:1};
+const sentences=['A little space can help you keep your place.','Reading at your own pace can make a long paragraph easier to follow.','You can pause whenever you need.','Then continue from the same sentence.'];
+function announce(message){$('#study-status').textContent=message}
+function tab(name){$$('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tab===name)));$$('.settings-panel').forEach(p=>p.hidden=p.id!==name+'-panel')}
+$$('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
+function renderPlayback(){
+$$('.play-state').forEach(e=>e.textContent=state.stopped?'Stopped':state.playing?'Reading':'Paused');
+$$('.toggle-play').forEach(b=>{b.setAttribute('aria-label',state.stopped?'Restart reading':state.playing?'Pause reading':'Resume reading');b.querySelector('use').setAttribute('href',state.playing&&!state.stopped?'#pause':'#play')});
+$$('[data-time]').forEach(e=>e.textContent=state.stopped?'0:00 / 0:48':'0:12 / 0:48');
+$$('.track').forEach(e=>{e.setAttribute('aria-valuenow',state.stopped?'0':'12');e.querySelector('span').style.width=state.stopped?'0%':'25%'});
+}
+$$('.toggle-play').forEach(b=>b.addEventListener('click',()=>{state.playing=state.stopped?true:!state.playing;state.stopped=false;renderPlayback();announce(state.playing?'Sample playback resumed.':'Sample playback paused.')}));
+$$('[data-stop]').forEach(b=>b.addEventListener('click',()=>{state.playing=false;state.stopped=true;renderPlayback();announce('Sample playback stopped.')}));
+function setVoice(name){state.voice=name;$('#voice').value=name;$('#menu-voice').value=name;$$('[data-voice]').forEach(b=>{const chosen=b.dataset.voice===name;b.setAttribute('aria-pressed',String(chosen));b.textContent=chosen?'Selected':'Use voice'});announce('Voice selected: '+name+'.')}
+$('#voice').addEventListener('change',e=>setVoice(e.target.value));$('#menu-voice').addEventListener('change',e=>setVoice(e.target.value));$$('[data-voice]').forEach(b=>b.addEventListener('click',()=>setVoice(b.dataset.voice)));
+function setSpeed(value){state.speed=Number(value);const label=state.speed.toFixed(2).replace(/0$/,'')+'×';$('#speed').value=String(state.speed);$('#speed-value').textContent=label;$('#cycle-speed').textContent=label;$('#cycle-speed').setAttribute('aria-label','Change speed, currently '+state.speed+' times');$('.menu-speed').textContent=label}
+$('#speed').addEventListener('input',e=>setSpeed(e.target.value));$('#cycle-speed').addEventListener('click',()=>{const speeds=[1,1.15,1.25,1.5,1.75,2];setSpeed(speeds[(speeds.indexOf(state.speed)+1)%speeds.length]);announce('Speed: '+state.speed+' times.')});
+$('#expand-reading').addEventListener('click',()=>{const expanded=$('#expand-reading').getAttribute('aria-expanded')!=='true';$('#expand-reading').setAttribute('aria-expanded',String(expanded));$('#pill-reading').hidden=!expanded});
+$$('.choose').forEach(b=>b.addEventListener('click',()=>{$$('.choose').forEach(e=>{e.setAttribute('aria-pressed',String(e===b));e.textContent=e===b?'Preferred':'Prefer this'});const name=b.closest('.concept').dataset.concept;$('#current-choice').textContent='Preferred: '+name;announce('Prototype preference: '+name+'. This does not finalize the specification.')}));
+function moveSentence(delta){state.sentence=Math.max(0,Math.min(sentences.length-1,state.sentence+delta));$('#sentence-text').textContent=sentences[state.sentence];$('#following-text').textContent=sentences[state.sentence+1]||'';$('.sentence-label').textContent='Sentence '+(state.sentence+1)+' of '+sentences.length;$('#previous-sentence').disabled=state.sentence===0;$('#next-sentence').disabled=state.sentence===sentences.length-1;announce('Sample sentence '+(state.sentence+1)+'.')}
+$('#previous-sentence').addEventListener('click',()=>moveSentence(-1));$('#next-sentence').addEventListener('click',()=>moveSentence(1));
+function openSettings(name){tab(name);$('.window').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});$('[data-tab="'+name+'"]').focus({preventScroll:true})}
+$('#open-settings').addEventListener('click',()=>openSettings('playback'));$('#reader-voice').addEventListener('click',()=>openSettings('voices'));
+$$('.voice-preview').forEach(b=>b.addEventListener('click',()=>{announce(b.getAttribute('aria-label')+' — audio is not connected in this UI study.');b.classList.add('is-previewing');setTimeout(()=>b.classList.remove('is-previewing'),500)}));
+$('#shortcut').addEventListener('change',e=>{$('#shortcut-display').textContent=e.target.value;announce('Example shortcut changed to '+e.target.value+'.')});
+$('#keep-ready').addEventListener('change',e=>announce(e.target.checked?'Prototype: keep the speech model loaded.':'Prototype: release the speech model when idle; the next reading may start later.'));
+$('#login').addEventListener('change',e=>announce('Prototype: open at login '+(e.target.checked?'enabled.':'disabled.')));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+[
+  {
+    "voice_id": 0,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13647,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 0,
+      "speed": 1.0,
+      "device": "MacBook Air Speakers",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181944320,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "0",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "0aa3fd7e3dcba513bac66178042cf172819fbc2c8f3a2dad7d8344313f434fce",
+    "first_pcm_ms": {
+      "p50": 403.12447899999995,
+      "p95": 405.734208,
+      "min": 398.893667,
+      "max": 429.981667
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 457.6239025,
+      "p95": 492.576898,
+      "min": 454.89604,
+      "max": 799.487106
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 17.1067075,
+      "p95": 22.346268,
+      "min": 10.793208,
+      "max": 22.893227
+    },
+    "peak_resident_bytes": 279773184
+  },
+  {
+    "voice_id": 1,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13649,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 1,
+      "speed": 1.0,
+      "device": "Rockerz 113",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181780480,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "1",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "46af4c6b2ed3d63049f4af1b655fb3df84b6c823675bf266125bef5d4f048399",
+    "first_pcm_ms": {
+      "p50": 526.2646045,
+      "p95": 530.087458,
+      "min": 519.163375,
+      "max": 530.152083
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 560.9410734999999,
+      "p95": 562.158448,
+      "min": 549.338574,
+      "max": 562.165166
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 19.711768499999998,
+      "p95": 22.856102,
+      "min": 12.727352,
+      "max": 22.896018
+    },
+    "peak_resident_bytes": 312901632
+  },
+  {
+    "voice_id": 2,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13657,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 2,
+      "speed": 1.0,
+      "device": "Rockerz 113",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181436416,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "2",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "29b4cad0c4a029d9daa6a048e512885215e6380aa6e0754e4ba7e75a99402502",
+    "first_pcm_ms": {
+      "p50": 478.2525835,
+      "p95": 482.895541,
+      "min": 470.223208,
+      "max": 483.517667
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 538.5047565,
+      "p95": 539.303074,
+      "min": 526.873157,
+      "max": 539.336564
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 20.8922475,
+      "p95": 22.855602,
+      "min": 11.815477,
+      "max": 22.884519
+    },
+    "peak_resident_bytes": 303939584
+  },
+  {
+    "voice_id": 3,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13659,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 3,
+      "speed": 1.0,
+      "device": "Rockerz 113",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181633024,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "3",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "20e6fcabb7e93dce236bab3c2f8b7854d9a5be11f8355c366b564015b202f622",
+    "first_pcm_ms": {
+      "p50": 503.659834,
+      "p95": 508.896625,
+      "min": 497.685542,
+      "max": 509.897292
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 570.6132540000001,
+      "p95": 570.905374,
+      "min": 558.033883,
+      "max": 570.954165
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 15.768934999999999,
+      "p95": 22.836644,
+      "min": 13.99056,
+      "max": 22.896435
+    },
+    "peak_resident_bytes": 308314112
+  },
+  {
+    "voice_id": 4,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13662,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 4,
+      "speed": 1.0,
+      "device": "Rockerz 113",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181534720,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "4",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "faa6b5be517c844b96efc68b2585311c66d6d709d5e7d5efed244ac835ff31fe",
+    "first_pcm_ms": {
+      "p50": 405.3294585,
+      "p95": 409.49525,
+      "min": 402.811584,
+      "max": 411.441417
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 464.09377700000005,
+      "p95": 465.158622,
+      "min": 452.297382,
+      "max": 465.567288
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 21.5811435,
+      "p95": 22.771227,
+      "min": 12.72781,
+      "max": 23.018852
+    },
+    "peak_resident_bytes": 278315008
+  },
+  {
+    "voice_id": 5,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13664,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 5,
+      "speed": 1.0,
+      "device": "Rockerz 113",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181485568,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "5",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "ce9c2364c1e76d2d6fd19675078237f915047b0c19f6f89f73a90f384ec4ad79",
+    "first_pcm_ms": {
+      "p50": 438.2789585,
+      "p95": 462.742208,
+      "min": 432.72675,
+      "max": 480.024125
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 520.7070094999999,
+      "p95": 543.467317,
+      "min": 519.209359,
+      "max": 567.184526
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 17.88406,
+      "p95": 22.611894,
+      "min": 12.810561,
+      "max": 22.936269
+    },
+    "peak_resident_bytes": 289898496
+  },
+  {
+    "voice_id": 6,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13707,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 6,
+      "speed": 1.0,
+      "device": "Rockerz 113",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181862400,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "6",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "0c4ea086a77a8d91e5e73bdf75a7f010501b3c195b825869623b9c67dbae2459",
+    "first_pcm_ms": {
+      "p50": 612.623291,
+      "p95": 697.18125,
+      "min": 598.523208,
+      "max": 838.890709
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 656.0731585000001,
+      "p95": 748.054892,
+      "min": 643.604309,
+      "max": 888.491069
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 18.413456500000002,
+      "p95": 20.838227,
+      "min": 15.18381,
+      "max": 21.159019
+    },
+    "peak_resident_bytes": 368001024
+  },
+  {
+    "voice_id": 7,
+    "complete": true,
+    "failures": 0,
+    "trial_count": 21,
+    "warm_count": 20,
+    "configuration": {
+      "event": "configuration",
+      "pid": 13778,
+      "engine": "Kitten CPU",
+      "threads": 2,
+      "first_chunk": 180,
+      "following_chunk": 180,
+      "voice": 7,
+      "speed": 1.0,
+      "device": "Rockerz 113",
+      "method": "request_to_real_render_callback; signal_threshold_minus50_dBFS; playback_and_silence_are_CPAL_double_buffer_estimates_not_acoustic",
+      "ready_resident_bytes": 181731328,
+      "cold": false,
+      "replacement": false,
+      "includes": "validation, controller, synthesis, bounded_PCM, resampling, real_audio_callback",
+      "excludes": "selection_capture, GPUI, physical_device_latency"
+    },
+    "command": [
+      "/Users/sxxrfx/~/.cargo/target/release/reading-bench",
+      "--catalog",
+      "--engine",
+      "kitten-cpu",
+      "--voice",
+      "7",
+      "--runs",
+      "21",
+      "--bucket",
+      "technical",
+      "--play-ms",
+      "25"
+    ],
+    "output_sha256": "624e940df1e07eff003ac45d723a20e7215814a9182bee0eaa89397ffd15e6b8",
+    "first_pcm_ms": {
+      "p50": 420.1720215,
+      "p95": 451.466417,
+      "min": 414.158875,
+      "max": 456.285625
+    },
+    "first_signal_playback_estimate_ms": {
+      "p50": 488.56994,
+      "p95": 512.422544,
+      "min": 476.639669,
+      "max": 523.564795
+    },
+    "stop_silence_estimate_ms": {
+      "p50": 17.897664499999998,
+      "p95": 20.599727,
+      "min": 15.366352,
+      "max": 21.10781
+    },
+    "peak_resident_bytes": 280084480
+  }
+]

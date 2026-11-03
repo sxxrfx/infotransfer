@@ -1,0 +1,96 @@
+{
+  "voices": [
+    {
+      "voice": 0,
+      "name": "Arthur",
+      "warm_trials": 20,
+      "median_ms": 319.7061455,
+      "p95_ms": 382.838375,
+      "min_ms": 318.311667,
+      "max_ms": 383.341875,
+      "max_stop_estimate_ms": 16.427791
+    },
+    {
+      "voice": 1,
+      "name": "Clara",
+      "warm_trials": 20,
+      "median_ms": 426.0030205,
+      "p95_ms": 563.901291,
+      "min_ms": 404.363667,
+      "max_ms": 639.105084,
+      "max_stop_estimate_ms": 16.260791
+    },
+    {
+      "voice": 2,
+      "name": "Elliot",
+      "warm_trials": 20,
+      "median_ms": 383.0598745,
+      "p95_ms": 394.347291,
+      "min_ms": 371.905166,
+      "max_ms": 403.340458,
+      "max_stop_estimate_ms": 17.239541
+    },
+    {
+      "voice": 3,
+      "name": "Maya",
+      "warm_trials": 20,
+      "median_ms": 426.4051875,
+      "p95_ms": 468.253375,
+      "min_ms": 415.331709,
+      "max_ms": 468.430667,
+      "max_stop_estimate_ms": 14.641291
+    },
+    {
+      "voice": 4,
+      "name": "Theo",
+      "warm_trials": 20,
+      "median_ms": 351.252625,
+      "p95_ms": 362.15875,
+      "min_ms": 340.735333,
+      "max_ms": 373.184167,
+      "max_stop_estimate_ms": 16.481583
+    },
+    {
+      "voice": 5,
+      "name": "Nora",
+      "warm_trials": 20,
+      "median_ms": 404.2033335,
+      "p95_ms": 511.678375,
+      "min_ms": 393.859041,
+      "max_ms": 532.337208,
+      "max_stop_estimate_ms": 17.127166
+    },
+    {
+      "voice": 6,
+      "name": "Owen",
+      "warm_trials": 20,
+      "median_ms": 489.638104,
+      "p95_ms": 500.123916,
+      "min_ms": 478.266583,
+      "max_ms": 500.662875,
+      "max_stop_estimate_ms": 16.807624
+    },
+    {
+      "voice": 7,
+      "name": "Ruby",
+      "warm_trials": 20,
+      "median_ms": 356.4110415,
+      "p95_ms": 383.497375,
+      "min_ms": 350.212666,
+      "max_ms": 447.774833,
+      "max_stop_estimate_ms": 16.038416
+    },
+    {
+      "voice": 8,
+      "name": "Heart",
+      "warm_trials": 20,
+      "median_ms": 2511.3690625,
+      "p95_ms": 2846.957125,
+      "min_ms": 2217.923083,
+      "max_ms": 2899.483875,
+      "max_stop_estimate_ms": 16.100416
+    }
+  ],
+  "failures": [],
+  "p95_method": "nearest rank, n=20 warm per voice"
+}

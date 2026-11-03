@@ -1,0 +1,25 @@
+InfoTransfer
+Original application code: Apache-2.0.
+
+UI design reference: Handy v0.9.8 by CJ Pais (MIT).
+https://github.com/cjpais/Handy
+The General navigation hand icon is adapted from Handy's MIT-licensed
+HandyHand.tsx at commit 14f6f0d31cb22a4268acfbddba3052820fd0a06e.
+Its license is preserved in assets/icons/HANDY-LICENSE and in the bundle.
+Handy's wordmark is not included; InfoTransfer retains its own identity.
+
+Lucide 0.542.0 icons: ISC, with Feather portions under MIT.
+The complete upstream license is preserved in assets/icons/LICENSE.
+
+Speech asset provenance and transformations: resources/SPEECH-NOTICES.txt.
+Pinned downloaded artifacts: resources/*manifest.json.
+The application uses sherpa-onnx (Apache-2.0), ONNX Runtime (MIT),
+GPUI (Apache-2.0), and onnx-protobuf (MPL-2.0).
+Exact crate revisions are pinned in Cargo.lock. Full binary dependency
+notices and distribution compatibility remain a public-release gate.
+
+Offline new-word pronunciation uses a separate eSpeak NG 1.52.0 executable
+(GPL-3.0-or-later), revision 4870adfa25b1a32b4361592f1be8a40337c58d6c.
+Its full license, exact corresponding source and build instructions are
+included in the bundle's Resources/phonemizer directory. It produces
+phonemes only; the selected neural model produces the audio.

@@ -1,0 +1,20 @@
+pub mod activation;
+pub mod advanced;
+pub mod assets;
+pub mod audio;
+#[cfg(feature = "desktop")]
+pub mod design;
+pub mod dictionary;
+pub mod instance;
+pub mod model;
+#[cfg(feature = "desktop")]
+pub mod native;
+mod phonemes;
+pub mod reader;
+#[cfg(feature = "desktop")]
+pub mod settings;
+pub mod sound;
+pub mod speech;
+pub mod spoken;
+pub mod text;
+pub mod voices;

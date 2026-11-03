@@ -1,0 +1,85 @@
+{
+  "recorded_at": "2026-10-30T20:23:52.567434+00:00",
+  "build": {
+    "bundle": "/Users/sxxrfx/.t3/projects/infotransfer/.cache/ui-preview-fn/InfoTransfer.app",
+    "bytes": 45536788,
+    "signer": "-",
+    "requirement": "cdhash H\"c12920ade42d261f90831bbf8772113458232a21\"",
+    "signing": "ad-hoc UI preview only",
+    "build_number": "1",
+    "notarized": false
+  },
+  "activation": {
+    "preferred": "Fn / Globe",
+    "fallback": "Right Option",
+    "tap": "release before 350 ms reads current selection",
+    "hold": "release after 350 ms reads only a changed valid selection",
+    "cancel": "Escape",
+    "ordinary_key_combinations": "cancel until modifier release",
+    "automatic_conflict_detection": "read-only undocumented system preference; unknown state uses right Option; third-party conflicts require manual choice"
+  },
+  "checks": {
+    "library_tests": {
+      "passed": 25,
+      "failed": 0
+    },
+    "clippy_all_targets_with_visual_test": "pass with -D warnings",
+    "release_build": "pass",
+    "signature_verification": "ad-hoc preview --deep --strict passed",
+    "production_gpui_components": "offscreen Metal captures; native system fonts and embedded SVGs rendered",
+    "font_icon_control_probe": {
+      "white_text_pixels": 3486,
+      "icon_pixels": 663,
+      "red_control_pixels": 576
+    }
+  },
+  "captures": {
+    "player-empty.png": "dba0d20fac32d8c617514ea03de0facaba361886e0d0ccdfa8915493cf39f51c",
+    "player-preparing.png": "ebfe586564818d8f5cd29ba1bc763e86ed4efd5acdbcec4350425e8faeffea87",
+    "player-reading.png": "2ca2681061d860e4880ecc78f8f3a00025fd886e1dbda0c9faf5357a4869b7e6",
+    "shortcuts-fn.png": "7a6cac7fba58e8ce4ea5bd994f87423649527872849596dbadf03e0ac22606a7",
+    "shortcuts-option.png": "51b55ac1b3308dcf9e292d4af482b3abeeeae03c1829a892c5628ea56621430e"
+  },
+  "source_sha256": {
+    "src/activation.rs": "d53d7d81d52a2511e64b359ba5cd65490b81d35585c49b2c2360fa179af6ce3d",
+    "src/native.rs": "31b2b8aeef7cccad5b6aac1cc400c30aed1cc1da43322f1df33d1fa8544d97fe",
+    "native/macos.m": "dde75fae866808020669599627174b3286e62ca8acdcb4237aded81fb2060937",
+    "src/settings.rs": "64bed7378780c3a7e769c9ea6995879fe04d1b93aa161838af78cfbbf4f988c3",
+    "src/ui.rs": "823a4c0a6948d6eeff9af35d48c092afceeac5fc0e4a91b76cbb77adc480704e",
+    "src/ui/shortcuts.rs": "4edd4025d6a3bfea0f8fe5c6f6b9d510dbd034e518eada2b0c09fd4a09d6693b",
+    "src/ui/player.rs": "fa5ed7f2c59c5aa60646d78eea73b18189c53e204b007b8837767e692dc42a75",
+    "src/ui/visual_check.rs": "9391705bafad031d41a4bd4ec2c9c1e50e2d5899da9601dbb87ad985ae6c597b",
+    "src/ui/settings_view.rs": "a32d62668b019d8001b5ebb9e514a8ca09618489891504fa89d482c2a7eaa069"
+  },
+  "live_validation": {
+    "status": "pending",
+    "error": "Computer Use server error -10005: cgWindowNotFound",
+    "surfaces_attempted": [
+      "existing preview",
+      "Activity Monitor",
+      "Finder",
+      "new isolated preview"
+    ],
+    "not_claimed": [
+      "physical Fn/Globe key delivery",
+      "physical right Option delivery",
+      "held mouse-selection flow in Zen",
+      "new-build Accessibility grant",
+      "live animation timing or one-to-one Handy parity"
+    ]
+  },
+  "permissions": {
+    "repair": "paused by user",
+    "no_grants_resets_or_keychain_changes_this_refinement": true,
+    "main_bundle_requirement": "# designated => cdhash H\"c6e4a675bcbf1a0e175f82b62f1ea8dca50c4855\"",
+    "old_main_bundle": "preserved; retains its previously verified Command-B/Escape behavior; Fn changes are in the isolated preview only"
+  },
+  "apple_account": {
+    "local_development": "paid membership not required",
+    "developer_id_and_notarization": "Apple Developer Program membership required",
+    "sources": [
+      "https://developer.apple.com/help/account/basics/about-your-developer-account/",
+      "https://developer.apple.com/developer-id/"
+    ]
+  }
+}

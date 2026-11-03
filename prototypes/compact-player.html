@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InfoTransfer compact player study</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --background: transparent;
+      --foreground: #23272f;
+      --muted: #626a78;
+      --card: #ffffff;
+      --popover: #ffffff;
+      --secondary: #eceef2;
+      --border: #dfe3e9;
+      --ring: #1664d9;
+      --primary: #1664d9;
+      --primary-foreground: #ffffff;
+      --accent: #e9f0fc;
+      --destructive: #bd3232;
+      --success: #18714c;
+      --radius: 14px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--foreground); font: 14px/1.5 var(--font-sans); -webkit-font-smoothing: antialiased; }
+    main { display: grid; gap: 18px; min-width: 0; }
+    button, input, select { font: inherit; }
+    button { color: inherit; cursor: pointer; }
+    button:disabled { cursor: default; opacity: .4; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
+    button { border: 0; background: none; }
+    p, h1, h2 { margin: 0; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .study-note, .feedback { color: var(--muted); font-size: 12px; }
+    fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+    legend { padding: 0; margin-bottom: 8px; font-size: 13px; font-weight: 600; }
+    .states { display: flex; flex-wrap: wrap; gap: 7px; }
+    .states label { cursor: pointer; display: flex; gap: 6px; align-items: center; padding: 5px 9px; border: 1px solid var(--border); border-radius: 7px; font-size: 12px; }
+    .states label:has(input:checked) { color: var(--primary); border-color: var(--primary); background: var(--accent); }
+    .states input { accent-color: var(--primary); margin: 0; }
+    .stage { display: grid; justify-items: center; align-content: center; padding: 30px 16px; min-height: 154px; background: var(--secondary); border-radius: var(--radius); min-width: 0; }
+    .player { width: 340px; max-width: 100%; min-width: 0; min-height: 58px; display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: var(--popover); border: 1px solid var(--border); border-radius: 32px; box-shadow: 0 5px 18px color-mix(in srgb, var(--foreground) 16%, transparent); }
+    [hidden] { display: none !important; }
+    .meter { width: 48px; height: 25px; display: flex; align-items: center; justify-content: center; gap: 3px; flex: none; color: var(--primary); }
+    .bar { display: block; width: 3px; height: 23px; border-radius: 2px; background: currentColor; transform: scaleY(.25); transform-origin: center; }
+    .player[data-state="paused"] .meter { color: var(--muted); }
+    .player[data-state="preparing"] .meter { color: var(--muted); }
+    .player[data-state="error"] .meter { color: var(--destructive); }
+    .state-label { font-size: 11px; flex: 1; min-width: 0; white-space: nowrap; }
+    .control { padding: 0; min-width: 32px; min-height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; flex: none; }
+    .control svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .speed { font-size: 12px; min-width: 38px; font-variant-numeric: tabular-nums; }
+    .clipboard { font-size: 11px; color: var(--primary); white-space: nowrap; padding: 6px 3px; }
+    .idle { color: var(--muted); font-size: 13px; }
+    .options { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; color: var(--muted); }
+    .options label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .options input { accent-color: var(--primary); margin: 0; }
+    .feedback { min-height: 18px; }
+    dialog { background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; width: 390px; max-width: calc(100% - 24px); }
+    dialog::backdrop { background: #0004; }
+    .dialog-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .dialog-header h2 { font-size: 18px; font-weight: 600; }
+    .setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .setting:last-of-type { border: 0; }
+    .setting input[type="range"] { width: 100px; accent-color: var(--primary); }
+    .setting input[type="checkbox"] { accent-color: var(--primary); }
+    .setting select { padding: 4px 8px; max-width: 160px; color: var(--foreground); background: var(--card); border: 1px solid var(--border); border-radius: 5px; }
+    .setting .speed-setting { display: flex; align-items: center; gap: 8px; }
+    .setting output { min-width: 36px; text-align: right; font-size: 12px; }
+    .dialog-note { color: var(--muted); font-size: 12px; margin-top: 14px; }
+    @media (hover: hover) and (pointer: fine) { .control:hover { background: var(--secondary); } .clipboard:hover { text-decoration: underline; } }
+    @media (max-width: 420px) { .stage { padding: 24px 10px; } .player { gap: 4px; padding: 7px 8px; } .meter { width: 39px; gap: 2px; } .control { min-width: 28px; } .speed { min-width: 32px; } .state-label { font-size: 10px; } .clipboard { font-size: 10px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 class="sr-only">InfoTransfer compact player study</h1>
+    <p class="study-note">Simulated output. No sound plays and no text is captured.</p>
+    <fieldset>
+      <legend>Preview state</legend>
+      <div class="states">
+        <label><input type="radio" name="state" value="preparing">Preparing</label>
+        <label><input type="radio" name="state" value="reading" checked>Reading</label>
+        <label><input type="radio" name="state" value="paused">Paused</label>
+        <label><input type="radio" name="state" value="error">Error</label>
+        <label><input type="radio" name="state" value="idle">Idle</label>
+      </div>
+    </fieldset>
+    <div class="stage">
+      <section class="player" data-state="reading" aria-label="Speech playback">
+        <div class="meter" aria-hidden="true">
+          <i class="bar"></i><i class="bar"></i><i class="bar"></i><i class="bar"></i><i class="bar"></i><i class="bar"></i><i class="bar"></i>
+        </div>
+        <p class="state-label" id="playback-state" role="status" aria-live="polite">Reading</p>
+        <button class="control" id="pause-button" aria-label="Pause reading">
+          <svg id="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5v14M15 5v14" stroke-width="3"/></svg>
+          <svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="m8 5 11 7-11 7z" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <button class="control" id="stop-button" aria-label="Stop reading"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor" stroke="none"/></svg></button>
+        <button class="control speed" id="speed-button" aria-label="Change speed, currently 1 times">1×</button>
+        <button class="clipboard" id="clipboard-button" hidden>Read clipboard</button>
+        <button class="control" id="settings-button" aria-label="Open settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h7m4 0h5M4 17h3m4 0h9M11 4v6M7 14v6"/></svg></button>
+      </section>
+      <p class="idle" hidden>Player hidden</p>
+    </div>
+    <div class="options">
+      <label><input type="checkbox" id="motion-toggle">Reduced motion</label>
+      <label><input type="checkbox" id="quiet-toggle">Quiet passage</label>
+    </div>
+    <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+    <dialog id="settings-dialog" aria-labelledby="settings-title">
+      <div class="dialog-header"><h2 id="settings-title">Playback</h2><button class="control" id="close-dialog" aria-label="Close settings">✕</button></div>
+      <div class="setting"><label for="voice-select">Voice</label><select id="voice-select"><option>Voice 1</option><option>Voice 2</option><option>Voice 3</option></select></div>
+      <div class="setting"><label for="speed-slider">Speed</label><div class="speed-setting"><input type="range" min="0.75" max="2" step="0.05" value="1" id="speed-slider"><output id="speed-value" for="speed-slider">1×</output></div></div>
+      <div class="setting"><label for="ready-toggle">Keep speech ready</label><input type="checkbox" id="ready-toggle" checked></div>
+      <div class="setting"><label for="history-toggle">Save new readings</label><input type="checkbox" id="history-toggle"></div>
+      <div class="setting"><label for="update-toggle">Check for updates</label><input type="checkbox" id="update-toggle" checked></div>
+      <p class="dialog-note">Sample controls. Voices and speed limits are still being specified. These preferences are not saved.</p>
+    </dialog>
+  </main>
+  <script>
+    (() => {
+      const query = selector => document.querySelector(selector);
+      const bars = [...document.querySelectorAll('.bar')];
+      const player = query('.player');
+      const media = matchMedia('(prefers-reduced-motion: reduce)');
+      let state = 'reading';
+      let speed = 1;
+      let frame = null;
+      let lastPaint = 0;
+
+      function announce(message) { query('#feedback').textContent = message; }
+      function fixedMeter(value) { bars.forEach(bar => { bar.style.transform = `scaleY(${value})`; }); }
+      function motionAllowed() { return state === 'reading' && !query('#motion-toggle').checked && !document.hidden; }
+
+      function paint(timestamp) {
+        if (!motionAllowed()) { frame = null; return; }
+        if (timestamp - lastPaint >= 33) {
+          const quiet = query('#quiet-toggle').checked;
+          bars.forEach((bar, index) => {
+            const envelope = .18 + Math.abs(Math.sin(timestamp / 320 + index * .76) * Math.cos(timestamp / 870 - index * .42)) * .82;
+            bar.style.transform = `scaleY(${quiet ? .08 : envelope})`;
+          });
+          lastPaint = timestamp;
+        }
+        frame = requestAnimationFrame(paint);
+      }
+
+      function updateMeter() {
+        if (frame !== null) cancelAnimationFrame(frame);
+        frame = null;
+        if (state === 'paused') return;
+        fixedMeter(state === 'reading' ? .5 : .12);
+        if (motionAllowed()) frame = requestAnimationFrame(paint);
+      }
+
+      function setState(next) {
+        state = next;
+        player.dataset.state = state;
+        player.hidden = state === 'idle';
+        query('.idle').hidden = state !== 'idle';
+        const error = state === 'error';
+        const paused = state === 'paused';
+        query('#playback-state').textContent = ({preparing:'Preparing…', reading:'Reading', paused:'Paused', error:'No selection', idle:'Stopped'})[state];
+        query('#pause-button').disabled = state === 'preparing';
+        query('#pause-button').hidden = error;
+        query('#speed-button').hidden = error;
+        query('#clipboard-button').hidden = !error;
+        query('#pause-button').setAttribute('aria-label', paused ? 'Resume reading' : 'Pause reading');
+        query('#pause-icon').toggleAttribute('hidden', paused);
+        query('#play-icon').toggleAttribute('hidden', !paused);
+        document.querySelectorAll('input[name="state"]').forEach(input => { input.checked = input.value === state; });
+        if (state === 'paused' && bars.every(bar => !bar.style.transform)) fixedMeter(.35);
+        updateMeter();
+      }
+
+      function setSpeed(value) {
+        speed = Number(value);
+        const text = `${Number(speed.toFixed(2))}×`;
+        query('#speed-button').textContent = text;
+        query('#speed-button').setAttribute('aria-label', `Change speed, currently ${speed} times`);
+        query('#speed-slider').value = String(speed);
+        query('#speed-value').textContent = text;
+      }
+
+      document.querySelectorAll('input[name="state"]').forEach(input => input.addEventListener('change', () => setState(input.value)));
+      query('#pause-button').addEventListener('click', () => setState(state === 'paused' ? 'reading' : 'paused'));
+      query('#stop-button').addEventListener('click', () => { setState('idle'); announce('Stopped. The playback panel is hidden.'); });
+      query('#speed-button').addEventListener('click', () => {
+        const choices = [1, 1.25, 1.5, 1.75, 2, .75];
+        setSpeed(choices[(choices.indexOf(speed) + 1) % choices.length]);
+        announce(`Sample speed: ${speed} times.`);
+      });
+      query('#clipboard-button').addEventListener('click', () => { setState('reading'); announce('Sample clipboard reading. The real clipboard was not accessed.'); });
+      query('#settings-button').addEventListener('click', () => query('#settings-dialog').showModal());
+      query('#close-dialog').addEventListener('click', () => query('#settings-dialog').close());
+      query('#speed-slider').addEventListener('input', event => setSpeed(event.target.value));
+      query('#motion-toggle').checked = media.matches;
+      query('#motion-toggle').addEventListener('change', () => { if (query('#motion-toggle').checked) fixedMeter(.5); updateMeter(); });
+      media.addEventListener('change', event => { query('#motion-toggle').checked = event.matches; if (event.matches) fixedMeter(.5); updateMeter(); });
+      document.addEventListener('visibilitychange', updateMeter);
+      query('#voice-select').addEventListener('change', event => announce(`${event.target.value} selected for this study. No voice model is connected.`));
+      query('#history-toggle').addEventListener('change', event => announce(event.target.checked ? 'Sample: save future readings locally.' : 'Sample: stop saving new readings. Existing history would remain until cleared.'));
+      query('#ready-toggle').addEventListener('change', event => announce(event.target.checked ? 'Sample: keep the model loaded for faster startup.' : 'Sample: release the model while idle; the next reading may start later.'));
+      query('#update-toggle').addEventListener('change', event => announce(`Sample automatic update checks ${event.target.checked ? 'enabled' : 'disabled'}. No network request was made.`));
+      setState('reading');
+    })();
+  </script>
+</body>
+</html>

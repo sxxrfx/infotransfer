@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InfoTransfer — Handy styling study</title>
+  <style>
+    :root {
+      --foreground: #27272a; --muted: #737373; --card: #fff; --secondary: #f0f0f0;
+      --border: #dedede; --primary: #c17c9f; --ring: #d58aae; --radius: 14px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --handy-bg: #2c2b29; --handy-control: #363533; --handy-line: #44433f;
+      --handy-text: #f3f2f1; --handy-muted: #aaa8a5; --handy-pink: #c17c9f;
+      --handy-bright: #ee88bb; --handy-active: #45373e;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.5 var(--font-sans); color: var(--foreground); -webkit-font-smoothing: antialiased; }
+    main { display: grid; gap: 22px; min-width: 0; }
+    main > * { min-width: 0; }
+    h1,h2,h3,p { margin: 0; }
+    button,input,select { font: inherit; }
+    button { cursor: pointer; color: inherit; }
+    button:disabled { opacity: .45; cursor: default; }
+    button:focus-visible,input:focus-visible,select:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    .note,.feedback { font-size: 12px; color: var(--muted); }
+    fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+    legend { font-size: 13px; font-weight: 600; margin-bottom: 9px; padding: 0; }
+    .reference-tabs,.preview-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .reference-tabs button,.preview-controls label { border: 1px solid var(--border); background: none; color: var(--foreground); padding: 5px 10px; border-radius: 7px; font-size: 12px; }
+    .reference-tabs button[aria-pressed="true"] { border-color: var(--primary); color: var(--primary); }
+    .reference-image { width: 100%; height: auto; display: block; }
+    .reference-caption { margin-top: 8px; }
+    .window { color-scheme: dark; background: var(--handy-bg); color: var(--handy-text); border: 1px solid var(--handy-line); border-radius: var(--radius); overflow: hidden; }
+    .titlebar { height: 34px; display: flex; align-items: center; gap: 6px; padding: 0 13px; border-bottom: 1px solid var(--handy-line); }
+    .titlebar i { width: 9px; height: 9px; border-radius: 50%; background: var(--handy-control); border: 1px solid var(--handy-muted); }
+    .titlebar h1 { font-size: 12px; font-weight: 600; color: var(--handy-muted); margin-left: 10px; }
+    .app-layout { display: grid; grid-template-columns: 148px minmax(0,1fr); min-height: 392px; }
+    .sidebar { border-right: 1px solid var(--handy-line); padding: 15px 8px; display: flex; flex-direction: column; gap: 6px; }
+    .brand { color: var(--handy-bright); font-size: 19px; font-weight: 780; letter-spacing: -.8px; padding: 0 7px 17px; margin-bottom: 3px; border-bottom: 1px solid var(--handy-line); }
+    .sidebar button { display: flex; align-items: center; gap: 9px; padding: 10px 9px; text-align: left; border: 0; border-radius: 8px; background: transparent; font-size: 13px; color: var(--handy-text); }
+    .sidebar button[aria-pressed="true"] { background: var(--handy-pink); color: var(--handy-text); }
+    .sidebar svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+    .panel { min-width: 0; padding: 19px 17px; }
+    .panel h2 { font-size: 19px; font-weight: 600; margin-bottom: 14px; }
+    .panel .group-title { font-size: 11px; color: var(--handy-muted); font-weight: 500; margin: 0 12px 8px; }
+    .settings-group { border: 1px solid var(--handy-line); border-radius: 9px; margin-bottom: 22px; overflow: hidden; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 47px; padding: 9px 13px; border-bottom: 1px solid var(--handy-line); font-size: 13px; }
+    .row:last-child { border-bottom: 0; }
+    .row > label,.row > span { min-width: 0; }
+    .row select,.record { background: var(--handy-control); color: var(--handy-text); border: 1px solid var(--handy-muted); border-radius: 6px; padding: 4px 9px; font-size: 12px; max-width: 170px; }
+    .record { min-width: 94px; text-align: center; }
+    .record[data-recording="true"] { border-color: var(--handy-bright); color: var(--handy-bright); }
+    .speed-setting { display: flex; align-items: center; gap: 9px; }
+    input[type="range"] { width: 93px; accent-color: var(--handy-pink); }
+    output { min-width: 35px; text-align: right; font-variant-numeric: tabular-nums; font-size: 12px; }
+    .switch { position: relative; flex: none; }
+    .switch input { position: absolute; inset: 0; margin: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 1; }
+    .switch span { display: block; width: 34px; height: 21px; border-radius: 20px; background: var(--handy-line); }
+    .switch span::after { content: ""; display: block; width: 17px; height: 17px; position: relative; top: 2px; left: 2px; border-radius: 50%; background: var(--handy-text); }
+    .switch input:checked + span { background: var(--handy-bright); }
+    .switch input:checked + span::after { left: 15px; }
+    .switch input:focus-visible + span { outline: 3px solid var(--ring); outline-offset: 3px; }
+    .app-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--handy-line); padding: 9px 13px; font-size: 11px; color: var(--handy-muted); }
+    .app-footer button { display: flex; align-items: center; gap: 7px; background: none; color: inherit; border: 0; padding: 0; font-size: inherit; }
+    .status-dot { width: 6px; height: 6px; background: var(--handy-bright); border-radius: 50%; display: inline-block; }
+    .voice-card { border: 1px solid var(--handy-line); border-radius: 10px; padding: 13px; margin-bottom: 10px; }
+    .voice-card.selected { background: var(--handy-active); border-color: var(--handy-pink); box-shadow: inset 0 0 0 1px var(--handy-pink); }
+    .voice-heading,.voice-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .voice-heading h3 { font-size: 14px; font-weight: 600; }
+    .voice-heading span { color: var(--handy-muted); font-size: 11px; }
+    .voice-actions { border-top: 1px solid var(--handy-line); padding-top: 10px; margin-top: 10px; }
+    .voice-actions button,.text-action { color: var(--handy-bright); background: none; border: 0; font-size: 12px; padding: 0; }
+    .voice-actions button[aria-pressed="true"] { background: var(--handy-bright); color: var(--handy-text); border-radius: 20px; padding: 2px 9px; }
+    .history-controls { margin-bottom: 16px; }
+    .history-empty { color: var(--handy-muted); font-size: 13px; padding: 20px 0; }
+    .history-list { display: grid; gap: 10px; }
+    .history-entry { border: 1px solid var(--handy-line); border-radius: 8px; padding: 12px; }
+    .history-entry p { font-size: 13px; margin-bottom: 10px; }
+    .history-entry footer { display: flex; justify-content: space-between; gap: 10px; color: var(--handy-muted); font-size: 11px; }
+    .history-entry footer div { display: flex; gap: 12px; }
+    .retention { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 11px; color: var(--handy-muted); margin-bottom: 12px; }
+    .panel .help { color: var(--handy-muted); font-size: 11px; margin-top: -10px; margin-bottom: 14px; }
+    .about-row { margin-bottom: 16px; color: var(--handy-muted); font-size: 13px; }
+    .preview-controls { margin-bottom: 0; }
+    .preview-controls label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+    .preview-controls input { margin: 0; accent-color: var(--primary); }
+    .player-stage { min-height: 115px; border-radius: var(--radius); padding: 22px 12px; background: var(--secondary); display: grid; place-items: center; }
+    .player { width: 310px; max-width: 100%; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 7px 11px; border: 1px solid var(--handy-line); border-radius: 26px; color: var(--handy-text); background: var(--handy-bg); box-shadow: 0 5px 16px color-mix(in srgb,var(--foreground) 18%,transparent); }
+    .meter { width: 43px; height: 23px; display: flex; gap: 3px; align-items: center; flex: none; color: var(--handy-bright); }
+    .meter i { width: 3px; height: 20px; border-radius: 2px; background: currentColor; transform: scaleY(.3); }
+    .player[data-state="paused"] .meter,.player[data-state="preparing"] .meter { color: var(--handy-muted); }
+    .player-state { min-width: 0; flex: 1; font-size: 11px; white-space: nowrap; }
+    .player button { background: none; color: inherit; border: 0; padding: 0; min-width: 29px; min-height: 30px; display: grid; place-items: center; border-radius: 5px; }
+    .player svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .player .rate { font-size: 11px; min-width: 31px; }
+    .player .recovery { color: var(--handy-bright); font-size: 10px; white-space: nowrap; }
+    .player-idle { font-size: 12px; color: var(--muted); }
+    .feedback { min-height: 18px; }
+    dialog { color-scheme: dark; color: var(--handy-text); background: var(--handy-bg); border: 1px solid var(--handy-line); border-radius: 12px; padding: 22px; max-width: calc(100% - 24px); }
+    dialog::backdrop { background: #0005; }
+    dialog h2 { font-size: 17px; margin-bottom: 20px; }
+    dialog form { display: flex; justify-content: flex-end; gap: 12px; }
+    dialog button { padding: 6px 12px; border: 1px solid var(--handy-line); border-radius: 6px; background: var(--handy-control); color: var(--handy-text); }
+    dialog #confirm-clear { background: var(--handy-pink); }
+    @media (hover:hover) and (pointer:fine) { .sidebar button:not([aria-pressed="true"]):hover { background: var(--handy-control); } .text-action:hover,.voice-actions button:hover { text-decoration: underline; } .player button:hover { background: var(--handy-control); } }
+    @media (max-width:560px) { .app-layout { grid-template-columns: minmax(0,1fr); } .sidebar { flex-direction: row; flex-wrap: wrap; gap: 4px; border-right: 0; border-bottom: 1px solid var(--handy-line); padding: 8px; } .brand { display: none; } .sidebar button { padding: 7px; gap: 5px; font-size: 11px; } .sidebar svg { width: 15px; height: 15px; } .panel { padding: 16px 12px; } .row { font-size: 12px; padding: 9px 11px; } .row select { max-width: 141px; } .app-footer { padding: 9px 10px; font-size: 10px; } .record { min-width: 85px; } .player { gap: 5px; padding: 7px 8px; } }
+  </style>
+</head>
+<body>
+<main>
+  <fieldset>
+    <legend>Handy — captured screens</legend>
+    <div class="reference-tabs" aria-label="Handy reference screenshots">
+      <button aria-pressed="true" data-reference="general">General</button>
+      <button aria-pressed="false" data-reference="models">Models</button>
+      <button aria-pressed="false" data-reference="advanced">Advanced</button>
+    </div>
+    <img class="reference-image" data-screen="general" src="../assets/references/handy-general.png" width="1360" height="1140" alt="Screenshot of Handy 0.9.8 General settings, with charcoal surfaces, pink selected sidebar item and grouped shortcut and sound settings.">
+    <img class="reference-image" data-screen="models" src="../assets/references/handy-models.png" width="1360" height="1140" alt="Screenshot of Handy 0.9.8 Models screen, showing the active model card and available downloads." hidden>
+    <img class="reference-image" data-screen="advanced" src="../assets/references/handy-advanced.png" width="1360" height="1140" alt="Screenshot of Handy 0.9.8 Advanced settings, showing grouped app and overlay controls." hidden>
+    <p class="note reference-caption">Captured from the installed Handy 0.9.8 app. Prototype below uses sample data; no speech, permissions, downloads or updates are connected.</p>
+  </fieldset>
+
+  <section class="window" aria-label="InfoTransfer settings prototype">
+    <header class="titlebar"><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i><h1>InfoTransfer</h1></header>
+    <div class="app-layout">
+      <nav class="sidebar" aria-label="Settings">
+        <p class="brand">InfoTransfer</p>
+        <button data-page="general" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h7m4 0h5M4 17h3m4 0h9M11 4v6M7 14v6"/></svg>General</button>
+        <button data-page="history" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2 7M3 4v7h7M12 7v6l4 2"/></svg>History</button>
+        <button data-page="voices" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m11 5-5 4H3v6h3l5 4zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Voices</button>
+        <button data-page="advanced" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg>Advanced</button>
+        <button data-page="about" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></svg>About</button>
+      </nav>
+      <section class="panel" id="general-panel" aria-label="General settings">
+        <h2 class="group-title">Shortcuts</h2>
+        <div class="settings-group">
+          <div class="row"><span>Read selection</span><button class="record" data-binding="read" aria-label="Set read selection shortcut">Set shortcut</button></div>
+          <div class="row"><span>Select while holding</span><button class="record" data-binding="hold" aria-label="Set selection-hold chord">Set chord</button></div>
+          <div class="row"><span>Pause / resume</span><button class="record" data-binding="pause" aria-label="Set pause or resume shortcut">Set shortcut</button></div>
+          <div class="row"><span>Stop</span><button class="record" data-binding="stop" aria-label="Set stop shortcut">Set shortcut</button></div>
+        </div>
+        <p class="help" id="record-help" hidden>Press the keys you want to use. Esc cancels.</p>
+        <h2 class="group-title">Playback</h2>
+        <div class="settings-group">
+          <div class="row"><label for="voice">Voice</label><select id="voice"><option>Maple</option><option>Sol</option><option>Vale</option></select></div>
+          <div class="row"><label for="speed">Speed</label><div class="speed-setting"><input id="speed" type="range" min="0.75" max="2" step="0.05" value="1"><output id="speed-value" for="speed">1×</output></div></div>
+          <div class="row"><span>Output</span><span>System default</span></div>
+        </div>
+      </section>
+      <section class="panel" id="history-panel" aria-label="History" hidden>
+        <h2>History</h2>
+        <div class="settings-group history-controls"><div class="row"><label for="history-enabled">Save new readings</label><label class="switch"><input type="checkbox" id="history-enabled"><span aria-hidden="true"></span></label></div></div>
+        <div class="retention"><span>100 readings · 30 days</span><button class="text-action" id="clear-history" disabled>Clear history</button></div>
+        <p class="history-empty" id="history-empty">No saved readings</p>
+        <div class="history-list" id="history-list"></div>
+      </section>
+      <section class="panel" id="voices-panel" aria-label="Voices" hidden>
+        <h2>Voices</h2>
+        <article class="voice-card selected" data-voice="Maple"><div class="voice-heading"><h3>Maple</h3><span>English</span></div><div class="voice-actions"><button data-preview="Maple">▶ Preview</button><button data-use="Maple" aria-pressed="true">Selected</button></div></article>
+        <article class="voice-card" data-voice="Sol"><div class="voice-heading"><h3>Sol</h3><span>English</span></div><div class="voice-actions"><button data-preview="Sol">▶ Preview</button><button data-use="Sol" aria-pressed="false">Use voice</button></div></article>
+        <article class="voice-card" data-voice="Vale"><div class="voice-heading"><h3>Vale</h3><span>English</span></div><div class="voice-actions"><button data-preview="Vale">▶ Preview</button><button data-use="Vale" aria-pressed="false">Use voice</button></div></article>
+      </section>
+      <section class="panel" id="advanced-panel" aria-label="Advanced settings" hidden>
+        <h2 class="group-title">App</h2>
+        <div class="settings-group">
+          <div class="row"><label for="login">Open at login</label><label class="switch"><input type="checkbox" id="login"><span aria-hidden="true"></span></label></div>
+          <div class="row"><label for="ready">Keep speech ready</label><label class="switch"><input type="checkbox" id="ready" checked><span aria-hidden="true"></span></label></div>
+          <div class="row"><label for="updates">Check for updates</label><label class="switch"><input type="checkbox" id="updates" checked><span aria-hidden="true"></span></label></div>
+        </div>
+        <p class="help">Keeping speech ready uses memory while idle.</p>
+        <h2 class="group-title">Playback</h2>
+        <div class="settings-group"><div class="row"><span>Player position</span><span>Bottom center</span></div><div class="row"><span>Audio-device changes</span><span>Continue reading</span></div></div>
+      </section>
+      <section class="panel" id="about-panel" aria-label="About" hidden>
+        <h2>InfoTransfer</h2><p class="about-row">Apache-2.0</p><button class="text-action" id="notices">Third-party notices</button>
+      </section>
+    </div>
+    <footer class="app-footer"><button id="footer-voice"><span class="status-dot"></span><span id="footer-voice-name">Maple</span><span aria-hidden="true">⌄</span></button><button id="check-updates">Check for updates</button></footer>
+  </section>
+
+  <fieldset>
+    <legend>Compact player</legend>
+    <div class="preview-controls">
+      <label><input type="radio" name="player-state" value="preparing">Preparing</label><label><input type="radio" name="player-state" value="reading" checked>Reading</label><label><input type="radio" name="player-state" value="paused">Paused</label><label><input type="radio" name="player-state" value="error">Error</label><label><input type="radio" name="player-state" value="idle">Idle</label>
+      <label><input type="checkbox" id="reduced">Reduced motion</label>
+    </div>
+  </fieldset>
+  <div class="player-stage">
+    <section class="player" data-state="reading" aria-label="Speech playback">
+      <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="player-state" id="player-state" role="status">Reading</p>
+      <button id="pause" aria-label="Pause reading"><svg id="pause-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5v14M15 5v14" stroke-width="3"/></svg><svg id="play-symbol" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="m8 5 11 7-11 7z" fill="currentColor" stroke="none"/></svg></button>
+      <button id="stop" aria-label="Stop reading"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1" fill="currentColor" stroke="none"/></svg></button>
+      <button class="rate" id="rate" aria-label="Change speed, currently 1 times">1×</button>
+      <button class="recovery" id="clipboard" hidden>Read clipboard</button>
+      <button id="open-settings" aria-label="Open settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg></button>
+    </section>
+    <p class="player-idle" hidden>Player hidden</p>
+  </div>
+  <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+</main>
+<dialog id="clear-dialog" aria-labelledby="clear-title"><h2 id="clear-title">Clear saved history?</h2><form method="dialog"><button value="cancel">Cancel</button><button id="confirm-clear" value="clear">Clear history</button></form></dialog>
+<script>
+(() => {
+  const q = selector => document.querySelector(selector);
+  const all = selector => [...document.querySelectorAll(selector)];
+  all('[data-reference]').forEach(button => button.addEventListener('click', () => { all('[data-reference]').forEach(other => other.setAttribute('aria-pressed',String(other===button))); all('.reference-image').forEach(image=>image.hidden=image.dataset.screen!==button.dataset.reference); }));
+  const state = {voice:'Maple', speed:1, player:'reading', history:[], binding:null, holdCandidate:null, bindings:{}};
+  const bars = all('.meter i');
+  let frame = null, lastPaint = 0;
+  const media = matchMedia('(prefers-reduced-motion: reduce)');
+  q('#reduced').checked = media.matches;
+  function announce(message) { q('#feedback').textContent=message; }
+  function cancelBinding() { if(state.binding){ const button=q('[data-binding="'+state.binding+'"]'); button.dataset.recording='false'; button.textContent=state.bindings[state.binding]||(state.binding==='hold'?'Set chord':'Set shortcut'); state.binding=null; state.holdCandidate=null; q('#record-help').hidden=true; } }
+  function page(name) { cancelBinding(); all('[data-page]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.page===name))); all('.panel').forEach(panel=>panel.hidden=panel.id!==name+'-panel'); }
+  all('[data-page]').forEach(button=>button.addEventListener('click',()=>page(button.dataset.page)));
+  function voice(name) { state.voice=name; q('#voice').value=name; q('#footer-voice-name').textContent=name; all('[data-voice]').forEach(card=>card.classList.toggle('selected',card.dataset.voice===name)); all('[data-use]').forEach(button=>{const selected=button.dataset.use===name;button.setAttribute('aria-pressed',String(selected));button.textContent=selected?'Selected':'Use voice';}); }
+  q('#voice').addEventListener('change',event=>voice(event.target.value));
+  all('[data-use]').forEach(button=>button.addEventListener('click',()=>voice(button.dataset.use)));
+  all('[data-preview]').forEach(button=>button.addEventListener('click',()=>announce('Sample preview for '+button.dataset.preview+'. Audio is not connected.')));
+  q('#footer-voice').addEventListener('click',()=>page('voices'));
+  function speed(value) { state.speed=Number(value);const label=Number(state.speed.toFixed(2))+'×';q('#speed').value=String(state.speed);q('#speed-value').textContent=label;q('#rate').textContent=label;q('#rate').setAttribute('aria-label','Change speed, currently '+state.speed+' times'); }
+  q('#speed').addEventListener('input',event=>speed(event.target.value));
+  q('#rate').addEventListener('click',()=>{const rates=[1,1.25,1.5,1.75,2,.75];speed(rates[(rates.indexOf(state.speed)+1)%rates.length]);});
+  function renderHistory() { const container=q('#history-list');container.replaceChildren();q('#history-empty').hidden=state.history.length>0;q('#clear-history').disabled=state.history.length===0;state.history.forEach(entry=>{const article=document.createElement('article');article.className='history-entry';const text=document.createElement('p');text.textContent=entry.text;const footer=document.createElement('footer');const meta=document.createElement('span');meta.textContent=entry.voice+' · '+entry.speed+'×';const actions=document.createElement('div');const replay=document.createElement('button');replay.className='text-action';replay.textContent='Read again';replay.addEventListener('click',()=>{voice(entry.voice);speed(entry.speed);player('reading',false);announce('Replaying the sample reading.');});const remove=document.createElement('button');remove.className='text-action';remove.textContent='Delete';remove.addEventListener('click',()=>{state.history=state.history.filter(other=>other!==entry);renderHistory();});actions.append(replay,remove);footer.append(meta,actions);article.append(text,footer);container.append(article);}); }
+  q('#history-enabled').addEventListener('change',event=>announce(event.target.checked?'Saving enabled for future sample readings.':'Saving stopped. Existing readings remain until deleted.'));
+  q('#clear-history').addEventListener('click',()=>q('#clear-dialog').showModal());
+  q('#confirm-clear').addEventListener('click',()=>{state.history=[];renderHistory();announce('Sample history cleared.');});
+  function paint(time) { if(state.player!=='reading'||q('#reduced').checked||document.hidden){frame=null;return;}if(time-lastPaint>=33){bars.forEach((bar,index)=>bar.style.transform='scaleY('+(.16+Math.abs(Math.sin(time/330+index*.7)*Math.cos(time/890-index*.4))*.84)+')');lastPaint=time;}frame=requestAnimationFrame(paint); }
+  function meter() { if(frame!==null)cancelAnimationFrame(frame);frame=null;if(state.player==='paused')return;bars.forEach(bar=>bar.style.transform='scaleY('+(state.player==='reading'?.45:.12)+')');if(state.player==='reading'&&!q('#reduced').checked&&!document.hidden)frame=requestAnimationFrame(paint); }
+  function player(next,save=true) { const previous=state.player;state.player=next;const element=q('.player');element.dataset.state=next;element.hidden=next==='idle';q('.player-idle').hidden=next!=='idle';q('#player-state').textContent=({reading:'Reading',preparing:'Preparing…',paused:'Paused',error:'No selection',idle:'Stopped'})[next];q('#pause').disabled=next==='preparing';q('#pause').hidden=next==='error';q('#rate').hidden=next==='error';q('#clipboard').hidden=next!=='error';q('#pause').setAttribute('aria-label',next==='paused'?'Resume reading':'Pause reading');q('#pause-symbol').toggleAttribute('hidden',next==='paused');q('#play-symbol').toggleAttribute('hidden',next!=='paused');all('input[name="player-state"]').forEach(input=>input.checked=input.value===next);if(save&&next==='reading'&&previous!=='paused'&&q('#history-enabled').checked){state.history.unshift({text:'Reading at your own pace can make a long paragraph easier to follow.',voice:state.voice,speed:state.speed});state.history=state.history.slice(0,100);renderHistory();}meter(); }
+  all('input[name="player-state"]').forEach(input=>input.addEventListener('change',()=>player(input.value)));
+  q('#pause').addEventListener('click',()=>player(state.player==='paused'?'reading':'paused',false));
+  q('#stop').addEventListener('click',()=>player('idle'));
+  q('#clipboard').addEventListener('click',()=>{player('reading');announce('Sample reading only. The clipboard was not accessed.');});
+  q('#open-settings').addEventListener('click',()=>{page('general');q('.window').scrollIntoView({behavior:'auto',block:'start'});q('[data-page="general"]').focus({preventScroll:true});});
+  q('#reduced').addEventListener('change',()=>{if(q('#reduced').checked)bars.forEach(bar=>bar.style.transform='scaleY(.45)');meter();});
+  media.addEventListener('change',event=>{q('#reduced').checked=event.matches;meter();});document.addEventListener('visibilitychange',meter);
+  all('[data-binding]').forEach(button=>button.addEventListener('click',()=>{cancelBinding();state.binding=button.dataset.binding;button.dataset.recording='true';button.textContent='Press keys…';q('#record-help').hidden=false;}));
+  document.addEventListener('keydown',event=>{if(!state.binding)return;event.preventDefault();if(event.key==='Escape'){cancelBinding();return;}const modifiers=[event.ctrlKey?'⌃':'',event.altKey?'⌥':'',event.shiftKey?'⇧':'',event.metaKey?'⌘':''].filter(Boolean);const modifierOnly=['Control','Alt','Shift','Meta'].includes(event.key);if(state.binding==='hold'){if(modifierOnly&&modifiers.length>=2){state.holdCandidate=modifiers.join(' ');q('[data-binding="hold"]').textContent=state.holdCandidate;}return;}if(modifierOnly||modifiers.length===0)return;const label=modifiers.join(' ')+' '+(event.code==='Space'?'Space':event.key.toUpperCase());state.bindings[state.binding]=label;cancelBinding();announce('Example binding recorded: '+label+'. No global shortcut was registered.');});
+  document.addEventListener('keyup',event=>{if(state.binding!=='hold'||event.ctrlKey||event.altKey||event.shiftKey||event.metaKey||!state.holdCandidate)return;state.bindings.hold=state.holdCandidate;const label=state.holdCandidate;cancelBinding();announce('Example hold chord recorded: '+label+'. No global input monitoring was enabled.');});
+  q('#check-updates').addEventListener('click',()=>announce('Sample update check. No network request was made.'));
+  q('#notices').addEventListener('click',()=>announce('The final app will include the exact dependency, model and voice notices.'));
+  ['login','ready','updates'].forEach(id=>q('#'+id).addEventListener('change',()=>announce('Sample preference changed. It is not saved to this Mac.')));
+  renderHistory();player('reading',false);
+})();
+</script>
+</body>
+</html>

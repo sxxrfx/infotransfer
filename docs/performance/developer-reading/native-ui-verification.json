@@ -1,0 +1,65 @@
+{
+  "main_bundle_cdhash": "c6e4a675bcbf1a0e175f82b62f1ea8dca50c4855",
+  "permission_changes": false,
+  "preview": {
+    "bundle": "/Users/sxxrfx/.t3/projects/infotransfer/.cache/ui-preview/InfoTransfer.app",
+    "bytes": 65625874,
+    "signer": "-",
+    "requirement": "cdhash H\"8239b7e7a085eb126e04ac74c8c77d76dd592146\"",
+    "signing": "ad-hoc UI preview only",
+    "build_number": "1",
+    "notarized": false
+  },
+  "library_tests": {
+    "passed": 36,
+    "failed": 0
+  },
+  "strict_clippy": "passed, all targets with visual-test",
+  "dictionary_ui": {
+    "build_cdhash": "8e01945f3fe35f99f44e5b57806a68d97ee0981b",
+    "duplicate_error": "A replacement for this word already exists",
+    "add_match_case_true": "passed",
+    "edit_match_case_false": "passed",
+    "restart_persistence": "passed",
+    "preview_action": "invoked without a visible error; not an acoustic listening judgment",
+    "remove_disposable_entry": "passed; zz_tts_test absent from saved preferences"
+  },
+  "selection_activation": "not retested: the new preview reports Accessibility Not allowed; permission work remains paused",
+  "ui_source_sha256": {
+    "native/macos.m": "1623135bfb87505a54c467db12febbf5251c1a143761b7bd706266e0d24b01d2",
+    "src/ui/dictionary_view.rs": "781af1bef4d8e9953dd9a9e895ba09e8507fdbfaf2f92d2e01f5ca8482315cd7",
+    "src/native.rs": "bbc0e57590669fdb5252d850aff1d0767942925ecb6c1c77aa4b892dc40e08c9"
+  },
+  "retired_previews": [
+    {
+      "original": ".cache/ui-preview-developer-reading",
+      "archive": ".cache/retired-previews/ui-preview-developer-reading.zip",
+      "binary_sha256": "4710beeb350d2bae5e90d3c64a98d513182396b25d596fd6f1a2a4e31c42bc81",
+      "archive_sha256": "1f85c0d2758f4b50c7c9dc65f7903783481981658124ecdb90a5db7a0f345704"
+    },
+    {
+      "original": ".cache/ui-preview-developer-reading-v2",
+      "archive": ".cache/retired-previews/ui-preview-developer-reading-v2.zip",
+      "binary_sha256": "bbd876aa766e95d1800c5ae5a59d816a0686284206555e3401855c30fd2ac493",
+      "archive_sha256": "af4fdb157af5c8160b82b6df26ed75e2ad9fd45eeb0c09ae3622c2a62b1d27ec"
+    },
+    {
+      "original": ".cache/ui-preview-editor-qa",
+      "archive": ".cache/retired-previews/ui-preview-editor-qa.zip",
+      "binary_sha256": "ab0842c207598268c9373769b01fe4e1404c7914f78370be50487e5929b2fb3d",
+      "archive_sha256": "a449aa2e805f222550807b7b3c4414f81e5d0345039c5088403cb9dc645c0699"
+    },
+    {
+      "original": ".cache/ui-preview-fn",
+      "archive": ".cache/retired-previews/ui-preview-fn.zip",
+      "binary_sha256": "122aaa5f2b978bfa5f0b3bc6730e55eda434cd80b8d99b0022d4975d6630ae1f",
+      "archive_sha256": "3ee6f1f73dfce7ebce0d5d138c656969c49256daf3055ba0ce7623cec5f49121"
+    },
+    {
+      "original": ".cache/ui-preview-settings",
+      "archive": ".cache/retired-previews/ui-preview-settings.zip",
+      "binary_sha256": "b24ecd467a43823cad4e4437daacefb54b3b4730593f74b4be439cbfb61cbb0c",
+      "archive_sha256": "763602915062387ebf86495ce285f6d97fcd432d9be6cec840b993d23c50d702"
+    }
+  ]
+}

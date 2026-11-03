@@ -1,0 +1,34 @@
+{
+  "package": "lucide-static",
+  "version": "0.542.0",
+  "tarball": "https://registry.npmjs.org/lucide-static/-/lucide-static-0.542.0.tgz",
+  "integrity": "sha512-jnXxFQYH0F24Nj5Zjje5jmMbGjClohnuSEYwTjAGuAa7UYDQiUjl0H7t4Ha19lkKryhCQA3VfeAJMjarrhzNZQ==",
+  "icons": [
+    "sliders-horizontal",
+    "audio-lines",
+    "cog",
+    "info",
+    "play",
+    "pause",
+    "square",
+    "settings",
+    "x",
+    "check",
+    "plus",
+    "minus",
+    "chevron-down",
+    "keyboard",
+    "clipboard",
+    "download",
+    "history",
+    "cpu",
+    "search"
+  ],
+  "handy_general": {
+    "source": "https://github.com/cjpais/Handy/blob/v0.9.8/src/components/icons/HandyHand.tsx",
+    "revision": "14f6f0d31cb22a4268acfbddba3052820fd0a06e",
+    "license": "MIT",
+    "modification": "JSX converted to SVG; currentColor fill/stroke retained",
+    "sha256": "f7ee425987703c4b7344072e6b37fff2f11e931d01f0ff5d02d82131d75b98d6"
+  }
+}
