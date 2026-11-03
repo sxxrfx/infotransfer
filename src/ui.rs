@@ -24,6 +24,7 @@ use infotransfer::{
     native,
     reader::{Origin, Phase, Reader},
     settings::{Settings, SettingsWriter},
+    update::{self, Release},
     voices::{self, VOICES, VoiceFilter, VoiceSort},
 };
 use player::Player;
@@ -179,6 +180,30 @@ enum UiEvent {
         total: u64,
     },
     DownloadFinished(Result<(), String>),
+    UpdateDue,
+    UpdateChecked {
+        result: Result<Option<Release>, String>,
+        manual: bool,
+    },
+    UpdateProgress {
+        done: u64,
+        total: u64,
+    },
+    UpdateInstalled(Result<(), String>),
+}
+#[derive(Clone, Default)]
+enum UpdateState {
+    #[default]
+    Idle,
+    Checking,
+    Current,
+    Available(Release),
+    Downloading {
+        version: String,
+        done: u64,
+        total: u64,
+    },
+    Failed(String),
 }
 struct CaptureWorker {
     pending: Arc<Mutex<Option<CapturePlan>>>,
@@ -248,6 +273,9 @@ struct Desktop {
     last_phase: Phase,
     last_ready: bool,
     last_notice: Option<String>,
+    update: UpdateState,
+    update_announced: Option<String>,
+    last_update_check: Option<std::time::Instant>,
 }
 struct DownloadProgress {
     model: SpeechModel,
@@ -350,7 +378,23 @@ impl Desktop {
             last_phase: Phase::Idle,
             last_ready: false,
             last_notice: None,
+            update: UpdateState::Idle,
+            update_announced: None,
+            last_update_check: None,
         };
+        if update::running_bundle().is_some() {
+            // Development builds never update themselves; installed builds look daily.
+            let events = result.events.clone();
+            std::thread::Builder::new()
+                .name("update-schedule".into())
+                .spawn(move || {
+                    std::thread::sleep(std::time::Duration::from_secs(15));
+                    while events.try_send(UiEvent::UpdateDue).is_ok() {
+                        std::thread::sleep(std::time::Duration::from_secs(60 * 60));
+                    }
+                })
+                .expect("start update schedule");
+        }
         if !native::configure_activation(result.settings.activation_key) && native::ax_trusted() {
             result.reader.notice(
                 "Keyboard monitoring is unavailable. Relaunch InfoTransfer to try again.".into(),
@@ -641,7 +685,106 @@ impl Desktop {
                 }
                 cx.notify();
             }
+            UiEvent::UpdateDue => {
+                let day = std::time::Duration::from_secs(24 * 60 * 60);
+                if self.settings.check_updates
+                    && self.last_update_check.is_none_or(|time| time.elapsed() >= day)
+                {
+                    self.check_for_update(false, cx);
+                }
+            }
+            UiEvent::UpdateChecked { result, manual } => {
+                self.update = match result {
+                    Ok(Some(release)) => {
+                        if !manual && self.update_announced.as_ref() != Some(&release.version) {
+                            self.reader.notice(format!(
+                                "InfoTransfer {} is available. Install it in Settings → About.",
+                                release.version
+                            ));
+                            self.update_announced = Some(release.version.clone());
+                        }
+                        UpdateState::Available(release)
+                    }
+                    Ok(None) => UpdateState::Current,
+                    // A background check fails quietly, for example while offline.
+                    Err(error) if manual => UpdateState::Failed(error),
+                    Err(_) => UpdateState::Idle,
+                };
+                cx.notify();
+            }
+            UiEvent::UpdateProgress { done, total } => {
+                if let UpdateState::Downloading {
+                    done: current,
+                    total: size,
+                    ..
+                } = &mut self.update
+                {
+                    (*current, *size) = (done, total);
+                }
+                cx.notify();
+            }
+            UiEvent::UpdateInstalled(result) => match result {
+                Ok(()) => {
+                    self.cancel_capture();
+                    self.reader.shutdown();
+                    cx.quit();
+                }
+                Err(error) => {
+                    self.update = UpdateState::Failed(error);
+                    cx.notify();
+                }
+            },
         }
+    }
+    fn check_for_update(&mut self, manual: bool, cx: &mut Context<Self>) {
+        if matches!(
+            self.update,
+            UpdateState::Checking | UpdateState::Downloading { .. }
+        ) {
+            return;
+        }
+        self.update = UpdateState::Checking;
+        self.last_update_check = Some(std::time::Instant::now());
+        let events = self.events.clone();
+        std::thread::Builder::new()
+            .name("update-check".into())
+            .spawn(move || {
+                let result = update::check().map_err(|error| error.to_string());
+                let _ = events.try_send(UiEvent::UpdateChecked { result, manual });
+            })
+            .expect("start update check");
+        cx.notify();
+    }
+    /// Downloads, verifies and installs the available update, then relaunches.
+    fn install_update(&mut self, cx: &mut Context<Self>) {
+        let UpdateState::Available(release) = self.update.clone() else {
+            return;
+        };
+        let Some(bundle) = update::running_bundle() else {
+            return;
+        };
+        self.update = UpdateState::Downloading {
+            version: release.version.clone(),
+            done: 0,
+            total: release.size,
+        };
+        let events = self.events.clone();
+        std::thread::Builder::new()
+            .name("update-install".into())
+            .spawn(move || {
+                let directory = assets::data_dir().join("updates");
+                let result = update::download(&release, &directory, |done, total| {
+                    let _ = events.try_send(UiEvent::UpdateProgress { done, total });
+                    true
+                })
+                .and_then(|archive| update::install(&archive, &release, &bundle))
+                .and_then(|()| update::relaunch_after_exit(&bundle))
+                .map_err(|error| error.to_string());
+                let _ = std::fs::remove_dir_all(&directory);
+                let _ = events.try_send(UiEvent::UpdateInstalled(result));
+            })
+            .expect("start update install");
+        cx.notify();
     }
     fn download(&mut self, cx: &mut Context<Self>) {
         self.download_voice(self.settings.speech.voice, cx);

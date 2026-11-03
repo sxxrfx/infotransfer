@@ -15,4 +15,5 @@ pub mod sound;
 pub mod speech;
 pub mod spoken;
 pub mod text;
+pub mod update;
 pub mod voices;

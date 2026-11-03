@@ -113,3 +113,23 @@ Listening through the app revealed frontend mismatches with Misaki, which produc
 - The eSpeak fallback follows Misaki's conversion table per dialect, and the helper takes a dialect byte per request (`en-us`, or `en` for British). The helper was rebuilt with `scripts/prepare_pronunciation.py`, which regenerated its provenance and corresponding source.
 
 On the test passage the app's phones now match Misaki exactly in both dialects, including suffix-built words and eSpeak-fallback names. Without EQ, the app's audio has the reference's length and 0.94 waveform correlation with it (it was about 0 before, with 125 ms of drift). The user then heard no wobble and preferred the cleanup EQ on Paradee Heart.
+
+## 2026-11-03: automatic updates
+
+Installed builds check `releases/latest/download/latest.json` 15 seconds after launch and then at most once a day, unless **Check for updates automatically** is off in Settings → About. Development builds, which do not run from an `.app` bundle, never update themselves. A background check fails quietly; a manual check shows the error.
+
+`latest.json` holds the version, notes, zip URL, SHA-256 and size. All of them are signed with an Ed25519 key (`ed25519-dalek`, strict verification); the public key is `resources/update-public-key.txt`. The app accepts a manifest only when the signature verifies, the version is a strictly newer `major.minor.patch`, and the URL is one of this project's release downloads. Installing then:
+
+1. downloads to `updates/` in the data folder and checks the exact size and SHA-256;
+2. unpacks with `ditto` next to the running bundle;
+3. requires `codesign --verify --deep --strict`, the running app's own designated requirement (`-R=`), and a matching `CFBundleShortVersionString`;
+4. swaps the bundles atomically with `renamex_np(RENAME_SWAP)`, removes the old copy, and relaunches once the process has exited.
+
+Step 3 means a stolen update key alone cannot install a different program, and a copy built from source (with its own signing identity) never takes prebuilt updates. An ad-hoc signed copy refuses to update. `release.py` builds and uploads `latest.json` with `update-sign`; the private key stays outside the repository.
+
+Local checks on the dry-run 0.2.0 assets:
+- A stand-in 0.1.0 bundle signed with the release identity updated to 0.2.0, with a valid signature and no staging left behind.
+- An ad-hoc re-signed app with a validly signed manifest (the stolen-key case) was refused, and the installed copy was unchanged.
+- A manifest with an altered checksum failed signature verification.
+
+The network path against a published release has not been exercised yet.
