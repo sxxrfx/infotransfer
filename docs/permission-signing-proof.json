@@ -1,0 +1,21 @@
+{
+  "requirement": "identifier \"dev.infotransfer.reader\" and certificate root = H\"b598710157fc1dcd0e5a040196469f3e62fb4a39\"",
+  "updates": [
+    {
+      "fixture": "v1",
+      "file_sha256": "ec1954a3be32962425703d391455efde7e308a2bc9f37f1808ef458b3e736a0e",
+      "matches_same_requirement": false,
+      "code_directory_hash": "CDHash=6cc2c7f27959bfdeefc792efac21bec984f1c7a4"
+    },
+    {
+      "fixture": "v2",
+      "file_sha256": "3436b3d6ddad09a834675ecbba7cffe248dbe481f053f2291f22e05f098a4aa3",
+      "matches_same_requirement": false,
+      "code_directory_hash": "CDHash=91bb529ac3140cfea844d3192b51c0205e3446b7"
+    }
+  ],
+  "old_adhoc_rejected": true,
+  "trust_scope": "No system or TLS root trust added; signer is pinned to this local certificate.",
+  "accessibility_preservation": "Requires final OS grant and a real bundle replacement test.",
+  "verification_status": "Fixture source was recompiled during checking; pending fresh signed fixtures after Keychain approval. Earlier manual signed fixtures had matching certificate-root requirements."
+}

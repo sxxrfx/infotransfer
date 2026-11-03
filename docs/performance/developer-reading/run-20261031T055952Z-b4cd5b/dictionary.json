@@ -1,0 +1,12 @@
+[
+  {
+    "word": "PR",
+    "replacement": "pull request",
+    "match_case": false
+  },
+  {
+    "word": "Codex",
+    "replacement": "coding assistant",
+    "match_case": false
+  }
+]

@@ -1,0 +1,122 @@
+{
+  "detail": "M4, 20 warm reads per voice at 1\u00d7; 180-character sentence policy, 300/650 ms minimum gaps, Natural tone with 5 ms edges. Request to actual CPAL callback. Excludes capture, UI and physical audio; small differences may be noise.",
+  "source": "docs/performance/pacing/startup.jsonl",
+  "binary_sha256": "9af05b7320bc4c285cbedc1945783bba15b17748ac1a31bdef03790ccec99e37",
+  "model_sha256": {
+    "kitten_cpu": "264b48c18257cc172960c9321b233b249e215879b5d295766baeace33f5eb5b1",
+    "kokoro_heart": "75635ea3b85a32d00094dcdd61a258aba87c160f7c264c304a7b3ae9d734195e"
+  },
+  "voices": [
+    {
+      "voice": 0,
+      "startup_p95_ms": 382.838375,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        3.3079971075057983,
+        3.6479559540748596
+      ],
+      "asr_wer": 0.17793594306049823,
+      "quality_samples": 12
+    },
+    {
+      "voice": 1,
+      "startup_p95_ms": 563.901291,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        2.927267372608185,
+        3.213753342628479
+      ],
+      "asr_wer": 0.16725978647686832,
+      "quality_samples": 12
+    },
+    {
+      "voice": 2,
+      "startup_p95_ms": 394.347291,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        3.363628387451172,
+        3.552009165287018
+      ],
+      "asr_wer": 0.18861209964412812,
+      "quality_samples": 12
+    },
+    {
+      "voice": 3,
+      "startup_p95_ms": 468.253375,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        3.17275208234787,
+        3.618119776248932
+      ],
+      "asr_wer": 0.23487544483985764,
+      "quality_samples": 12
+    },
+    {
+      "voice": 4,
+      "startup_p95_ms": 362.15875,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        3.1499974727630615,
+        3.390222907066345
+      ],
+      "asr_wer": 0.17793594306049823,
+      "quality_samples": 12
+    },
+    {
+      "voice": 5,
+      "startup_p95_ms": 511.678375,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        3.0965149998664856,
+        3.4612613916397095
+      ],
+      "asr_wer": 0.17437722419928825,
+      "quality_samples": 12
+    },
+    {
+      "voice": 6,
+      "startup_p95_ms": 500.123916,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        3.1374406218528748,
+        3.329714596271515
+      ],
+      "asr_wer": 0.1708185053380783,
+      "quality_samples": 12
+    },
+    {
+      "voice": 7,
+      "startup_p95_ms": 383.497375,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        2.610748767852783,
+        2.7809795141220093
+      ],
+      "asr_wer": 0.18505338078291814,
+      "quality_samples": 12
+    },
+    {
+      "voice": 8,
+      "startup_p95_ms": 2846.957125,
+      "naturalness_median": null,
+      "naturalness_iqr": [
+        3.652936279773712,
+        3.8522124886512756
+      ],
+      "asr_wer": 0.11743772241992882,
+      "quality_samples": 12
+    }
+  ],
+  "quality_detail": "The sentence chunking and pause policy changed. Previous naturalness predictions do not rate this playback pipeline.",
+  "quality_method": {
+    "kind": "predicted_naturalness",
+    "predictor": "UTMOS22 strong / SpeechMOS v1.2.0",
+    "checkpoint_sha256": "38aa51ab79e2a4e09a1449758a4b37e9cbb2e8235a49662a732d33a9ba1e9bff",
+    "corpus_sha256": "fd07558074a24c31f0b403e2b0e30a61835a6cc6f52e277ba44e5d34af352fc1",
+    "source": "docs/performance/voice-evaluation/results.json",
+    "samples_per_voice": 12,
+    "speed": 1,
+    "human_listener_study": false
+  },
+  "status": "startup_refreshed_quality_unrated_after_pacing_change"
+}

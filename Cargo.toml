@@ -1,0 +1,66 @@
+[package]
+name = "infotransfer"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+description = "Local selected-text speech for macOS"
+default-run = "infotransfer"
+
+[features]
+default = ["desktop"]
+desktop = ["dep:gpui", "dep:gpui_platform", "dep:raw-window-handle", "dep:accesskit", "gpui_platform/font-kit"]
+experimental-voices = []
+visual-test = ["desktop", "gpui/test-support", "gpui_platform/test-support"]
+
+[dependencies]
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+hex = "0.4"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "json"] }
+crossbeam-channel = "0.5"
+crossbeam-queue = "0.3"
+arc-swap = "1.9.3"
+async-channel = "2.5"
+cpal = "0.16"
+libc = "0.2"
+regex = "1"
+onnx-protobuf = "=0.2.3"
+protobuf = "=3.4.0"
+raw-window-handle = {version = "0.6", optional = true}
+accesskit = { version = "=0.24.1", optional = true }
+gpui = { git = "https://github.com/zed-industries/zed", rev = "33156f0d81f3a90854626f7286869a7edc6234a0", default-features = false, optional = true }
+gpui_platform = { git = "https://github.com/zed-industries/zed", rev = "33156f0d81f3a90854626f7286869a7edc6234a0", default-features = false, features = ["runtime_shaders"], optional = true }
+
+[build-dependencies]
+cc = "1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[[bin]]
+name = "infotransfer"
+path = "src/main.rs"
+required-features = ["desktop"]
+
+[[bin]]
+name = "speech-bench"
+path = "src/bin/speech-bench.rs"
+
+[[bin]]
+name = "reading-bench"
+path = "src/bin/reading-bench.rs"
+
+[[bin]]
+name = "render-check"
+path = "src/render-check.rs"
+required-features = ["visual-test"]
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "debuginfo"
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"

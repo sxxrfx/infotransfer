@@ -1,0 +1,22 @@
+{
+  "script_sha256": "667518a06cd170237e1a10d12ecb84d15e6df85773405e49983ea08d7b8aeadb",
+  "generation_results_sha256": "64fdb656d1c5e774ea2199caf6c89a202eeaeb6f05360c4fce7b79a6d51b0c4b",
+  "packages": {
+    "faster-whisper": "1.2.1",
+    "ctranslate2": "4.8.4",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "soundfile": "0.14.0"
+  },
+  "artifacts": {
+    ".cache/voice-eval/asr/model.bin": "62b2a45b05ee59acb4a5341b33ee35e041395d378d418a18acfe4c9e768ee37a",
+    ".cache/voice-eval/asr/config.json": "666a9605530ac1f61fa8177f3702b4dacec9966749e42610839fcc32661d5fae",
+    ".cache/voice-eval/asr/tokenizer.json": "929c5252409436dce1b38a75d1abbcb5e132d170d8e324e4e04ed915fa2d22df",
+    ".cache/voice-eval/asr/README.md": "c87ff776137c2ecb30ee3b324b4cf5f38abf9423464613641ee45430bf580851",
+    ".cache/voice-eval/asr/vocabulary.txt": "ff77588746d3a2595d32ab5b69ffd7b95ce2441ac57533cb66fc3eb575a115cf",
+    ".cache/voice-eval/whisper_normalizers/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".cache/voice-eval/whisper_normalizers/english.json": "6607f948be9824d2e1b2fa2223cd94c06c45afa4e05ea0e3d5e1f2bdffde2465",
+    ".cache/voice-eval/whisper_normalizers/basic.py": "4742eaa040e0657fa1247a1361e0d856c62317a43326ea59a40c2e9edd8d2c38",
+    ".cache/voice-eval/whisper_normalizers/english.py": "2898e4672aeefc9f44cb4de38c115cdf286f5b35ae321433467a7674ce8841d0"
+  }
+}

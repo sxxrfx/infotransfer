@@ -1,0 +1,21 @@
+{
+  "claim": "Model-component startup, synthesis time, and process RSS for five explicitly configured local pipelines on this M4; not intrinsic quality, physical playback, selection latency, or M1 certification.",
+  "text": "Reading at your own pace can make a difficult paragraph easier to follow. Take a breath, then continue when you are ready.",
+  "rounds": 5,
+  "runs_per_process": "one first inference then one warm inference",
+  "timers": "after Python process start; load includes imports and reference preparation; generation consumes the iterator and materializes PCM",
+  "rtf_definition": "generation seconds / audio seconds; lower is faster",
+  "memory": "Darwin ru_maxrss bytes, includes process host memory; MLX memory tracked separately and overlaps RSS; never add them",
+  "cold": "unloaded new process with normal filesystem cache; not a reboot or uncached disk",
+  "hardware": "macOS-27.2-arm64-arm-64bit",
+  "started_at": "2026-10-30T20:43:58+0530",
+  "load_average": "20:43  up 8 days,  3:26, 1 user, load averages: 3.85 3.44 3.29",
+  "provenance": {
+    "scripts/advanced_tts_worker.py": "8e3a8df305d7df19cd532f7da809d5d99f33174ef48b8a09437f5187e8e16534",
+    ".cache/advanced-tts/downloads.json": "4fd2243c4d9fe0df94ac261c80ba387e8b4a4b8eae796aa8948d7ecaec61a723",
+    ".cache/advanced-tts/requirements-main.txt": "248c72a81cbf85f49855a3a100b198a68f5c749ff92675a230affa20c032b9bd",
+    ".cache/advanced-tts/requirements-cosyvoice.txt": "0306be83c6d49a2e57ad6e35298da024d3f3c0709bb98d8ad465a31f99506b48",
+    ".cache/advanced-tts/reference.json": "647c684af0851c9d68e8c827a735e599e5d4c97e600f0f106b600de476e9e839",
+    ".cache/advanced-tts/reference.wav": "35ae373489fbedbdb2f5bb03a46ddc5ecc4ebaccdac5ecbea0af6b9f7a097ccd"
+  }
+}

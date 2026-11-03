@@ -1,0 +1,121 @@
+{
+  "detail": "M4, 20 warm reads at 1\u00d7. Excludes text capture, UI and physical audio latency; small differences may be noise.",
+  "source": "docs/performance/voice-startup.json",
+  "binary_sha256": "cb2de5edbf70b01a61e31a6da163b80ad97c3c839f9a2e7613698005fd149812",
+  "model_sha256": {
+    "kitten_cpu": "264b48c18257cc172960c9321b233b249e215879b5d295766baeace33f5eb5b1",
+    "kokoro_heart": "75635ea3b85a32d00094dcdd61a258aba87c160f7c264c304a7b3ae9d734195e"
+  },
+  "voices": [
+    {
+      "voice": 0,
+      "startup_p95_ms": 167.794792,
+      "naturalness_median": 3.538092255592346,
+      "naturalness_iqr": [
+        3.3079971075057983,
+        3.6479559540748596
+      ],
+      "asr_wer": 0.17793594306049823,
+      "quality_samples": 12
+    },
+    {
+      "voice": 1,
+      "startup_p95_ms": 223.563875,
+      "naturalness_median": 3.099066734313965,
+      "naturalness_iqr": [
+        2.927267372608185,
+        3.213753342628479
+      ],
+      "asr_wer": 0.16725978647686832,
+      "quality_samples": 12
+    },
+    {
+      "voice": 2,
+      "startup_p95_ms": 223.134541,
+      "naturalness_median": 3.5039647817611694,
+      "naturalness_iqr": [
+        3.363628387451172,
+        3.552009165287018
+      ],
+      "asr_wer": 0.18861209964412812,
+      "quality_samples": 12
+    },
+    {
+      "voice": 3,
+      "startup_p95_ms": 255.922959,
+      "naturalness_median": 3.484100580215454,
+      "naturalness_iqr": [
+        3.17275208234787,
+        3.618119776248932
+      ],
+      "asr_wer": 0.23487544483985764,
+      "quality_samples": 12
+    },
+    {
+      "voice": 4,
+      "startup_p95_ms": 191.022542,
+      "naturalness_median": 3.349789261817932,
+      "naturalness_iqr": [
+        3.1499974727630615,
+        3.390222907066345
+      ],
+      "asr_wer": 0.17793594306049823,
+      "quality_samples": 12
+    },
+    {
+      "voice": 5,
+      "startup_p95_ms": 194.040583,
+      "naturalness_median": 3.252362608909607,
+      "naturalness_iqr": [
+        3.0965149998664856,
+        3.4612613916397095
+      ],
+      "asr_wer": 0.17437722419928825,
+      "quality_samples": 12
+    },
+    {
+      "voice": 6,
+      "startup_p95_ms": 276.213209,
+      "naturalness_median": 3.196239948272705,
+      "naturalness_iqr": [
+        3.1374406218528748,
+        3.329714596271515
+      ],
+      "asr_wer": 0.1708185053380783,
+      "quality_samples": 12
+    },
+    {
+      "voice": 7,
+      "startup_p95_ms": 213.042291,
+      "naturalness_median": 2.7066863775253296,
+      "naturalness_iqr": [
+        2.610748767852783,
+        2.7809795141220093
+      ],
+      "asr_wer": 0.18505338078291814,
+      "quality_samples": 12
+    },
+    {
+      "voice": 8,
+      "startup_p95_ms": 1067.841042,
+      "naturalness_median": 3.7552571296691895,
+      "naturalness_iqr": [
+        3.652936279773712,
+        3.8522124886512756
+      ],
+      "asr_wer": 0.11743772241992882,
+      "quality_samples": 12
+    }
+  ],
+  "quality_detail": "Median prediction across 12 passages at 1\u00d7. This build skipped some names, numbers and accented words. No human listening study.",
+  "quality_method": {
+    "kind": "predicted_naturalness",
+    "predictor": "UTMOS22 strong / SpeechMOS v1.2.0",
+    "checkpoint_sha256": "38aa51ab79e2a4e09a1449758a4b37e9cbb2e8235a49662a732d33a9ba1e9bff",
+    "corpus_sha256": "fd07558074a24c31f0b403e2b0e30a61835a6cc6f52e277ba44e5d34af352fc1",
+    "source": "docs/performance/voice-evaluation/results.json",
+    "samples_per_voice": 12,
+    "speed": 1,
+    "human_listener_study": false
+  }
+}

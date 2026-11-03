@@ -1,0 +1,18 @@
+[
+  {
+    "id": "references",
+    "text": "Read PR #5, API v1.2.3, and CPU at 90%."
+  },
+  {
+    "id": "numbers",
+    "text": "$1,234.50, 0xFF, 1.2e-3, 16GB and getUserName(user_id)."
+  },
+  {
+    "id": "terms",
+    "text": "Kubernetes, OpenTelemetry and Codex use Rust and JSON."
+  },
+  {
+    "id": "contractions",
+    "text": "I'll check main.rs:42. I'am ready, and we're reading PR #5."
+  }
+]

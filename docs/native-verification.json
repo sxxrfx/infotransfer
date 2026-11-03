@@ -1,0 +1,26 @@
+{
+  "build": "dist/InfoTransfer.app",
+  "code_requirement": "# designated => cdhash H\"c6e4a675bcbf1a0e175f82b62f1ea8dca50c4855\"",
+  "shortcuts": {
+    "read_selection": "Command B",
+    "cancel": "Escape",
+    "other_global_bindings_removed": true
+  },
+  "checks": {
+    "rust_lib_tests": 8,
+    "provenance_tests": 4,
+    "clippy": "pass",
+    "release_build": "pass",
+    "deep_signature_verification": "pass",
+    "native_accessibility_before": "denied despite enabled system switch",
+    "native_accessibility_after": "granted after removing/readding the exact bundle and restarting",
+    "native_speed_set_value": "1.50\u00d7 via string AX value; passed",
+    "global_selection_and_escape": "PASS: user physically tested in Zen; Command B reads selected text and Escape stops it",
+    "automated_key_input": "Targeted automated Command B toggled TextEdit Bold; not used as global-key validation"
+  },
+  "limitations": [
+    "No M1 certification",
+    "Native speech frontend still skips some unsupported tokens",
+    "Full Handy visual/motion parity not certified"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "kind": "correctness QA; concurrent development means timings are not comparative performance results",
+  "binary_sha256": "cf9b6ed3c34c7e42333b3fbf33f273fae7d947596fa79eb269ed43bd0d652459",
+  "script_sha256": "2ad3bdd27dd428f40675a4e3b4c01eec82afe913789df60623e8daad853f9a2e",
+  "corpus_sha256": "58e8ac24d195186c675695ccd647232f9b2dfabfde358c0b3b55caf912f3a6a2",
+  "dictionary_sha256": "d1ed98372d9e0cfaf963f9052da3754748821690cdc5d14bb84431586436c520",
+  "voices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "phonemizer_manifest_sha256": "484a5032aeaf986bd252645e919b055b1fd109ae83aef2224f330d6102a2980f",
+  "phonemizer_executable_sha256": "93da0dfdde67553b67b0957cc1097b60dfc573963d3937dea27012529dcb5a2d",
+  "source_sha256": {
+    "src/speech.rs": "8ad615960b692fb465a7ac9a8b2febb9444914e3603f273214dd25ba2a795948",
+    "src/phonemes.rs": "974c926e507cb093b8b270a709c058510f052ce3cae8f18bab4735e557bcad0c",
+    "src/spoken.rs": "1e8b9f2a84cf3176dac5bce6a882edce594187f95180ae14ae1f4336dcdeda04",
+    "src/dictionary.rs": "7808055fefde6a12243d7e5c4f712ad5b6615ea86f7e022a63ddba60c76acdb4",
+    "src/text.rs": "5c8cff0bb763284cfe0336caac2340dd67f228d1b97e3fdc2aa7600a780bb521",
+    "src/sound.rs": "c05a20c7d5118d1e3de1db22ea9423f7e9f5c40fc5652fdda6fd221806aa4a15",
+    "src/voices.rs": "36acdd7ff9ca4e5eef5c10a4347e1d50d21126c2e14722ae4ea79186fa3b15ce",
+    "src/advanced.rs": "f08c420a873b131a3b74755b568583db26c7b7ca2fd04111c75187d75e198553",
+    "native/speech.c": "732eec950ccf07a7b424072029a704016e2a226c98cf8fdaef8aea9602d36cb4",
+    "native/exceptions.cpp": "5f48aabe5e64047112ffe38e7e838b06c7b9fece1c954bcc72c55849a22d866c"
+  }
+}

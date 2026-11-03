@@ -1,0 +1,2058 @@
+{
+  "method": "CPU text-to-complete-PCM generation; no selection capture, UI, playback, output device or physical audio",
+  "hardware": "Apple M4",
+  "os": "27.2",
+  "text": "Reading at your own pace",
+  "threads": 2,
+  "speed": 1,
+  "rounds": 5,
+  "priming_per_process": 1,
+  "warm_per_process": 10,
+  "load_before": "10:30  up 7 days, 17:13, 1 user, load averages: 3.91 5.64 6.30",
+  "native_binary_sha256": "6ac06f43158fcce57c25bae13c3f2b8e7dce51a4d8e0dd728aa0eb0f27b7604e",
+  "runs": [
+    {
+      "kind": "kitten08",
+      "voice": "Hugo",
+      "load_ms": 2623.4909999766387,
+      "peak_rss_bytes": 428933120,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 338.3616249775514,
+          "samples": 52600,
+          "peak": 0.7308151721954346,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 273.172750021331,
+          "samples": 52600,
+          "peak": 0.6759602427482605,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 346.42362501472235,
+          "samples": 52600,
+          "peak": 0.7538508176803589,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 286.04687500046566,
+          "samples": 52600,
+          "peak": 0.7312813997268677,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 303.4720839932561,
+          "samples": 52600,
+          "peak": 0.6884958148002625,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 278.76279200427234,
+          "samples": 52600,
+          "peak": 0.7151676416397095,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 347.76120900642127,
+          "samples": 52600,
+          "peak": 0.708890438079834,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 279.512542008888,
+          "samples": 52600,
+          "peak": 0.7105408906936646,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 335.4652500129305,
+          "samples": 52600,
+          "peak": 0.6948276162147522,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 327.85341603448614,
+          "samples": 52600,
+          "peak": 0.7526596188545227,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 284.31962500326335,
+          "samples": 52600,
+          "peak": 0.6962474584579468,
+          "success": true
+        }
+      ],
+      "round": 0,
+      "order": 0
+    },
+    {
+      "kind": "native-heart",
+      "voice": "Heart",
+      "load_ms": 925.764084,
+      "peak_rss_bytes": 475480064,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 920.534,
+          "samples": 31101,
+          "peak": 0.2808263599872589,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 910.528042,
+          "samples": 31129,
+          "peak": 0.27110257744789124,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 918.212917,
+          "samples": 31095,
+          "peak": 0.2767343819141388,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 879.153458,
+          "samples": 31101,
+          "peak": 0.26666393876075745,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 921.397916,
+          "samples": 31103,
+          "peak": 0.2723744511604309,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 1017.2329579999999,
+          "samples": 31099,
+          "peak": 0.2702084183692932,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 947.4501250000001,
+          "samples": 31129,
+          "peak": 0.28028789162635803,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 998.3261669999999,
+          "samples": 31099,
+          "peak": 0.27678611874580383,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 967.757541,
+          "samples": 31106,
+          "peak": 0.27505236864089966,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 742.564125,
+          "samples": 31099,
+          "peak": 0.2700110375881195,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 935.2235420000001,
+          "samples": 31102,
+          "peak": 0.282388299703598,
+          "success": true
+        }
+      ],
+      "round": 0,
+      "order": 1
+    },
+    {
+      "kind": "paradee12",
+      "voice": "af_heart",
+      "load_ms": 493.6317909741774,
+      "peak_rss_bytes": 569540608,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 1853.8711250294,
+          "samples": 45600,
+          "peak": 0.28023001551628113,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 23.854584025684744,
+          "samples": 45600,
+          "peak": 0.2741755545139313,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 18.115415994543582,
+          "samples": 45600,
+          "peak": 0.28529518842697144,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 17.903791973367333,
+          "samples": 45600,
+          "peak": 0.28478485345840454,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 17.671459005214274,
+          "samples": 45600,
+          "peak": 0.2846878170967102,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 17.44299998972565,
+          "samples": 45600,
+          "peak": 0.28314119577407837,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 18.278040981385857,
+          "samples": 45600,
+          "peak": 0.28587764501571655,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 18.461042025592178,
+          "samples": 45600,
+          "peak": 0.28318774700164795,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 18.1562919751741,
+          "samples": 45600,
+          "peak": 0.28149381279945374,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 17.480207956396043,
+          "samples": 45600,
+          "peak": 0.28280577063560486,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 17.565290967468172,
+          "samples": 45600,
+          "peak": 0.2869696617126465,
+          "success": true
+        }
+      ],
+      "round": 0,
+      "order": 2
+    },
+    {
+      "kind": "native-kitten",
+      "voice": "Arthur",
+      "load_ms": 673.28775,
+      "peak_rss_bytes": 268828672,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 120.222,
+          "samples": 37200,
+          "peak": 0.5524275302886963,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 119.7905,
+          "samples": 37200,
+          "peak": 0.5564013719558716,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 112.66975,
+          "samples": 37200,
+          "peak": 0.5580921173095703,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 111.482084,
+          "samples": 37200,
+          "peak": 0.5595172643661499,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 110.685042,
+          "samples": 37200,
+          "peak": 0.5597744584083557,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 113.532833,
+          "samples": 37200,
+          "peak": 0.5522072315216064,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 113.74145800000001,
+          "samples": 37200,
+          "peak": 0.5554879307746887,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 113.721541,
+          "samples": 37200,
+          "peak": 0.5578859448432922,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 112.803916,
+          "samples": 37200,
+          "peak": 0.5604736804962158,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 112.794959,
+          "samples": 37200,
+          "peak": 0.5573743581771851,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 113.95358399999999,
+          "samples": 37200,
+          "peak": 0.5506189465522766,
+          "success": true
+        }
+      ],
+      "round": 0,
+      "order": 3
+    },
+    {
+      "kind": "kitten08",
+      "voice": "Hugo",
+      "load_ms": 1576.0505410144106,
+      "peak_rss_bytes": 458637312,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 308.6839170427993,
+          "samples": 52600,
+          "peak": 0.670117974281311,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 294.1884160391055,
+          "samples": 52600,
+          "peak": 0.68731290102005,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 269.12133302539587,
+          "samples": 52600,
+          "peak": 0.696917712688446,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 276.14533400628716,
+          "samples": 52600,
+          "peak": 0.7257795333862305,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 269.65704205213115,
+          "samples": 52600,
+          "peak": 0.7151588201522827,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 276.5132500207983,
+          "samples": 52600,
+          "peak": 0.714694619178772,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 294.75720901973546,
+          "samples": 52600,
+          "peak": 0.7513390779495239,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 289.87333399709314,
+          "samples": 52600,
+          "peak": 0.6902276277542114,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 304.9707080353983,
+          "samples": 52600,
+          "peak": 0.6981059908866882,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 297.94249997939914,
+          "samples": 52600,
+          "peak": 0.7260144948959351,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 323.98341700900346,
+          "samples": 52600,
+          "peak": 0.7212008237838745,
+          "success": true
+        }
+      ],
+      "round": 1,
+      "order": 0
+    },
+    {
+      "kind": "paradee12",
+      "voice": "af_heart",
+      "load_ms": 391.16674999240786,
+      "peak_rss_bytes": 564740096,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 1557.670791982673,
+          "samples": 45600,
+          "peak": 0.2862900197505951,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 22.785708017181605,
+          "samples": 45600,
+          "peak": 0.28137660026550293,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 20.75233298819512,
+          "samples": 45600,
+          "peak": 0.2814624011516571,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 21.948417008388788,
+          "samples": 45600,
+          "peak": 0.27686211466789246,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 18.1667500291951,
+          "samples": 45600,
+          "peak": 0.2974812686443329,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 19.030083960387856,
+          "samples": 45600,
+          "peak": 0.28930535912513733,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 19.81033297488466,
+          "samples": 45600,
+          "peak": 0.28327253460884094,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 19.660000049043447,
+          "samples": 45600,
+          "peak": 0.28493568301200867,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 18.750291026663035,
+          "samples": 45600,
+          "peak": 0.2821657657623291,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 18.628416990395635,
+          "samples": 45600,
+          "peak": 0.2805914580821991,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 18.408083997201174,
+          "samples": 45600,
+          "peak": 0.2782962918281555,
+          "success": true
+        }
+      ],
+      "round": 1,
+      "order": 1
+    },
+    {
+      "kind": "native-heart",
+      "voice": "Heart",
+      "load_ms": 827.050333,
+      "peak_rss_bytes": 467533824,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 998.050166,
+          "samples": 31141,
+          "peak": 0.2739114463329315,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 971.976167,
+          "samples": 31100,
+          "peak": 0.2773505747318268,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 991.638791,
+          "samples": 31100,
+          "peak": 0.27846160531044006,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 962.673833,
+          "samples": 31140,
+          "peak": 0.27502384781837463,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 973.394125,
+          "samples": 31133,
+          "peak": 0.27468082308769226,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 920.984333,
+          "samples": 31099,
+          "peak": 0.2681381404399872,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 995.125333,
+          "samples": 31106,
+          "peak": 0.27380019426345825,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 1044.7800840000002,
+          "samples": 31094,
+          "peak": 0.27423155307769775,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 945.784709,
+          "samples": 31102,
+          "peak": 0.27251458168029785,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 1075.5733329999998,
+          "samples": 31101,
+          "peak": 0.27663981914520264,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 937.37375,
+          "samples": 31128,
+          "peak": 0.27392250299453735,
+          "success": true
+        }
+      ],
+      "round": 1,
+      "order": 2
+    },
+    {
+      "kind": "native-kitten",
+      "voice": "Arthur",
+      "load_ms": 637.958167,
+      "peak_rss_bytes": 267911168,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 141.368458,
+          "samples": 37200,
+          "peak": 0.5602502822875977,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 116.44420799999999,
+          "samples": 37200,
+          "peak": 0.5589791536331177,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 120.923042,
+          "samples": 37200,
+          "peak": 0.5555920600891113,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 123.084875,
+          "samples": 37200,
+          "peak": 0.5569934844970703,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 126.400667,
+          "samples": 37200,
+          "peak": 0.557759165763855,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 120.872792,
+          "samples": 37200,
+          "peak": 0.5553790926933289,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 118.22775,
+          "samples": 37200,
+          "peak": 0.5552657246589661,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 113.59629100000001,
+          "samples": 37200,
+          "peak": 0.5553862452507019,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 117.024083,
+          "samples": 37200,
+          "peak": 0.5581592321395874,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 111.880834,
+          "samples": 37200,
+          "peak": 0.5606649518013,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 124.28224999999999,
+          "samples": 37200,
+          "peak": 0.5503085851669312,
+          "success": true
+        }
+      ],
+      "round": 1,
+      "order": 3
+    },
+    {
+      "kind": "native-heart",
+      "voice": "Heart",
+      "load_ms": 840.297916,
+      "peak_rss_bytes": 476020736,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 892.460291,
+          "samples": 31129,
+          "peak": 0.2769719660282135,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 1068.515459,
+          "samples": 31104,
+          "peak": 0.26921316981315613,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 1063.121666,
+          "samples": 31131,
+          "peak": 0.28282010555267334,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 1011.3265840000001,
+          "samples": 31103,
+          "peak": 0.2763533890247345,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 870.9829169999999,
+          "samples": 31141,
+          "peak": 0.27386510372161865,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 885.9918749999999,
+          "samples": 31097,
+          "peak": 0.2745193839073181,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 1073.1779999999999,
+          "samples": 31099,
+          "peak": 0.27794381976127625,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 878.517333,
+          "samples": 31129,
+          "peak": 0.28099313378334045,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 949.4718340000001,
+          "samples": 31128,
+          "peak": 0.2696596384048462,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 917.990458,
+          "samples": 31130,
+          "peak": 0.26387473940849304,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 943.806625,
+          "samples": 31101,
+          "peak": 0.2804836332798004,
+          "success": true
+        }
+      ],
+      "round": 2,
+      "order": 0
+    },
+    {
+      "kind": "native-kitten",
+      "voice": "Arthur",
+      "load_ms": 612.187,
+      "peak_rss_bytes": 268632064,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 113.25708399999999,
+          "samples": 37200,
+          "peak": 0.5569393634796143,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 111.643125,
+          "samples": 37200,
+          "peak": 0.5556811094284058,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 109.263834,
+          "samples": 37200,
+          "peak": 0.5555356740951538,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 110.04941699999999,
+          "samples": 37200,
+          "peak": 0.5579328536987305,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 111.95325,
+          "samples": 37200,
+          "peak": 0.5632191300392151,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 109.00550000000001,
+          "samples": 37200,
+          "peak": 0.5645724534988403,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 113.822125,
+          "samples": 37200,
+          "peak": 0.5581564903259277,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 116.53587499999999,
+          "samples": 37200,
+          "peak": 0.5622906684875488,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 111.758542,
+          "samples": 37200,
+          "peak": 0.553342342376709,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 109.412708,
+          "samples": 37200,
+          "peak": 0.5562323927879333,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 109.12537499999999,
+          "samples": 37200,
+          "peak": 0.5563872456550598,
+          "success": true
+        }
+      ],
+      "round": 2,
+      "order": 1
+    },
+    {
+      "kind": "kitten08",
+      "voice": "Hugo",
+      "load_ms": 2236.6230839979835,
+      "peak_rss_bytes": 445595648,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 303.56541700894013,
+          "samples": 52600,
+          "peak": 0.7361676692962646,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 308.12091601546854,
+          "samples": 52600,
+          "peak": 0.7230877876281738,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 336.8897499749437,
+          "samples": 52600,
+          "peak": 0.7122863531112671,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 278.7287500104867,
+          "samples": 52600,
+          "peak": 0.6688001155853271,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 275.81629098858684,
+          "samples": 52600,
+          "peak": 0.7736884355545044,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 271.65354200406,
+          "samples": 52600,
+          "peak": 0.7411296367645264,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 299.56695897271857,
+          "samples": 52600,
+          "peak": 0.7063590884208679,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 311.608541989699,
+          "samples": 52600,
+          "peak": 0.7167611718177795,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 273.13929196679965,
+          "samples": 52600,
+          "peak": 0.698551595211029,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 309.535667009186,
+          "samples": 52600,
+          "peak": 0.7195446491241455,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 309.9877500208095,
+          "samples": 52600,
+          "peak": 0.7159938216209412,
+          "success": true
+        }
+      ],
+      "round": 2,
+      "order": 2
+    },
+    {
+      "kind": "paradee12",
+      "voice": "af_heart",
+      "load_ms": 409.4809170346707,
+      "peak_rss_bytes": 569147392,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 1568.0514580453746,
+          "samples": 45600,
+          "peak": 0.2830268144607544,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 20.829042012337595,
+          "samples": 45600,
+          "peak": 0.2804180383682251,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 17.139333009254187,
+          "samples": 45600,
+          "peak": 0.28370893001556396,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 17.023707972839475,
+          "samples": 45600,
+          "peak": 0.2998771369457245,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 16.78654196439311,
+          "samples": 45600,
+          "peak": 0.284461110830307,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 16.85441698646173,
+          "samples": 45600,
+          "peak": 0.2831615209579468,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 16.57604199135676,
+          "samples": 45600,
+          "peak": 0.2796195149421692,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 17.037542012985796,
+          "samples": 45600,
+          "peak": 0.2800116539001465,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 16.87562500592321,
+          "samples": 45600,
+          "peak": 0.2821480929851532,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 16.861541953403503,
+          "samples": 45600,
+          "peak": 0.2768232524394989,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 16.69962500454858,
+          "samples": 45600,
+          "peak": 0.28726980090141296,
+          "success": true
+        }
+      ],
+      "round": 2,
+      "order": 3
+    },
+    {
+      "kind": "native-kitten",
+      "voice": "Arthur",
+      "load_ms": 598.6854999999999,
+      "peak_rss_bytes": 268632064,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 111.448791,
+          "samples": 37200,
+          "peak": 0.5559772253036499,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 110.347334,
+          "samples": 37200,
+          "peak": 0.5579275488853455,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 134.398667,
+          "samples": 37200,
+          "peak": 0.557616114616394,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 200.733083,
+          "samples": 37200,
+          "peak": 0.5586070418357849,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 112.06295800000001,
+          "samples": 37200,
+          "peak": 0.5525163412094116,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 111.1245,
+          "samples": 37200,
+          "peak": 0.5544788837432861,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 209.430375,
+          "samples": 37200,
+          "peak": 0.5547931790351868,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 135.595667,
+          "samples": 37200,
+          "peak": 0.5516345500946045,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 119.05275,
+          "samples": 37200,
+          "peak": 0.5548614263534546,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 116.97470799999999,
+          "samples": 37200,
+          "peak": 0.558264434337616,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 114.266334,
+          "samples": 37200,
+          "peak": 0.555661678314209,
+          "success": true
+        }
+      ],
+      "round": 3,
+      "order": 0
+    },
+    {
+      "kind": "paradee12",
+      "voice": "af_heart",
+      "load_ms": 384.76716697914526,
+      "peak_rss_bytes": 549126144,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 1553.650290996302,
+          "samples": 45600,
+          "peak": 0.28076303005218506,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 24.74612498190254,
+          "samples": 45600,
+          "peak": 0.2926046848297119,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 19.284749985672534,
+          "samples": 45600,
+          "peak": 0.28057029843330383,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 18.037125002592802,
+          "samples": 45600,
+          "peak": 0.2787805199623108,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 17.303791013546288,
+          "samples": 45600,
+          "peak": 0.27921465039253235,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 17.62937504099682,
+          "samples": 45600,
+          "peak": 0.2784730792045593,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 17.574124969542027,
+          "samples": 45600,
+          "peak": 0.2821788787841797,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 17.586292000487447,
+          "samples": 45600,
+          "peak": 0.2782871425151825,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 17.451749998144805,
+          "samples": 45600,
+          "peak": 0.2861928343772888,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 17.404582991730422,
+          "samples": 45600,
+          "peak": 0.28392916917800903,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 17.549209005665034,
+          "samples": 45600,
+          "peak": 0.27758997678756714,
+          "success": true
+        }
+      ],
+      "round": 3,
+      "order": 1
+    },
+    {
+      "kind": "native-heart",
+      "voice": "Heart",
+      "load_ms": 826.6222909999999,
+      "peak_rss_bytes": 476020736,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 982.752541,
+          "samples": 31098,
+          "peak": 0.27312859892845154,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 954.216917,
+          "samples": 31101,
+          "peak": 0.27567344903945923,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 1009.153666,
+          "samples": 31099,
+          "peak": 0.27661675214767456,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 1040.4182500000002,
+          "samples": 31130,
+          "peak": 0.2748136520385742,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 1117.3158329999999,
+          "samples": 31102,
+          "peak": 0.27413249015808105,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 945.2966670000001,
+          "samples": 31102,
+          "peak": 0.2748364508152008,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 1019.2875839999999,
+          "samples": 31107,
+          "peak": 0.28274625539779663,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 990.683,
+          "samples": 31101,
+          "peak": 0.27404239773750305,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 968.6208330000001,
+          "samples": 31099,
+          "peak": 0.2721758186817169,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 1086.673291,
+          "samples": 31103,
+          "peak": 0.27176061272621155,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 1046.194166,
+          "samples": 31140,
+          "peak": 0.26876938343048096,
+          "success": true
+        }
+      ],
+      "round": 3,
+      "order": 2
+    },
+    {
+      "kind": "kitten08",
+      "voice": "Hugo",
+      "load_ms": 2071.019083959982,
+      "peak_rss_bytes": 445808640,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 326.9710420281626,
+          "samples": 52600,
+          "peak": 0.657008945941925,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 334.0783339808695,
+          "samples": 52600,
+          "peak": 0.7337841391563416,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 275.93808399979025,
+          "samples": 52600,
+          "peak": 0.730108916759491,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 293.9462499925867,
+          "samples": 52600,
+          "peak": 0.688467800617218,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 324.020791973453,
+          "samples": 52600,
+          "peak": 0.690027117729187,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 308.38466703426093,
+          "samples": 52600,
+          "peak": 0.7182473540306091,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 312.84983397927135,
+          "samples": 52600,
+          "peak": 0.6650030016899109,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 318.3732909965329,
+          "samples": 52600,
+          "peak": 0.6652078032493591,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 295.4415410058573,
+          "samples": 52600,
+          "peak": 0.6991301774978638,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 320.158916991204,
+          "samples": 52600,
+          "peak": 0.7372507452964783,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 298.63391595426947,
+          "samples": 52600,
+          "peak": 0.6983360648155212,
+          "success": true
+        }
+      ],
+      "round": 3,
+      "order": 3
+    },
+    {
+      "kind": "kitten08",
+      "voice": "Hugo",
+      "load_ms": 1468.099208024796,
+      "peak_rss_bytes": 457228288,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 312.0086249546148,
+          "samples": 52600,
+          "peak": 0.6988949775695801,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 287.14883304201066,
+          "samples": 52600,
+          "peak": 0.6995954513549805,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 302.7061250177212,
+          "samples": 52600,
+          "peak": 0.7061513662338257,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 288.6021659942344,
+          "samples": 52600,
+          "peak": 0.7103095054626465,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 364.84854196896777,
+          "samples": 52600,
+          "peak": 0.766273021697998,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 277.1517909714021,
+          "samples": 52600,
+          "peak": 0.7005065679550171,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 297.847916954197,
+          "samples": 52600,
+          "peak": 0.7008212208747864,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 307.50975001137704,
+          "samples": 52600,
+          "peak": 0.7471029162406921,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 303.33645798964426,
+          "samples": 52600,
+          "peak": 0.7115449905395508,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 318.2907089940272,
+          "samples": 52600,
+          "peak": 0.7211235165596008,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 278.1098330160603,
+          "samples": 52600,
+          "peak": 0.729820728302002,
+          "success": true
+        }
+      ],
+      "round": 4,
+      "order": 0
+    },
+    {
+      "kind": "paradee12",
+      "voice": "af_heart",
+      "load_ms": 411.6951249889098,
+      "peak_rss_bytes": 543391744,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 1718.158166971989,
+          "samples": 45600,
+          "peak": 0.2842106521129608,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 29.321958019863814,
+          "samples": 45600,
+          "peak": 0.28404709696769714,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 42.07900003530085,
+          "samples": 45600,
+          "peak": 0.2840813100337982,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 34.85941601684317,
+          "samples": 45600,
+          "peak": 0.28694260120391846,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 32.688874984160066,
+          "samples": 45600,
+          "peak": 0.285529226064682,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 21.150416985619813,
+          "samples": 45600,
+          "peak": 0.2835548222064972,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 20.18179203150794,
+          "samples": 45600,
+          "peak": 0.28605204820632935,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 21.129833010490984,
+          "samples": 45600,
+          "peak": 0.28044798970222473,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 19.815875042695552,
+          "samples": 45600,
+          "peak": 0.2858511507511139,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 20.41866595391184,
+          "samples": 45600,
+          "peak": 0.28298431634902954,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 20.746832946315408,
+          "samples": 45600,
+          "peak": 0.2753681242465973,
+          "success": true
+        }
+      ],
+      "round": 4,
+      "order": 1
+    },
+    {
+      "kind": "native-heart",
+      "voice": "Heart",
+      "load_ms": 1018.6280830000001,
+      "peak_rss_bytes": 398360576,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 1063.929541,
+          "samples": 31103,
+          "peak": 0.2742966413497925,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 1021.836875,
+          "samples": 31104,
+          "peak": 0.27819615602493286,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 1003.178417,
+          "samples": 31101,
+          "peak": 0.26310521364212036,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 989.207125,
+          "samples": 31100,
+          "peak": 0.27424904704093933,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 967.7255,
+          "samples": 31093,
+          "peak": 0.2802308201789856,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 944.866292,
+          "samples": 31100,
+          "peak": 0.2759469449520111,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 1073.290417,
+          "samples": 31102,
+          "peak": 0.2842704653739929,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 935.63525,
+          "samples": 31099,
+          "peak": 0.27819815278053284,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 1012.699875,
+          "samples": 31139,
+          "peak": 0.2729722559452057,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 876.306166,
+          "samples": 31104,
+          "peak": 0.27427515387535095,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 1043.1859160000001,
+          "samples": 31103,
+          "peak": 0.2734881639480591,
+          "success": true
+        }
+      ],
+      "round": 4,
+      "order": 2
+    },
+    {
+      "kind": "native-kitten",
+      "voice": "Arthur",
+      "load_ms": 650.569667,
+      "peak_rss_bytes": 269123584,
+      "rows": [
+        {
+          "trial": 0,
+          "phase": "priming",
+          "ms": 117.98275,
+          "samples": 37200,
+          "peak": 0.5637804269790649,
+          "success": true
+        },
+        {
+          "trial": 1,
+          "phase": "warm",
+          "ms": 121.272375,
+          "samples": 37200,
+          "peak": 0.5569658875465393,
+          "success": true
+        },
+        {
+          "trial": 2,
+          "phase": "warm",
+          "ms": 112.26899999999999,
+          "samples": 37200,
+          "peak": 0.5568478107452393,
+          "success": true
+        },
+        {
+          "trial": 3,
+          "phase": "warm",
+          "ms": 115.458417,
+          "samples": 37200,
+          "peak": 0.5558637976646423,
+          "success": true
+        },
+        {
+          "trial": 4,
+          "phase": "warm",
+          "ms": 112.418791,
+          "samples": 37200,
+          "peak": 0.5497375726699829,
+          "success": true
+        },
+        {
+          "trial": 5,
+          "phase": "warm",
+          "ms": 117.41858300000001,
+          "samples": 37200,
+          "peak": 0.5555558204650879,
+          "success": true
+        },
+        {
+          "trial": 6,
+          "phase": "warm",
+          "ms": 112.495417,
+          "samples": 37200,
+          "peak": 0.5540130138397217,
+          "success": true
+        },
+        {
+          "trial": 7,
+          "phase": "warm",
+          "ms": 109.08604199999999,
+          "samples": 37200,
+          "peak": 0.5595775842666626,
+          "success": true
+        },
+        {
+          "trial": 8,
+          "phase": "warm",
+          "ms": 110.465292,
+          "samples": 37200,
+          "peak": 0.5544649362564087,
+          "success": true
+        },
+        {
+          "trial": 9,
+          "phase": "warm",
+          "ms": 117.50416700000001,
+          "samples": 37200,
+          "peak": 0.5518683195114136,
+          "success": true
+        },
+        {
+          "trial": 10,
+          "phase": "warm",
+          "ms": 111.08904199999999,
+          "samples": 37200,
+          "peak": 0.551195502281189,
+          "success": true
+        }
+      ],
+      "round": 4,
+      "order": 3
+    }
+  ],
+  "load_after": "10:32  up 7 days, 17:15, 1 user, load averages: 4.85 5.40 6.12",
+  "summary": [
+    {
+      "kind": "native-kitten",
+      "voice": "Arthur",
+      "warm_trials": 50,
+      "failures": 0,
+      "median_ms": 113.658916,
+      "p95_ms": 135.05701699999997,
+      "range_ms": [
+        109.00550000000001,
+        209.430375
+      ],
+      "round_median_ms": [
+        113.1683745,
+        119.55027100000001,
+        110.846271,
+        118.013729,
+        112.457104
+      ],
+      "peak_process_rss_bytes": 269123584
+    },
+    {
+      "kind": "native-heart",
+      "voice": "Heart",
+      "warm_trials": 50,
+      "failures": 0,
+      "median_ms": 970.2985000000001,
+      "p95_ms": 1074.5460208,
+      "range_ms": [
+        742.564125,
+        1117.3158329999999
+      ],
+      "round_median_ms": [
+        928.310729,
+        972.685146,
+        946.6392295,
+        1014.2206249999999,
+        996.192771
+      ],
+      "peak_process_rss_bytes": 476020736
+    },
+    {
+      "kind": "kitten08",
+      "voice": "Hugo",
+      "warm_trials": 50,
+      "failures": 0,
+      "median_ms": 298.2882079668343,
+      "p95_ms": 342.13338124682195,
+      "range_ms": [
+        269.12133302539587,
+        364.84854196896777
+      ],
+      "round_median_ms": [
+        294.7594794968609,
+        292.0308750180993,
+        303.84393749409355,
+        310.61725050676614,
+        300.2770209859591
+      ],
+      "peak_process_rss_bytes": 458637312
+    },
+    {
+      "kind": "paradee12",
+      "voice": "af_heart",
+      "warm_trials": 50,
+      "failures": 0,
+      "median_ms": 18.22239550529048,
+      "p95_ms": 31.173762350226742,
+      "range_ms": [
+        16.57604199135676,
+        42.07900003530085
+      ],
+      "round_median_ms": [
+        18.009603983955458,
+        19.34504200471565,
+        16.868583479663357,
+        17.580208485014737,
+        21.1401249980554
+      ],
+      "peak_process_rss_bytes": 569540608
+    }
+  ]
+}

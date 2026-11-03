@@ -1,0 +1,50 @@
+[
+  {
+    "name": "LICENSE",
+    "url": "https://huggingface.co/csukuangfj/kitten-nano-en-v0_1-fp16/resolve/2f82cb5390e25056d71ef39f076e9dec727e3113/LICENSE",
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "name": "model.fp16.onnx",
+    "url": "https://huggingface.co/csukuangfj/kitten-nano-en-v0_1-fp16/resolve/2f82cb5390e25056d71ef39f076e9dec727e3113/model.fp16.onnx",
+    "bytes": 23848586,
+    "sha256": "6b42d25df767db408d95738b464f02168a9cfb76367c1b2b9e90095485981407"
+  },
+  {
+    "name": "tokens.txt",
+    "url": "https://huggingface.co/csukuangfj/kitten-nano-en-v0_1-fp16/resolve/2f82cb5390e25056d71ef39f076e9dec727e3113/tokens.txt",
+    "bytes": 1064,
+    "sha256": "934a4188addc7665dd3410256bb622169242357fbb99d840d9351209b486dabb"
+  },
+  {
+    "name": "voices.bin",
+    "url": "https://huggingface.co/csukuangfj/kitten-nano-en-v0_1-fp16/resolve/2f82cb5390e25056d71ef39f076e9dec727e3113/voices.bin",
+    "bytes": 8192,
+    "sha256": "138cf3a7afd0ebf1f9d6fb72f49e960ef8405252eaff5d130cf3fba1b038a741"
+  },
+  {
+    "name": "gb_gold.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/gb_gold.json",
+    "bytes": 2841062,
+    "sha256": "090cdecbe6bda9516a2cdc21563d62def0b91f5b55ea74fe6ef729eef682785f"
+  },
+  {
+    "name": "gb_silver.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/gb_silver.json",
+    "bytes": 3677750,
+    "sha256": "cb8655f5e614e6306146e0da1bf93522ac542ebd39dcd9892afcf51c9aa52e1a"
+  },
+  {
+    "name": "us_gold.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/us_gold.json",
+    "bytes": 3001196,
+    "sha256": "8507f89840f0813b10cf584740942f58e9cc9ad3660e24088b442ab0a6b126be"
+  },
+  {
+    "name": "us_silver.json",
+    "url": "https://huggingface.co/datasets/hexgrad/misaki/resolve/7a6093fd11124188077f2dc16397cc465466d59a/us_silver.json",
+    "bytes": 3105352,
+    "sha256": "ea0e1abca0c9b18fb0d3402034633a337154a3153e9a9f49f97d668c908e140c"
+  }
+]

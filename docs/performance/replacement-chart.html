@@ -1,0 +1,11 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{font-family:var(--font-sans);color:var(--foreground);margin:0}h3{font-size:16px;margin:0 0 18px;font-weight:600}svg{width:100%;height:220px;display:block;overflow:visible}.note{font-size:12px;color:var(--muted-foreground);line-height:1.5;margin:12px 0 0}.label{font-size:13px;fill:currentColor}.tick{font-size:11px;fill:var(--muted-foreground)}
+</style></head><body><h3>Replacement request → first audio callback</h3>
+<svg viewBox="0 0 700 220" role="img" aria-label="95th percentile latency: original model 618 milliseconds, converted model 260 milliseconds. Target 500 milliseconds.">
+<g stroke="var(--border)"><path d="M150 25V180H670" fill="none"/><path d="M299 25V180M447 25V180M596 25V180" stroke-dasharray="2 5"/></g>
+<path d="M521.4 20V180" stroke="var(--warning)" stroke-dasharray="5 4"/><text x="521.4" y="12" text-anchor="middle" class="tick">500 ms target</text>
+<text x="134" y="73" text-anchor="end" class="label">Original</text><rect x="150" y="50" width="459" height="32" rx="4" fill="var(--chart-2)"/><text x="617" y="72" class="label">618 ms</text>
+<text x="134" y="142" text-anchor="end" class="label">Float convolutions</text><rect x="150" y="119" width="193.3" height="32" rx="4" fill="var(--chart-1)"/><text x="353" y="141" class="label">260 ms</text>
+<g class="tick" text-anchor="middle"><text x="150" y="201">0</text><text x="299" y="201">200</text><text x="447" y="201">400</text><text x="596" y="201">600 ms</text></g></svg>
+<p class="note">p95 · 25 warm trials per model · five interleaved rounds · no failures.<br>M4, Bluetooth output. Software callback measurement; selection capture, GPUI and physical audio latency are excluded. The converted graph produced identical samples in 27 seeded correctness checks.</p>
+</body></html>

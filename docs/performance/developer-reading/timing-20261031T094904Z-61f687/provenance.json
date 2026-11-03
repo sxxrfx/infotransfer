@@ -1,0 +1,31 @@
+{
+  "claim": "Absolute release-build timing on this host for nine native voices, not a speedup or certification",
+  "binary_sha256": "0cf34d2ac96c73d13b9411f30e302814e0876ef4ebf858c9cccb6e54b8689051",
+  "script_sha256": "916b8335f8b588cf4e5626fe57536de4153f46a44711f456cce31da5435523d4",
+  "host": {
+    "os": "macOS-27.2-arm64-arm-64bit",
+    "cpu": "Apple M4",
+    "cores": 10,
+    "memory_bytes": 17179869184,
+    "load_average": [
+      2.0146484375,
+      3.1318359375,
+      2.845703125
+    ]
+  },
+  "method": "One first inference plus 20 warm trials per voice; nearest-rank p95; technical passage; CPAL signal threshold -50 dBFS; 25 ms playback then stop",
+  "includes": "validation, normalization, pronunciation, synthesis, PCM buffering, resampling and real audio callback",
+  "excludes": "selection capture, global shortcut, GUI and physical/acoustic output latency",
+  "source_sha256": {
+    "src/bin/reading-bench.rs": "8a71e0a5343c6494809686dac6fb8a19bf058b8c30c71cde33f9c526d6f1e3ac",
+    "src/reader.rs": "234335ceb72e47213806a1b3e348bd0e162a994169473b0a7035943062da2e5e",
+    "src/audio.rs": "388523333960c1bdd6e00c9718ba018d434c333468acad0405cbeb9ac5625d0f",
+    "src/phonemes.rs": "61aacf62360b8d5ec1f267e2ee05dbcb7b16ad0099250153990db65504ec934a",
+    "src/spoken.rs": "1e8b9f2a84cf3176dac5bce6a882edce594187f95180ae14ae1f4336dcdeda04",
+    "src/speech.rs": "8ad615960b692fb465a7ac9a8b2febb9444914e3603f273214dd25ba2a795948",
+    "src/dictionary.rs": "7808055fefde6a12243d7e5c4f712ad5b6615ea86f7e022a63ddba60c76acdb4",
+    "src/sound.rs": "c05a20c7d5118d1e3de1db22ea9423f7e9f5c40fc5652fdda6fd221806aa4a15",
+    "src/voices.rs": "36acdd7ff9ca4e5eef5c10a4347e1d50d21126c2e14722ae4ea79186fa3b15ce"
+  },
+  "phonemizer_manifest_sha256": "484a5032aeaf986bd252645e919b055b1fd109ae83aef2224f330d6102a2980f"
+}
