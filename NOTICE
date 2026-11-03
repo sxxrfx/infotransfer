@@ -1,12 +1,9 @@
 InfoTransfer
 Original application code: Apache-2.0.
 
-UI design reference: Handy v0.9.8 by CJ Pais (MIT).
-https://github.com/cjpais/Handy
-The General navigation hand icon is adapted from Handy's MIT-licensed
-HandyHand.tsx at commit 14f6f0d31cb22a4268acfbddba3052820fd0a06e.
-Its license is preserved in assets/icons/HANDY-LICENSE and in the bundle.
-Handy's wordmark is not included; InfoTransfer retains its own identity.
+Inspired by Handy by CJ Pais (MIT), https://github.com/cjpais/Handy.
+The settings layout, navigation and motion were modeled on Handy's design.
+No Handy code, icons or artwork are included.
 
 Lucide 0.542.0 icons: ISC, with Feather portions under MIT.
 The complete upstream license is preserved in assets/icons/LICENSE.

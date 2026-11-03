@@ -19,12 +19,12 @@ enum Kind {
 }
 
 #[derive(IntoElement)]
-pub(super) struct HandyButton {
+pub(super) struct AppButton {
     id: ElementId,
     inner: Stateful<Div>,
     kind: Kind,
 }
-impl HandyButton {
+impl AppButton {
     pub fn new(id: ElementId, inner: Stateful<Div>, ghost: bool) -> Self {
         Self {
             id,
@@ -61,26 +61,26 @@ impl HandyButton {
         }
     }
 }
-impl Styled for HandyButton {
+impl Styled for AppButton {
     fn style(&mut self) -> &mut StyleRefinement {
         self.inner.style()
     }
 }
-impl InteractiveElement for HandyButton {
+impl InteractiveElement for AppButton {
     fn interactivity(&mut self) -> &mut Interactivity {
         self.inner.interactivity()
     }
 }
-impl StatefulInteractiveElement for HandyButton {}
-impl ParentElement for HandyButton {
+impl StatefulInteractiveElement for AppButton {}
+impl ParentElement for AppButton {
     fn extend(&mut self, elements: impl IntoIterator<Item = AnyElement>) {
         self.inner.extend(elements);
     }
 }
-impl RenderOnce for HandyButton {
+impl RenderOnce for AppButton {
     fn render(mut self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let state = window.with_element_namespace(self.id.clone(), |window| {
-            window.use_keyed_state("handy-hover", cx, |_, _| HoverState::default())
+            window.use_keyed_state("button-hover", cx, |_, _| HoverState::default())
         });
         let hovered = state.read(cx).hovered;
         let background = self
@@ -104,26 +104,26 @@ impl RenderOnce for HandyButton {
             .unwrap_or_else(|| rgb(TEXT).into());
         let (hover_background, hover_border, hover_foreground) = match self.kind {
             Kind::Secondary => (
-                rgb(0xda5893).opacity(0.3).into(),
-                rgb(PINK).into(),
+                rgb(0x2f9e8f).opacity(0.3).into(),
+                rgb(ACCENT).into(),
                 foreground,
             ),
             Kind::Ghost => (
                 rgb(0x808080).opacity(0.1).into(),
-                rgb(PINK).into(),
+                rgb(ACCENT).into(),
                 foreground,
             ),
             Kind::Sidebar(true) => (background, border, foreground),
             Kind::Sidebar(false) | Kind::Toolbar(false) => {
                 (rgb(0x808080).opacity(0.2).into(), border, foreground)
             }
-            Kind::Toolbar(true) => (rgb(PINK).opacity(0.3).into(), border, foreground),
+            Kind::Toolbar(true) => (rgb(ACCENT).opacity(0.3).into(), border, foreground),
             Kind::Menu(true) => (background, border, foreground),
             Kind::Menu(false) => (rgb(0x808080).opacity(0.1).into(), border, foreground),
             Kind::AccentGhost => (
-                rgb(PINK).opacity(0.1).into(),
-                rgb(PINK).into(),
-                rgb(PINK).into(),
+                rgb(ACCENT).opacity(0.1).into(),
+                rgb(ACCENT).into(),
+                rgb(ACCENT).into(),
             ),
         };
         let target = Paint {

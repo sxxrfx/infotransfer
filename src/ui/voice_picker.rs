@@ -26,7 +26,7 @@ impl RenderOnce for DownloadMeter {
 }
 
 fn download_progress(id: usize, fraction: f32, scale: f32, cx: &App) -> AnyElement {
-    let fill = div().h_full().rounded_full().bg(rgb(PINK));
+    let fill = div().h_full().rounded_full().bg(rgb(ACCENT));
     let fill = if fraction >= 1. {
         let fill = fill.w_full();
         if cx.reduce_motion() {
@@ -130,14 +130,14 @@ fn indicator(
                 .w(px(60. * scale))
                 .h(px(5.625 * scale))
                 .rounded_full()
-                .bg(rgb(0x3d3c3a))
+                .bg(rgb(0x2c333c))
                 .when_some(fill, |track, fill| {
                     track.child(
                         div()
                             .w(px(60. * scale * fill.clamp(0., 1.)))
                             .h_full()
                             .rounded_full()
-                            .bg(rgb(0xf28cbb)),
+                            .bg(rgb(0x5ec8b8)),
                     )
                 }),
         )
@@ -168,7 +168,7 @@ impl Desktop {
         cx.notify();
     }
 
-    fn voice_menu_button(&self, menu: VoiceMenu, cx: &mut Context<Self>) -> HandyButton {
+    fn voice_menu_button(&self, menu: VoiceMenu, cx: &mut Context<Self>) -> AppButton {
         let (id, label) = match menu {
             VoiceMenu::Filter => ("voice-filter", self.voice_filter.short_label().to_owned()),
             VoiceMenu::Sort => ("voice-sort", format!("Sort: {}", self.voice_sort.label())),
@@ -245,7 +245,7 @@ impl Desktop {
                 VoiceMenu::Sort => self.voice_sort == VoiceSort::ALL[index],
             };
             options = options.child(
-                HandyButton::menu(
+                AppButton::menu(
                     (id, index).into(),
                     div()
                         .id((id, index))
@@ -259,9 +259,9 @@ impl Desktop {
                         .py(px(5.625))
                         .text_size(px(13.125))
                         .line_height(px(18.75))
-                        .text_color(if selected { rgb(PINK) } else { rgb(TEXT) })
+                        .text_color(if selected { rgb(ACCENT) } else { rgb(TEXT) })
                         .when(selected, |view| {
-                            view.bg(rgb(PINK).opacity(0.2))
+                            view.bg(rgb(ACCENT).opacity(0.2))
                                 .font_weight(gpui::FontWeight::SEMIBOLD)
                         }),
                     selected,
@@ -413,7 +413,7 @@ impl Desktop {
             .rounded_lg()
             .border_1()
             .border_color(if self.search_focused {
-                rgb(PINK)
+                rgb(ACCENT)
             } else {
                 rgb(0x808080).opacity(0.4)
             })
@@ -552,7 +552,7 @@ impl Desktop {
             )
     }
 
-    fn voice_card(&self, voice: u32, cx: &mut Context<Self>) -> card::HandyCard {
+    fn voice_card(&self, voice: u32, cx: &mut Context<Self>) -> card::AppCard {
         let index = voice as usize;
         let descriptor = &VOICES[index];
         let selected = self.settings.speech.voice == voice;
@@ -644,7 +644,7 @@ impl Desktop {
             cx.notify();
         });
         let card_id: ElementId = ("voice-card", index).into();
-        card::HandyCard::new(card_id.clone(), selected, move |scale, paint| {
+        card::AppCard::new(card_id.clone(), selected, move |scale, paint| {
             let p = |value: f32| px(value * scale);
             let heading = div()
                 .flex()
@@ -667,7 +667,7 @@ impl Desktop {
                             .rounded_full()
                             .px(p(11.25))
                             .py(p(3.75))
-                            .bg(rgb(PINK))
+                            .bg(rgb(ACCENT))
                             .text_color(rgb(TEXT))
                             .text_size(p(11.25))
                             .line_height(p(15.))
@@ -690,7 +690,7 @@ impl Desktop {
                 .flex_1()
                 .min_w_0()
                 .cursor_pointer()
-                .focus_visible(|style| style.rounded_sm().border_1().border_color(rgb(PINK)))
+                .focus_visible(|style| style.rounded_sm().border_1().border_color(rgb(ACCENT)))
                 .child(heading)
                 .child(
                     div()
@@ -727,7 +727,7 @@ impl Desktop {
                     scale,
                 ));
             let action_id: ElementId = ("preview", index).into();
-            let action_button = HandyButton::accent_ghost(
+            let action_button = AppButton::accent_ghost(
                 action_id.clone(),
                 div()
                     .id(action_id)
@@ -738,7 +738,7 @@ impl Desktop {
                     .cursor_pointer()
                     .rounded_lg()
                     .border(p(1.))
-                    .border_color(rgb(PINK).opacity(0.))
+                    .border_color(rgb(ACCENT).opacity(0.))
                     .px(p(7.5))
                     .py(p(3.75))
                     .flex()
@@ -747,7 +747,7 @@ impl Desktop {
                     .text_size(p(11.25))
                     .line_height(p(15.))
                     .font_weight(gpui::FontWeight::MEDIUM)
-                    .text_color(rgb(PINK).opacity(0.85))
+                    .text_color(rgb(ACCENT).opacity(0.85))
                     .when(fraction.is_none(), |view| {
                         view.child(
                             if installed {

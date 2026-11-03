@@ -85,9 +85,7 @@ Normal mode keeps the selected model loaded while the app runs. Optional memory-
 
 ## 5. UI and accessibility
 
-Use the installed Handy v0.9.8 screenshots as the visual/navigation reference: [General](../assets/references/handy-general.png), [Models](../assets/references/handy-models.png), [Advanced](../assets/references/handy-advanced.png). The [interactive study](../prototypes/handy-reader.html) is the current design artifact. It contains simulated data, not a working native speech app.
-
-Reproduce the charcoal surfaces, fine dividers, light text, pink selected states, left sidebar, grouped rows, right-aligned controls, selected voice cards and persistent speech-choice/update footer. Keep InfoTransfer branding. Current implemented navigation: **General → Voices → Dictionary → Advanced → About**; opt-in History remains a required feature pending implementation. Adapt recording/input controls to reading/playback. Omit transcription-only settings, unnecessary descriptions/info icons, decorative copy and invented quality/speed ratings. See [handy-reference.md](handy-reference.md).
+Use slate surfaces (`#1c2026`), fine dividers (`#3a424d`), light text (`#f2f4f7`), teal selected states (`#5ec8b8`), left sidebar, grouped rows, right-aligned controls, selected voice cards and persistent speech-choice/update footer. Keep InfoTransfer branding. Current implemented navigation: **General → Voices → Dictionary → Advanced → About**; opt-in History remains a required feature pending implementation. Adapt recording/input controls to reading/playback. Omit transcription-only settings, unnecessary descriptions/info icons, decorative copy and invented quality/speed ratings.
 
 Run one GUI instance across development/preview bundle variants. Reopening brings forward the current app. Development packaging uses one fixed preview location and refuses replacement while the GUI is running.
 

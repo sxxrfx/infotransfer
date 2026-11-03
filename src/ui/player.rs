@@ -140,7 +140,7 @@ pub(super) fn visual(
         let bar = div()
             .w(px(2.))
             .rounded(px(1.))
-            .bg(if arming { rgb(0xa3a09a) } else { rgb(0x91c500) })
+            .bg(if arming { rgb(0x8a96a3) } else { rgb(0x5ec8b8) })
             .opacity(if arming { 0.35 } else { 1. });
         let element = if arming && !reduced {
             let delay = [0., 75., 150., 225., 300., 225., 150., 75., 0.][index] / 900.;
@@ -173,7 +173,7 @@ pub(super) fn visual(
         meter = meter.child(element);
     }
     let leading = if working {
-        let spinner = Icon::SpeechSpinner.element(12.).text_color(rgb(PINK));
+        let spinner = Icon::SpeechSpinner.element(12.).text_color(rgb(ACCENT));
         if reduced {
             spinner.into_any_element()
         } else {
@@ -220,9 +220,9 @@ pub(super) fn visual(
         .aria_label("Speech playback")
         .h(px(28.))
         .relative()
-        .bg(rgb(0x222221).opacity(0.98))
+        .bg(rgb(0x181c21).opacity(0.98))
         .border_1()
-        .border_color(rgb(0x60605a))
+        .border_color(rgb(0x46505c))
         .px(px(14.))
         .flex()
         .items_center()

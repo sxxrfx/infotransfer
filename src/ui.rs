@@ -10,7 +10,7 @@ mod slider;
 #[cfg(feature = "visual-test")]
 mod visual_check;
 mod voice_picker;
-use controls::HandyButton;
+use controls::AppButton;
 use gpui::{
     App, Bounds, Context, Div, ElementId, FocusHandle, KeyBinding, Role, SharedString, Stateful,
     TitlebarOptions, Window, WindowBackgroundAppearance, WindowBounds, WindowHandle, WindowKind,
@@ -39,11 +39,11 @@ use std::{
 pub(crate) use visual_check::capture_component_previews;
 
 actions!(infotransfer, [Tab, PreviousTab, OpenSettings, Quit]);
-const BG: u32 = 0x282827;
-const BORDER: u32 = 0x50504d;
-const TEXT: u32 = 0xfbfbfb;
-const PINK: u32 = 0xf28cbb;
-fn button(id: impl Into<ElementId>, label: impl Into<SharedString>) -> HandyButton {
+const BG: u32 = 0x1c2026;
+const BORDER: u32 = 0x3a424d;
+const TEXT: u32 = 0xf2f4f7;
+const ACCENT: u32 = 0x5ec8b8;
+fn button(id: impl Into<ElementId>, label: impl Into<SharedString>) -> AppButton {
     let id = id.into();
     let label = label.into();
     let inner = div()
@@ -63,15 +63,15 @@ fn button(id: impl Into<ElementId>, label: impl Into<SharedString>) -> HandyButt
         .line_height(px(18.75))
         .text_color(rgb(TEXT))
         .cursor_pointer()
-        .focus_visible(|style| style.border_color(rgb(PINK)))
+        .focus_visible(|style| style.border_color(rgb(ACCENT)))
         .child(label);
-    HandyButton::new(id, inner, false)
+    AppButton::new(id, inner, false)
 }
 fn tool_button(
     id: impl Into<ElementId>,
     label: impl Into<SharedString>,
     active: bool,
-) -> HandyButton {
+) -> AppButton {
     let id = id.into();
     let label = label.into();
     let inner = div()
@@ -90,19 +90,19 @@ fn tool_button(
         .text_size(px(13.125))
         .line_height(px(18.75))
         .bg(if active {
-            rgb(PINK).opacity(0.2)
+            rgb(ACCENT).opacity(0.2)
         } else {
             rgb(0x808080).opacity(0.1)
         })
         .text_color(if active {
-            rgb(PINK)
+            rgb(ACCENT)
         } else {
             rgb(TEXT).opacity(0.6)
         })
         .cursor_pointer()
-        .focus_visible(|style| style.border_1().border_color(rgb(PINK)))
+        .focus_visible(|style| style.border_1().border_color(rgb(ACCENT)))
         .child(label);
-    HandyButton::toolbar(id, inner, active)
+    AppButton::toolbar(id, inner, active)
 }
 fn row(label: &str) -> Div {
     row_content(setting_label(label))
@@ -140,7 +140,7 @@ fn section(label: &str) -> Stateful<Div> {
         .text_size(px(13.))
         .line_height(px(20.))
         .font_weight(gpui::FontWeight::MEDIUM)
-        .text_color(rgb(0x9d9d98))
+        .text_color(rgb(0x9aa4b0))
         .child(label.to_owned())
 }
 

@@ -90,7 +90,7 @@ impl Desktop {
                 .px_3()
                 .py_2()
                 .cursor_pointer()
-                .when(selected, |view| view.bg(rgb(PINK).opacity(0.1)))
+                .when(selected, |view| view.bg(rgb(ACCENT).opacity(0.1)))
                 .when(self.footer_cursor == index, |view| {
                     view.aria_active_descendant()
                 })
@@ -123,7 +123,7 @@ impl Desktop {
                             view.child(
                                 div()
                                     .text_size(px(11.25))
-                                    .text_color(rgb(PINK))
+                                    .text_color(rgb(ACCENT))
                                     .child("Active"),
                             )
                         }),
@@ -135,7 +135,7 @@ impl Desktop {
                     window.focus(&this.footer_focus, cx);
                     cx.notify();
                 }));
-            menu = menu.child(HandyButton::menu(
+            menu = menu.child(AppButton::menu(
                 ("footer-motion", index).into(),
                 inner,
                 false,

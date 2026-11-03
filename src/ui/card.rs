@@ -27,13 +27,13 @@ impl TweenValue for Visual {
 }
 
 #[derive(IntoElement)]
-pub(super) struct HandyCard {
+pub(super) struct AppCard {
     id: ElementId,
     selected: bool,
     height: f32,
     build: Builder,
 }
-impl HandyCard {
+impl AppCard {
     pub fn new(
         id: ElementId,
         selected: bool,
@@ -96,7 +96,7 @@ impl RenderOnce for CardFrame {
             )
     }
 }
-impl RenderOnce for HandyCard {
+impl RenderOnce for AppCard {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let state = window.with_element_namespace(self.id.clone(), |window| {
             window.use_keyed_state("card-interaction", cx, |_, _| Interaction::default())
@@ -114,7 +114,7 @@ impl RenderOnce for HandyCard {
                 1.
             },
             paint: Paint {
-                background: rgb(PINK)
+                background: rgb(ACCENT)
                     .opacity(if self.selected {
                         0.1
                     } else if hovered {
@@ -124,11 +124,11 @@ impl RenderOnce for HandyCard {
                     })
                     .into(),
                 border: if self.selected || hovered {
-                    rgb(PINK).opacity(0.5).into()
+                    rgb(ACCENT).opacity(0.5).into()
                 } else {
                     neutral
                 },
-                foreground: rgb(if hovered { PINK } else { TEXT }).into(),
+                foreground: rgb(if hovered { ACCENT } else { TEXT }).into(),
             },
         };
         let hover_state = state.clone();

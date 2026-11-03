@@ -91,7 +91,6 @@ def main():
             ('vendor/sherpa-onnx/LICENSE', 'LICENSE-APACHE-2.0'),
             ('resources/SPEECH-NOTICES.txt', 'SPEECH-NOTICES.txt'),
             ('assets/icons/LICENSE', 'LUCIDE-LICENSE'),
-            ('assets/icons/HANDY-LICENSE', 'HANDY-ICON-LICENSE'),
             ('vendor/sonic/LICENSE', 'SONIC-LICENSE'),
             ('assets/AppIcon.icns', 'AppIcon.icns'),
         ]:

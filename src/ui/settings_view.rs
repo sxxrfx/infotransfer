@@ -182,7 +182,7 @@ impl Desktop {
             .relative()
             .rounded_full()
             .bg(if saver {
-                rgb(0xda5893)
+                rgb(0x2f9e8f)
             } else {
                 rgb(0x808080).opacity(0.2)
             })
@@ -250,8 +250,8 @@ impl Render for Desktop {
                     .items_center()
                     .justify_center()
                     .gap_2()
-                    .text_color(rgb(PINK))
-                    .child(Icon::Voices.element(23.).text_color(rgb(PINK)))
+                    .text_color(rgb(ACCENT))
+                    .child(Icon::Voices.element(23.).text_color(rgb(ACCENT)))
                     .child(
                         div()
                             .text_size(px(14.5))
@@ -271,7 +271,7 @@ impl Render for Desktop {
         .enumerate()
         {
             let active = self.tab == index;
-            navigation = navigation.child(HandyButton::sidebar(
+            navigation = navigation.child(AppButton::sidebar(
                 ("tab-motion", index).into(),
                 div()
                     .id(("tab", index))
@@ -288,7 +288,7 @@ impl Render for Desktop {
                     .gap_2()
                     .rounded(px(7.5))
                     .bg(if active {
-                        rgb(PINK).opacity(0.8)
+                        rgb(0x24786d)
                     } else {
                         rgb(BG).opacity(0.)
                     })
@@ -396,7 +396,7 @@ impl Render for Desktop {
                                     .flex_shrink_0()
                                     .p_3()
                                     .border_1()
-                                    .border_color(rgb(PINK))
+                                    .border_color(rgb(ACCENT))
                                     .rounded_md()
                                     .child(notice),
                             )
