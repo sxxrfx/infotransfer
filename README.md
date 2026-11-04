@@ -23,10 +23,8 @@
 </p>
 
 <p align="center">
-  <img src="docs/media/usage.gif" width="720" alt="Selecting a paragraph in TextEdit and tapping right Option. A small player appears at the bottom of the screen showing Preparing, then a live audio meter while the text is read, and disappears after pressing Escape.">
+  <img src="docs/media/infographic.webp" width="900" alt="InfoTransfer: hear any text on your Mac. Select text, tap right Option, listen. Runs on your Mac, works offline, about 0.1 s per sentence on an M4, free and open source. Shown with the settings window and TextEdit reading selected text aloud.">
 </p>
-
-<p align="center"><sub>Select text → tap right Option → listen. Press Esc to stop. <a href="docs/media/usage.mp4">MP4 version</a> (the recording has no sound).</sub></p>
 
 ## Who it is for
 
@@ -51,6 +49,12 @@ It is designed to stay out of the way:
 - **Private:** speech is generated on your Mac. Your text never leaves the computer, and there is no account, tracking or subscription.
 
 ## How to use it
+
+<p align="center">
+  <img src="docs/media/usage.gif" width="720" alt="Selecting a paragraph in TextEdit and tapping right Option. A small player appears at the bottom of the screen showing Preparing, then a live audio meter while the text is read, and disappears after pressing Escape.">
+</p>
+
+<p align="center"><sub>Select text → tap right Option → listen. Press Esc to stop. <a href="docs/media/usage.mp4">MP4 version</a> (the recording has no sound).</sub></p>
 
 | Do this | What happens |
 | --- | --- |
