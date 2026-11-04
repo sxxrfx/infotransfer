@@ -133,3 +133,42 @@ Local checks on the dry-run 0.2.0 assets:
 - A manifest with an altered checksum failed signature verification.
 
 The network path against a published release has not been exercised yet.
+
+## 2026-11-03: audit fixes
+
+These follow the audit in [ROADMAP.md](ROADMAP.md), Phase 0 and items B1–B9.
+
+- **Reading.**
+  - A chunk that cannot be prepared is no longer skipped silently. Superscripts, subscripts, fractions and non-ASCII digits are now read.
+  - Anything still unreadable is skipped with a notice that names it.
+  - One failed chunk skips ahead instead of ending the reading. If the engine itself fails after audio has started, the queued audio plays out first.
+- **Audio.**
+  - The queue holds 3 s instead of 10 s, so speed, volume and EQ changes are heard within about 3 s.
+  - A producer waiting on a full queue sleeps 20 ms, or 50 ms while paused, instead of 2 ms.
+  - The meter draws at the 30 Hz sample rate instead of tweening at display rate.
+- **Output loss.** While a reading waits for an output, the app keeps retrying past 60 s, the error stays on screen, and Resume waits for the output instead of showing Reading with no sound.
+- **Activation.**
+  - Escape is registered only while capturing, preparing or reading. Notices and paused readings, including the lock/sleep pause, leave it to other apps.
+  - The Fn state comes from modifier-change events only, so arrows and F-keys no longer block the next Fn tap.
+- **Capture.**
+  - If a field does not report its role and secure input is on, the selection is refused as protected.
+  - A NUL inside a selection becomes a space instead of cutting the text short.
+- **Settings.** An invalid sound value, dictionary entry or mistyped field resets only itself. A notice names what was reset, and a copy is kept in `settings.json.bak`.
+- **Voice download.**
+  - The timeout applies to each read, so a stalled connection fails within 30 s.
+  - The version swap is a single `renamex_np(RENAME_SWAP)`, and an interrupted older install is restored.
+  - Free disk space is checked first, and partial files resume with HTTP range requests.
+- **Updates.**
+  - Download, Ready and Install are separate steps, and the download can be canceled.
+  - Installing during a reading asks first. If a reading starts during the install, the restart waits for it to end.
+  - The installed copy is verified again after the swap, and the swap is reversed if the check fails. A symlinked app in the archive is rejected.
+- **Signing and release.**
+  - Bundles use hardened runtime with `disable-library-validation`.
+  - The release key comes from the login keychain (`release.py --import-key`) and is passed to `update-sign` over stdin.
+  - `release.py` refuses uncommitted changes and an existing version unless `--replace` is passed.
+  - `install.sh` runs inside `main`, checks the release's designated requirement, and swaps the app in only after a complete copy.
+- **Text.**
+  - Hyphen ranges and names, all-caps words, plural acronyms, years and decades, slash dates, `file:line:col`, am/pm, Unicode dictionary case and URL query marks are handled.
+  - `s` and `min` after a number read as seconds and minutes.
+  - The pronunciation helper's startup wait is limited to 5 s.
+

@@ -1,13 +1,20 @@
 #!/bin/sh
-# Install a prebuilt InfoTransfer release. scripts/release.py fills in the version and checksum.
+# Install a prebuilt InfoTransfer release. scripts/release.py fills in the version, the
+# checksum and the signing requirement.
+#
+# Everything runs inside main, called on the last line, so a download cut short by
+# `curl | sh` runs nothing.
 set -eu
 
 VERSION='@VERSION@'
 SHA256='@SHA256@'
+REQUIREMENT='@REQUIREMENT@'
 URL="https://github.com/sxxrfx/infotransfer/releases/download/v$VERSION/InfoTransfer-$VERSION-arm64.zip"
 SOURCE='https://github.com/sxxrfx/infotransfer'
 
 fail() { printf '\nInfoTransfer: %s\n' "$1" >&2; exit 1; }
+
+main() {
 
 [ "$(uname -s)" = Darwin ] || fail 'InfoTransfer runs on macOS only.'
 [ "$(uname -m)" = arm64 ] || fail 'InfoTransfer needs a Mac with Apple Silicon (M1 or newer).'
@@ -48,6 +55,9 @@ ditto -x -k "$work/InfoTransfer.zip" "$work/unpacked"
 app="$work/unpacked/InfoTransfer.app"
 [ -d "$app" ] || fail 'The download did not contain InfoTransfer.app.'
 codesign --verify --deep --strict "$app" 2>/dev/null || fail 'The app signature is broken. Nothing was installed.'
+# The same identity signs every release, which also keeps the Accessibility permission.
+codesign --verify --strict "-R=$REQUIREMENT" "$app" 2>/dev/null ||
+    fail 'The app is signed by an unexpected identity. Nothing was installed.'
 
 target=/Applications
 [ -w "$target" ] || target="$HOME/Applications"
@@ -59,8 +69,20 @@ if pgrep -x infotransfer >/dev/null 2>&1; then
     sleep 1
 fi
 
-rm -rf "$target/InfoTransfer.app"
-ditto "$app" "$target/InfoTransfer.app"
+# Copy next to the old app first, so a failed copy leaves the installed app untouched.
+new="$target/.InfoTransfer.app.new"
+old="$target/.InfoTransfer.app.old"
+rm -rf "$new" "$old"
+ditto "$app" "$new" || { rm -rf "$new"; fail 'Copying the app failed. Nothing was changed.'; }
+if [ -e "$target/InfoTransfer.app" ]; then
+    mv "$target/InfoTransfer.app" "$old"
+fi
+if ! mv "$new" "$target/InfoTransfer.app"; then
+    [ -e "$old" ] && mv "$old" "$target/InfoTransfer.app"
+    rm -rf "$new"
+    fail 'Replacing the app failed. The previous version was kept.'
+fi
+rm -rf "$old"
 # curl does not quarantine downloads; clear the flag anyway in case a proxy or tool added it.
 xattr -dr com.apple.quarantine "$target/InfoTransfer.app" 2>/dev/null || true
 
@@ -75,3 +97,6 @@ Next:
 
 EOF
 open "$target/InfoTransfer.app"
+}
+
+main "$@"

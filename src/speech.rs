@@ -179,9 +179,7 @@ impl Speech {
         );
         let started = Instant::now();
         let spoken = crate::spoken::prepare(text, &self.dictionary)?;
-        let phonemes = self
-            .frontend
-            .phonemes(&spoken, self.model.british(voice))?;
+        let phonemes = self.frontend.phonemes(&spoken, self.model.british(voice))?;
         if cancel() {
             return Ok(Generation {
                 first_audio: None,

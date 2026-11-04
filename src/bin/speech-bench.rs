@@ -40,7 +40,7 @@ fn main() -> Result<()> {
         let text = args.get(index + 1).context("--phonemes needs text")?;
         let voice = value("--voice", "0").parse::<u32>()?;
         let mut engine = Speech::load(&paths, threads)?;
-        for chunk in Chunks::new(text) {
+        for chunk in app_chunks(text) {
             println!("{}", engine.pronunciation(chunk, voice)?);
         }
         return Ok(());
@@ -62,7 +62,7 @@ fn main() -> Result<()> {
         json!({"event":"loaded","load_ms":started.elapsed().as_secs_f64()*1000.,"threads":threads,"sample_rate":engine.sample_rate,"voices":engine.voices,"method":"model_callback_not_audible_output"})
     );
     for run in 0..runs {
-        let default_input = Chunks::new(&text).next().context("benchmark input")?;
+        let default_input = app_chunks(&text).next().context("benchmark input")?;
         let input = if let Some(index) = args.iter().position(|arg| arg == "--words") {
             let count = args
                 .get(index + 1)
@@ -101,4 +101,10 @@ fn main() -> Result<()> {
         }
     }
     Ok(())
+}
+
+/// The app's own chunk sizes, so first-chunk timings describe what a reading does.
+fn app_chunks(text: &str) -> Chunks<'_> {
+    let options = infotransfer::reader::RuntimeOptions::default();
+    Chunks::with_limits(text, options.first_chunk, options.following_chunk)
 }

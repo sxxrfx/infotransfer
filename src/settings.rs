@@ -23,25 +23,46 @@ impl Default for Settings {
     }
 }
 impl Settings {
-    pub fn load() -> Result<Self> {
+    /// Loads saved settings. A value that cannot be used is reset on its own, and the
+    /// message names what was reset.
+    pub fn load() -> Result<(Self, Option<String>)> {
         let path = data_dir().join("settings.json");
         if !path.exists() {
-            return Ok(Self::default());
+            return Ok((Self::default(), None));
         }
         let bytes = fs::read(&path)?;
-        Self::from_json(&bytes).inspect_err(|_| {
-            // Defaults will overwrite this file, so keep the user's dictionary recoverable.
+        let keep_copy = || {
+            // The next save overwrites this file, so keep the user's dictionary recoverable.
             let _ = fs::write(path.with_extension("json.bak"), &bytes);
-        })
+        };
+        let (value, reset) = Self::from_json(&bytes).inspect_err(|_| keep_copy())?;
+        if reset.is_empty() {
+            return Ok((value, None));
+        }
+        keep_copy();
+        Ok((
+            value,
+            Some(format!(
+                "Reset {} that could not be loaded. A copy is in settings.json.bak.",
+                reset.join(", ")
+            )),
+        ))
     }
-    fn from_json(bytes: &[u8]) -> Result<Self> {
+    fn from_json(bytes: &[u8]) -> Result<(Self, Vec<&'static str>)> {
         let raw: serde_json::Value = serde_json::from_slice(bytes)?;
         let legacy = raw
             .get("sound_defaults_version")
             .and_then(serde_json::Value::as_u64)
             .unwrap_or(0)
             == 0;
-        let mut value: Self = serde_json::from_value(raw)?;
+        let mut reset = Vec::new();
+        let mut value: Self = match serde_json::from_value(raw.clone()) {
+            Ok(value) => value,
+            Err(_) => {
+                reset.push("unreadable settings");
+                Self::lenient(&raw)
+            }
+        };
         // Replace the previous automatic gap defaults once; preserve custom gaps.
         if legacy
             && value.speech.sound.sentence_pause_ms == 300
@@ -51,16 +72,76 @@ impl Settings {
             value.speech.sound.paragraph_pause_ms = 0;
         }
         value.sound_defaults_version = 1;
-        value.speech.sound.validate()?;
-        crate::dictionary::validate(&value.speech.dictionary)?;
         // One unusable value resets that value, not the whole saved configuration.
+        if value.speech.sound.validate().is_err() {
+            value.speech.sound = Default::default();
+            reset.push("sound settings");
+        }
+        let mut dictionary = Vec::new();
+        for entry in std::mem::take(&mut value.speech.dictionary) {
+            dictionary.push(entry);
+            if crate::dictionary::validate(&dictionary).is_err() {
+                dictionary.pop();
+                if !reset.contains(&"dictionary entries") {
+                    reset.push("dictionary entries");
+                }
+            }
+        }
+        value.speech.dictionary = dictionary;
         if !crate::voices::available(value.speech.voice) {
             value.speech.voice = 0;
         }
         if !(0.75..=2.).contains(&value.speech.speed) {
             value.speech.speed = 1.;
+            reset.push("speed");
         }
-        Ok(value)
+        Ok((value, reset))
+    }
+    /// Keeps every field, and every dictionary entry, that still has a usable type.
+    fn lenient(raw: &serde_json::Value) -> Self {
+        let mut value = serde_json::to_value(Self::default()).expect("serialize settings");
+        merge_fields::<Self>(&mut value, raw, "speech");
+        if let Some(saved) = raw.get("speech") {
+            let mut speech = value["speech"].take();
+            merge_fields::<Preferences>(&mut speech, saved, "dictionary");
+            if let Some(entries) = saved.get("dictionary").and_then(|value| value.as_array()) {
+                speech["dictionary"] = entries
+                    .iter()
+                    .filter(|entry| {
+                        serde_json::from_value::<crate::dictionary::WordReplacement>(
+                            (*entry).clone(),
+                        )
+                        .is_ok()
+                    })
+                    .cloned()
+                    .collect();
+            }
+            value["speech"] = speech;
+        }
+        serde_json::from_value(value).unwrap_or_default()
+    }
+}
+
+/// Copies each saved field into `target` only while `T` still deserializes.
+fn merge_fields<T: serde::de::DeserializeOwned>(
+    target: &mut serde_json::Value,
+    saved: &serde_json::Value,
+    skip: &str,
+) {
+    let (Some(saved), Some(object)) = (saved.as_object(), target.as_object_mut()) else {
+        return;
+    };
+    for (key, item) in saved {
+        if key == skip {
+            continue;
+        }
+        let previous = object.insert(key.clone(), item.clone());
+        if serde_json::from_value::<T>(serde_json::Value::Object(object.clone())).is_err() {
+            match previous {
+                Some(previous) => object.insert(key.clone(), previous),
+                None => object.remove(key),
+            };
+        }
     }
 }
 
@@ -131,7 +212,7 @@ mod tests {
     #[test]
     fn one_invalid_value_does_not_reset_the_dictionary() {
         let saved = br#"{"speech":{"voice":99,"speed":9.0,"dictionary":[{"word":"k8s","replacement":"kubernetes","match_case":false}]}}"#;
-        let loaded = Settings::from_json(saved).unwrap();
+        let loaded = Settings::from_json(saved).unwrap().0;
         assert_eq!(loaded.speech.voice, 0);
         assert_eq!(loaded.speech.speed, 1.);
         assert_eq!(loaded.speech.dictionary[0].replacement, "kubernetes");
@@ -149,13 +230,14 @@ mod tests {
     #[test]
     fn natural_pacing_migrates_only_the_old_automatic_gaps() {
         let legacy = br#"{"speech":{"sound":{"sentence_pause_ms":300,"paragraph_pause_ms":650}}}"#;
-        let loaded = Settings::from_json(legacy).unwrap();
+        let loaded = Settings::from_json(legacy).unwrap().0;
         assert_eq!(loaded.speech.sound.sentence_pause_ms, 0);
         assert_eq!(loaded.speech.sound.paragraph_pause_ms, 0);
         let custom = br#"{"speech":{"sound":{"sentence_pause_ms":200,"paragraph_pause_ms":450}}}"#;
         assert_eq!(
             Settings::from_json(custom)
                 .unwrap()
+                .0
                 .speech
                 .sound
                 .sentence_pause_ms,
@@ -165,10 +247,35 @@ mod tests {
         assert_eq!(
             Settings::from_json(saved)
                 .unwrap()
+                .0
                 .speech
                 .sound
                 .sentence_pause_ms,
             300
         );
+    }
+    #[test]
+    fn one_bad_dictionary_entry_or_sound_value_keeps_everything_else() {
+        let saved = br#"{"activation_key":"right_option","speech":{"speed":1.5,"sound":{"volume":9.0},"dictionary":[{"word":"k8s","replacement":"kubernetes","match_case":false},{"word":"K8S","replacement":"duplicate","match_case":false},{"word":"","replacement":"empty","match_case":false}]}}"#;
+        let (loaded, reset) = Settings::from_json(saved).unwrap();
+        assert_eq!(loaded.speech.speed, 1.5);
+        assert_eq!(
+            loaded.activation_key,
+            crate::activation::KeyPreference::RightOption
+        );
+        assert_eq!(loaded.speech.sound.volume, 1.);
+        assert_eq!(loaded.speech.dictionary.len(), 1);
+        assert_eq!(loaded.speech.dictionary[0].replacement, "kubernetes");
+        assert_eq!(reset, ["sound settings", "dictionary entries"]);
+    }
+    #[test]
+    fn a_field_with_the_wrong_type_is_reset_alone() {
+        let saved = br#"{"check_updates":false,"speech":{"speed":"fast","memory_saver":true,"dictionary":[{"word":"k8s","replacement":"kubernetes","match_case":false},{"word":5}]}}"#;
+        let (loaded, reset) = Settings::from_json(saved).unwrap();
+        assert!(!loaded.check_updates);
+        assert!(loaded.speech.memory_saver);
+        assert_eq!(loaded.speech.speed, 1.);
+        assert_eq!(loaded.speech.dictionary.len(), 1);
+        assert_eq!(reset, ["unreadable settings"]);
     }
 }

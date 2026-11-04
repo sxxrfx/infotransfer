@@ -47,10 +47,10 @@ impl Phonemizer {
             input,
             output,
         };
+        // A helper that hangs at launch is killed when `value` drops on this error.
         let mut ready = [0u8; 4];
         value
-            .output
-            .read_exact(&mut ready)
+            .read_before(&mut ready, Instant::now() + PRONUNCIATION_TIMEOUT)
             .context("Pronunciation could not load")?;
         ensure!(ready == [0; 4], "Invalid pronunciation runtime");
         Ok(value)
@@ -177,14 +177,27 @@ impl EnglishFrontend {
                 pieces.push(Piece::Space);
             }
         }
+        // A capital "A" is the article only where a sentence starts; elsewhere it is a letter.
+        let mut initial = true;
+        let starts: Vec<bool> = pieces
+            .iter()
+            .map(|piece| match piece {
+                Piece::Word(..) => std::mem::replace(&mut initial, false),
+                Piece::Symbol(ch) => {
+                    initial |= ".!?…".contains(*ch);
+                    false
+                }
+                Piece::Space => false,
+            })
+            .collect();
         // Function words depend on what follows, as in Misaki: walk right to left,
         // tracking whether the next sound is a vowel (None at punctuation or the end).
         let mut next_vowel = None;
-        for piece in pieces.iter_mut().rev() {
+        for (piece, initial) in pieces.iter_mut().zip(starts).rev() {
             match piece {
                 Piece::Symbol(ch) if PAUSES.contains(*ch) => next_vowel = None,
                 Piece::Word(raw, phones) => {
-                    if let Some(reduced) = function_word(raw, next_vowel)
+                    if let Some(reduced) = function_word(raw, next_vowel, initial)
                         .filter(|reduced| self.supported(reduced))
                     {
                         *phones = reduced;
@@ -253,7 +266,10 @@ impl EnglishFrontend {
         let converted = compatible(&ipa, self.british);
         let mut phones: Vec<i32> = converted.trim().chars().map(|ch| ch as i32).collect();
         if !self.supported(&phones) {
-            if let Some(known) = self.lexicons[dialect].get(&key).filter(|p| self.supported(p)) {
+            if let Some(known) = self.lexicons[dialect]
+                .get(&key)
+                .filter(|p| self.supported(p))
+            {
                 return Ok(known.clone());
             }
             // A model may lack a rare phone. Spell the complete word instead of dropping it.
@@ -368,7 +384,10 @@ impl EnglishFrontend {
             let last = *chars.last()?;
             if british && "əː".contains(last) {
                 return None;
-            } else if !british && last == 't' && chars.len() > 1 && US_TAUS.contains(chars[chars.len() - 2])
+            } else if !british
+                && last == 't'
+                && chars.len() > 1
+                && US_TAUS.contains(chars[chars.len() - 2])
             {
                 chars.pop();
                 format!("{}ɾɪŋ", chars.into_iter().collect::<String>())
@@ -434,10 +453,11 @@ fn starts_with_vowel(phones: &[i32]) -> Option<Option<bool>> {
 
 /// Misaki's reduced forms for unstressed function words. `next_vowel` describes the
 /// following word, or is None before a pause. Words such as "a" read as letters before
-/// a pause.
-fn function_word(raw: &str, next_vowel: Option<bool>) -> Option<Vec<i32>> {
+/// a pause, and a capital "A" after the start of a sentence is a letter, as in "Vitamin A is".
+fn function_word(raw: &str, next_vowel: Option<bool>, initial: bool) -> Option<Vec<i32>> {
     let phones = match (raw, next_vowel) {
-        ("a" | "A", Some(_)) => "ɐ",
+        ("a", Some(_)) => "ɐ",
+        ("A", Some(_)) if initial => "ɐ",
         ("an" | "An" | "AN", Some(_)) => "ɐn",
         ("am" | "Am", Some(_)) => "ɐm",
         ("I", _) => "ˌI",
@@ -514,17 +534,19 @@ mod tests {
     }
     #[test]
     fn function_words_reduce_like_misaki() {
-        assert_eq!(function_word("a", Some(false)), Some(phones("ɐ")));
-        assert_eq!(function_word("A", None), None);
-        assert_eq!(function_word("the", Some(true)), Some(phones("ði")));
-        assert_eq!(function_word("The", Some(false)), Some(phones("ðə")));
-        assert_eq!(function_word("the", None), Some(phones("ðə")));
-        assert_eq!(function_word("to", Some(false)), Some(phones("tə")));
-        assert_eq!(function_word("to", Some(true)), Some(phones("tʊ")));
-        assert_eq!(function_word("to", None), None);
-        assert_eq!(function_word("in", None), Some(phones("ˈɪn")));
-        assert_eq!(function_word("I", None), Some(phones("ˌI")));
-        assert_eq!(function_word("cat", Some(true)), None);
+        assert_eq!(function_word("a", Some(false), false), Some(phones("ɐ")));
+        assert_eq!(function_word("A", None, true), None);
+        assert_eq!(function_word("A", Some(false), true), Some(phones("ɐ")));
+        assert_eq!(function_word("A", Some(true), false), None);
+        assert_eq!(function_word("the", Some(true), false), Some(phones("ði")));
+        assert_eq!(function_word("The", Some(false), false), Some(phones("ðə")));
+        assert_eq!(function_word("the", None, false), Some(phones("ðə")));
+        assert_eq!(function_word("to", Some(false), false), Some(phones("tə")));
+        assert_eq!(function_word("to", Some(true), false), Some(phones("tʊ")));
+        assert_eq!(function_word("to", None, false), None);
+        assert_eq!(function_word("in", None, false), Some(phones("ˈɪn")));
+        assert_eq!(function_word("I", None, false), Some(phones("ˌI")));
+        assert_eq!(function_word("cat", Some(true), false), None);
     }
     #[test]
     fn next_sound_skips_stress_and_stops_at_pauses() {
