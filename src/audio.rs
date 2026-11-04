@@ -10,9 +10,13 @@ use std::{
     time::{Duration, Instant},
 };
 
-/// Ten seconds at 24 kHz. Synthesis of the next chunk starts once its audio fits,
-/// so this must cover the slowest chunk's generation time or playback gaps.
-const QUEUE_SAMPLES: usize = 240_000;
+/// Three seconds at 24 kHz. Synthesis of the next chunk starts once its audio fits,
+/// so this must cover the slowest chunk's generation time (Paradee: about 0.2 s for
+/// 180 characters on an M4) or playback gaps. Settings changes wait behind it.
+const QUEUE_SAMPLES: usize = 72_000;
+/// While the queue is full, wait for about this much audio to play before retrying.
+const FULL_WAIT: Duration = Duration::from_millis(20);
+const PAUSED_WAIT: Duration = Duration::from_millis(50);
 /// Taps of the band-limited resampler; half of them, 1 ms at 24 kHz, is its delay.
 const TAPS: usize = 48;
 const PHASES: usize = 256;
@@ -163,7 +167,7 @@ impl AudioBus {
                 match run.queue.push(value) {
                     Ok(()) => break,
                     Err(_) => {
-                        std::thread::sleep(Duration::from_millis(2));
+                        std::thread::sleep(if run.paused() { PAUSED_WAIT } else { FULL_WAIT })
                     }
                 }
             }
@@ -478,6 +482,22 @@ mod tests {
         control.stop();
         renderer.render(&mut output, 1, 24_000, &bus, clock_ns());
         assert!(output.iter().all(|sample| *sample == 0.));
+    }
+    #[test]
+    fn a_producer_waiting_on_a_full_queue_returns_promptly_on_stop() {
+        let mut control = AudioControl::new();
+        let bus = control.bus();
+        let run = control.begin(24_000);
+        control.pause();
+        let producer = {
+            let (bus, run) = (bus.clone(), run.clone());
+            std::thread::spawn(move || bus.push(&run, &vec![0.1; QUEUE_SAMPLES + 1]))
+        };
+        std::thread::sleep(Duration::from_millis(120));
+        let stopped = Instant::now();
+        control.stop();
+        assert!(!producer.join().unwrap());
+        assert!(stopped.elapsed() < Duration::from_millis(200));
     }
     #[test]
     fn pause_preserves_audio_and_meter() {

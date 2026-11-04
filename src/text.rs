@@ -88,6 +88,37 @@ fn opening_clause(sentence: &str, longest: usize) -> Option<usize> {
     punctuation.or(joiner).or(space)
 }
 
+/// Combining marks, joiners, variation selectors and skin tones continue the character
+/// before them, so a cut never lands in front of one.
+fn extends(ch: char) -> bool {
+    matches!(ch,
+        '\u{300}'..='\u{36f}'
+        | '\u{1ab0}'..='\u{1aff}'
+        | '\u{1dc0}'..='\u{1dff}'
+        | '\u{20d0}'..='\u{20ff}'
+        | '\u{fe00}'..='\u{fe0f}'
+        | '\u{fe20}'..='\u{fe2f}'
+        | '\u{200d}'
+        | '\u{1f3fb}'..='\u{1f3ff}'
+        | '\u{e0020}'..='\u{e007f}')
+}
+/// A blank line follows: `\n\n`, `\r\n\r\n` or a line of spaces.
+fn blank_line_follows(after: &str) -> bool {
+    after
+        .find(['\n', '\u{2029}'])
+        .is_some_and(|end| after[..end].trim().is_empty())
+}
+/// A short unit after a number, as in `3.5 GB` or `10 ms`, stays with the number.
+fn unit_follows(before: &str, after: &str) -> bool {
+    before.ends_with(|ch: char| ch.is_ascii_digit())
+        && after.split_whitespace().next().is_some_and(|word| {
+            (1..=4).contains(&word.chars().count())
+                && word
+                    .chars()
+                    .all(|ch| ch.is_alphabetic() || matches!(ch, '%' | '/'))
+        })
+}
+
 impl<'a> Iterator for Chunks<'a> {
     type Item = &'a str;
     fn next(&mut self) -> Option<Self::Item> {
@@ -99,17 +130,51 @@ impl<'a> Iterator for Chunks<'a> {
         let limit = self.following_limit.max(self.first_limit);
         let opening = std::mem::take(&mut self.first);
         let mut end = self.remaining.len();
-        let mut whitespace = None;
+        let (mut whitespace, mut earlier) = (None, None);
         for (count, (index, ch)) in self.remaining.char_indices().enumerate() {
             if count >= limit {
-                end = whitespace.filter(|at| *at > 0).unwrap_or(index);
+                end = match whitespace.filter(|at| *at > 0) {
+                    Some(at)
+                        if unit_follows(&self.remaining[..at], &self.remaining[at..])
+                            && earlier.is_some_and(|at| at > 0) =>
+                    {
+                        earlier.unwrap()
+                    }
+                    Some(at) => at,
+                    None => {
+                        let mut cut = index;
+                        while cut > 0
+                            && (self.remaining[cut..].chars().next().is_some_and(extends)
+                                || self.remaining[..cut].ends_with('\u{200d}'))
+                        {
+                            cut -= self.remaining[..cut]
+                                .chars()
+                                .next_back()
+                                .unwrap()
+                                .len_utf8();
+                        }
+                        if cut == 0 { index } else { cut }
+                    }
+                };
                 break;
             }
             if ch.is_whitespace() {
+                if whitespace.is_some_and(|at| at + 1 < index) {
+                    earlier = whitespace;
+                }
                 whitespace = Some(index);
             }
-            if matches!(ch, '!' | '?' | ';')
-                || (ch == '\n' && self.remaining[index..].starts_with("\n\n"))
+            let spaced = self.remaining[index + ch.len_utf8()..]
+                .chars()
+                .next()
+                .is_none_or(|next| {
+                    next.is_whitespace()
+                        || matches!(next, '!' | '?' | '"' | '”' | '\'' | '’' | ')' | ']')
+                });
+            // `?` inside a URL query is not the end of a sentence.
+            if (matches!(ch, '!' | '?' | ';') && spaced)
+                || ch == '\u{2029}'
+                || (ch == '\n' && blank_line_follows(&self.remaining[index + 1..]))
             {
                 end = index + ch.len_utf8();
                 while let Some(next) = self.remaining[end..].chars().next() {
@@ -144,8 +209,7 @@ impl<'a> Iterator for Chunks<'a> {
                 }
             }
         }
-        if opening && let Some(clause) = opening_clause(&self.remaining[..end], self.first_limit)
-        {
+        if opening && let Some(clause) = opening_clause(&self.remaining[..end], self.first_limit) {
             end = clause;
         }
         let (chunk, tail) = self.remaining.split_at(end);
@@ -155,8 +219,12 @@ impl<'a> Iterator for Chunks<'a> {
             .rev()
             .take_while(|ch| ch.is_whitespace())
             .chain(tail[..leading].chars())
-            .filter(|ch| *ch == '\n')
-            .count()
+            .map(|ch| match ch {
+                '\u{2029}' => 2,
+                '\n' => 1,
+                _ => 0,
+            })
+            .sum::<usize>()
             >= 2;
         let ending = chunk
             .trim_end()
@@ -204,10 +272,17 @@ mod tests {
     }
     #[test]
     fn a_shorter_opening_limit_still_prefers_clause_breaks() {
-        let text = "After the long report finally arrives, read the summary first and then the details.";
+        let text =
+            "After the long report finally arrives, read the summary first and then the details.";
         let mut chunks = Chunks::with_limits(text, 60, 180);
-        assert_eq!(chunks.next(), Some("After the long report finally arrives,"));
-        assert_eq!(chunks.next(), Some("read the summary first and then the details."));
+        assert_eq!(
+            chunks.next(),
+            Some("After the long report finally arrives,")
+        );
+        assert_eq!(
+            chunks.next(),
+            Some("read the summary first and then the details.")
+        );
         let short = "Short opening sentences stay whole.";
         assert_eq!(Chunks::with_limits(short, 60, 180).next(), Some(short));
     }
@@ -251,6 +326,76 @@ mod tests {
         assert!(validate(&"é".repeat(100_000)).is_ok());
         assert!(validate(&"é".repeat(100_001)).is_err());
         assert!(validate(" \n ").is_err());
+    }
+    #[test]
+    fn other_paragraph_breaks_and_urls() {
+        for text in [
+            "One.\r\n\r\nTwo.",
+            "One.\n \nTwo.",
+            "One.\u{2029}Two.",
+            "One\n\t\nTwo.",
+        ] {
+            let mut chunks = Chunks::new(text);
+            assert!(chunks.next().unwrap().starts_with("One"), "{text:?}");
+            assert_eq!(chunks.boundary(), Boundary::Paragraph, "{text:?}");
+            assert_eq!(chunks.next(), Some("Two."));
+        }
+        assert_eq!(
+            Chunks::new("Open https://x.dev/a?q=1&b=2 now. Done?").collect::<Vec<_>>(),
+            ["Open https://x.dev/a?q=1&b=2 now.", "Done?"]
+        );
+    }
+    #[test]
+    fn hard_cuts_keep_units_and_marks_together() {
+        let text = format!("{}3.5 GB more words", "word ".repeat(35));
+        let first = Chunks::with_limits(&text, 180, 180).next().unwrap();
+        assert!(first.ends_with("word"), "{first}");
+        let marked = "e\u{301}".repeat(200);
+        for chunk in Chunks::new(&marked) {
+            assert!(!chunk.starts_with('\u{301}'));
+        }
+        let family = "👩\u{200d}👩\u{200d}👧".repeat(60);
+        for chunk in Chunks::new(&family) {
+            assert!(!chunk.starts_with('\u{200d}') && !chunk.ends_with('\u{200d}'));
+        }
+    }
+    /// Deterministic xorshift input of mixed scripts, symbols, digits and markup.
+    fn random_text(seed: u64, length: usize) -> String {
+        let pool: Vec<char> =
+            "aZ09 -./:,?!*#_'\"$€£²₂½①Ⅻ٤１\u{301}\u{308}\u{200D}🙂éß→≥—–\n\t\r\u{2029}%^~|"
+                .chars()
+                .collect();
+        let mut state = seed | 1;
+        (0..length)
+            .map(|_| {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                if state.is_multiple_of(5) {
+                    char::from_u32((state >> 20) as u32 % 0x3000).unwrap_or('x')
+                } else {
+                    pool[(state >> 8) as usize % pool.len()]
+                }
+            })
+            .collect()
+    }
+    #[test]
+    fn random_input_chunks_without_panics_or_loss() {
+        let meaningful = |s: &str| {
+            s.chars()
+                .filter(|ch| !ch.is_whitespace())
+                .collect::<String>()
+        };
+        for seed in 0..400 {
+            let text = random_text(seed, 1 + seed as usize % 600);
+            let chunks: Vec<_> = Chunks::with_limits(&text, 8 + seed as usize % 100, 180).collect();
+            assert!(chunks.iter().all(|chunk| !chunk.is_empty()));
+            assert_eq!(meaningful(&chunks.concat()), meaningful(&text), "{seed}");
+            for chunk in chunks {
+                let _ = crate::spoken::prepare(chunk, &crate::dictionary::defaults());
+                let _ = crate::spoken::speech_check(chunk, &[]);
+            }
+        }
     }
     #[test]
     fn one_long_token_is_not_lost() {

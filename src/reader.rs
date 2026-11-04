@@ -99,6 +99,8 @@ struct Shared {
     synthesizing: AtomicBool,
     audio_wake: Sender<()>,
     output_wanted_ns: AtomicU64,
+    /// A reading is paused only because no output is available; keep trying to open one.
+    awaiting_output: AtomicBool,
 }
 impl Shared {
     fn update(&self, f: impl FnOnce(&mut Snapshot)) {
@@ -265,6 +267,7 @@ impl Reader {
             synthesizing: AtomicBool::new(false),
             audio_wake,
             output_wanted_ns: AtomicU64::new(0),
+            awaiting_output: AtomicBool::new(false),
         });
         let (commands, rx) = unbounded();
         let (job_wake, job_rx) = bounded(1);
@@ -493,6 +496,7 @@ fn controller(
                 shared.touch_output();
                 manual_pause = false;
                 route_resume = false;
+                shared.awaiting_output.store(false, Ordering::Release);
                 shared.update(|view| {
                     view.phase = Phase::Preparing;
                     view.notice = None;
@@ -518,6 +522,11 @@ fn controller(
             Some(Command::Resume) => {
                 manual_pause = false;
                 shared.touch_output();
+                if shared.awaiting_output.load(Ordering::Acquire) {
+                    // Resuming now would show Reading with no sound. OutputReady resumes it.
+                    route_resume = control.current().active();
+                    continue;
+                }
                 control.resume();
                 if control.current().active() {
                     shared.update(|view| {
@@ -534,6 +543,7 @@ fn controller(
                 jobs.idle();
                 manual_pause = false;
                 route_resume = false;
+                shared.awaiting_output.store(false, Ordering::Release);
                 shared.update(|view| {
                     view.phase = Phase::Idle;
                     view.notice = None;
@@ -588,6 +598,7 @@ fn controller(
             Some(Command::GenerationFailed { run, error }) => {
                 if control.current().id == run && control.current().active() {
                     control.stop();
+                    jobs.idle();
                     shared.update(|view| {
                         view.phase = Phase::Failed;
                         view.notice = Some(error);
@@ -595,6 +606,7 @@ fn controller(
                 }
             }
             Some(Command::OutputReady(device)) => {
+                shared.awaiting_output.store(false, Ordering::Release);
                 shared.update(|view| view.output_device = Some(device));
                 if route_resume && !manual_pause && control.current().active() {
                     control.resume();
@@ -610,8 +622,9 @@ fn controller(
                 route_resume = false;
             }
             Some(Command::OutputLost(error)) => {
-                route_resume = control.current().active() && !manual_pause;
                 let active = control.current().active();
+                route_resume = route_resume || (active && !manual_pause);
+                shared.awaiting_output.store(active, Ordering::Release);
                 control.pause();
                 shared.update(|view| {
                     view.output_device = None;
@@ -627,7 +640,12 @@ fn controller(
                 break;
             }
             None => {
-                if notice_deadline.is_some_and(|deadline| deadline <= Instant::now()) {
+                if notice_deadline.is_some_and(|deadline| deadline <= Instant::now())
+                    && shared.awaiting_output.load(Ordering::Acquire)
+                {
+                    // An output error stays until output returns or the reading stops.
+                    notice_deadline = Some(Instant::now() + NOTICE_LIFETIME);
+                } else if notice_deadline.is_some_and(|deadline| deadline <= Instant::now()) {
                     notice_deadline = None;
                     shown_notice = None;
                     shared.update(|view| {
@@ -731,6 +749,7 @@ fn speech_worker(
             }
             let mut started = false;
             let mut failed = false;
+            let mut skipped = None::<String>;
             let mut audio = SpeechAudio::new(24_000, shared.preferences.read().unwrap().sound);
             let mut processed = Vec::with_capacity(4096);
             let mut chunks =
@@ -743,7 +762,14 @@ fn speech_worker(
                 let prefs = shared.preferences.read().unwrap().clone();
                 let voice = preview_voice.unwrap_or(prefs.voice);
                 audio.configure(prefs.sound);
-                let result = if !crate::spoken::speakable(chunk, &prefs.dictionary) {
+                let speakable = match crate::spoken::speech_check(chunk, &prefs.dictionary) {
+                    Ok(speakable) => speakable,
+                    Err(error) => {
+                        skipped.get_or_insert(error.to_string());
+                        false
+                    }
+                };
+                let result = if !speakable {
                     Ok(())
                 } else {
                     load_engine(
@@ -754,38 +780,53 @@ fn speech_worker(
                         || !run.active() || shared.quitting.load(Ordering::Acquire),
                     )
                     .and_then(|engine| {
-                        engine.set_dictionary(&prefs.dictionary)?;
-                        engine.generate_cancellable(
-                            chunk,
-                            source.speaker(voice),
-                            prefs.speed,
-                            |samples| {
-                                audio.process(samples, &mut processed);
-                                for part in processed.chunks(1024) {
-                                    if !bus.push(&run, part) {
-                                        return false;
+                        let generated = engine.set_dictionary(&prefs.dictionary).and_then(|()| {
+                            engine.generate_cancellable(
+                                chunk,
+                                source.speaker(voice),
+                                prefs.speed,
+                                |samples| {
+                                    audio.process(samples, &mut processed);
+                                    for part in processed.chunks(1024) {
+                                        if !bus.push(&run, part) {
+                                            return false;
+                                        }
+                                        if !started {
+                                            started = true;
+                                            let _ = commands.send(Command::Started {
+                                                run: run.id,
+                                                time: clock_ns(),
+                                            });
+                                        }
                                     }
-                                    if !started {
-                                        started = true;
-                                        let _ = commands.send(Command::Started {
-                                            run: run.id,
-                                            time: clock_ns(),
-                                        });
-                                    }
-                                }
-                                true
-                            },
-                            || !run.active(),
-                        )
+                                    true
+                                },
+                                || !run.active(),
+                            )
+                        });
+                        match generated {
+                            Ok(_) => Ok(()),
+                            // One bad chunk skips ahead; a dead engine ends the reading.
+                            Err(error) if engine.alive() && run.active() => {
+                                skipped.get_or_insert(error.to_string());
+                                Ok(())
+                            }
+                            Err(error) => Err(error),
+                        }
                     })
-                    .map(|_| ())
                 };
                 if let Err(error) = result {
                     failed = true;
-                    let _ = commands.send(Command::GenerationFailed {
-                        run: run.id,
-                        error: error.to_string(),
-                    });
+                    if started {
+                        // Let the audio already queued finish, then explain why it stopped.
+                        run.finish();
+                        let _ = commands.send(Command::Notice(error.to_string()));
+                    } else {
+                        let _ = commands.send(Command::GenerationFailed {
+                            run: run.id,
+                            error: error.to_string(),
+                        });
+                    }
                     break;
                 }
                 audio.finish_chunk(&mut processed);
@@ -816,10 +857,16 @@ fn speech_worker(
             if !failed && run.active() {
                 if started {
                     run.finish();
+                    if let Some(error) = skipped {
+                        let _ = commands.send(Command::Notice(format!(
+                            "Part of the selection was skipped. {error}"
+                        )));
+                    }
                 } else {
                     let _ = commands.send(Command::GenerationFailed {
                         run: run.id,
-                        error: "Nothing to read in this selection".into(),
+                        error: skipped
+                            .unwrap_or_else(|| "Nothing to read in this selection".into()),
                     });
                 }
             }
@@ -879,7 +926,7 @@ fn audio_worker(
     let mut last_error = None;
     while !shared.quitting.load(Ordering::Acquire) {
         let run = bus.current();
-        if run.active() && !run.paused() {
+        if run.active() && (!run.paused() || shared.awaiting_output.load(Ordering::Acquire)) {
             shared
                 .output_wanted_ns
                 .store(clock_ns().max(1), Ordering::Release);

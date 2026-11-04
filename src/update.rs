@@ -135,7 +135,8 @@ pub fn download(
     fs::create_dir_all(directory)?;
     let target = directory.join(format!("InfoTransfer-{}.zip", release.version));
     let partial = target.with_extension("part");
-    let mut response = client(Duration::from_secs(3600))?
+    // The timeout applies to each read, so a stalled download ends while a slow one continues.
+    let mut response = client(Duration::from_secs(30))?
         .get(&release.url)
         .send()?
         .error_for_status()?;
@@ -172,22 +173,36 @@ pub fn running_bundle() -> Option<PathBuf> {
     let executable = std::env::current_exe().ok()?.canonicalize().ok()?;
     let bundle = executable.parent()?.parent()?.parent()?;
     (executable.parent()?.file_name()? == "MacOS"
-        && bundle.extension().is_some_and(|extension| extension == "app"))
+        && bundle
+            .extension()
+            .is_some_and(|extension| extension == "app"))
     .then(|| bundle.to_path_buf())
 }
 
 fn checked(command: &mut Command) -> Result<String> {
     let output = command.output()?;
-    ensure!(output.status.success(), "{:?} failed", command.get_program());
+    ensure!(
+        output.status.success(),
+        "{:?} failed",
+        command.get_program()
+    );
     Ok(String::from_utf8_lossy(&output.stdout).into_owned()
         + &String::from_utf8_lossy(&output.stderr))
 }
 
 fn designated_requirement(bundle: &Path) -> Result<String> {
-    let details = checked(Command::new("/usr/bin/codesign").arg("-d").arg("-r-").arg(bundle))?;
+    let details = checked(
+        Command::new("/usr/bin/codesign")
+            .arg("-d")
+            .arg("-r-")
+            .arg(bundle),
+    )?;
     details
         .lines()
-        .find_map(|line| line.split_once("designated => ").map(|(_, rest)| rest.trim()))
+        .find_map(|line| {
+            line.split_once("designated => ")
+                .map(|(_, rest)| rest.trim())
+        })
         .map(str::to_owned)
         .context("The running app has no designated requirement")
 }
@@ -225,7 +240,10 @@ pub fn install(archive: &Path, release: &Release, bundle: &Path) -> Result<()> {
         )
         .context("The update archive could not be unpacked")?;
         let candidate = staging.join("InfoTransfer.app");
-        ensure!(candidate.is_dir(), "The update does not contain InfoTransfer.app");
+        ensure!(
+            fs::symlink_metadata(&candidate).is_ok_and(|meta| meta.file_type().is_dir()),
+            "The update does not contain InfoTransfer.app"
+        );
         checked(
             Command::new("/usr/bin/codesign")
                 .args(["--verify", "--deep", "--strict"])
@@ -250,7 +268,19 @@ pub fn install(archive: &Path, release: &Release, bundle: &Path) -> Result<()> {
             .args(["-dr", "com.apple.quarantine"])
             .arg(&candidate)
             .status();
-        swap(&candidate, bundle)
+        swap(&candidate, bundle)?;
+        // Check the installed copy again: staging could have changed after the first check.
+        let installed = checked(
+            Command::new("/usr/bin/codesign")
+                .args(["--verify", "--deep", "--strict"])
+                .arg(format!("-R={requirement}"))
+                .arg(bundle),
+        );
+        if installed.is_err() {
+            swap(&candidate, bundle).context("The update changed after it was checked")?;
+            bail!("The update changed after it was checked. The current version was kept.");
+        }
+        Ok(())
     })();
     // After a swap the old version sits in staging; either way, staging goes.
     let _ = fs::remove_dir_all(&staging);

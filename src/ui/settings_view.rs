@@ -165,12 +165,16 @@ impl Desktop {
     }
 
     fn advanced(&self, cx: &mut Context<Self>) -> Div {
-        let toggle = switch("memory-saver", "Memory saver", self.settings.speech.memory_saver)
-            .on_click(cx.listener(|this, _, _, cx| {
-                this.settings.speech.memory_saver = !this.settings.speech.memory_saver;
-                this.preferences_changed();
-                cx.notify();
-            }));
+        let toggle = switch(
+            "memory-saver",
+            "Memory saver",
+            self.settings.speech.memory_saver,
+        )
+        .on_click(cx.listener(|this, _, _, cx| {
+            this.settings.speech.memory_saver = !this.settings.speech.memory_saver;
+            this.preferences_changed();
+            cx.notify();
+        }));
         let login = native::open_at_login();
         div().flex().flex_col().gap_6()
             .child(div().child(section("Startup")).child(group().child(row("Open at login").border_b_0().child(
@@ -193,36 +197,62 @@ impl Desktop {
 impl Desktop {
     fn updates(&self, cx: &mut Context<Self>) -> Div {
         let installed = update::running_bundle().is_some();
-        let (status, action): (String, Option<&str>) = match &self.update {
-            _ if !installed => ("Updates apply to the installed app".into(), None),
-            UpdateState::Idle => ("Not checked yet".into(), Some("Check now")),
-            UpdateState::Checking => ("Checking…".into(), None),
-            UpdateState::Current => ("InfoTransfer is up to date".into(), Some("Check now")),
+        let (status, actions): (String, &[(&str, &str)]) = match &self.update {
+            _ if !installed => ("Updates apply to the installed app".into(), &[]),
+            UpdateState::Idle => ("Not checked yet".into(), &[("check", "Check now")]),
+            UpdateState::Checking => ("Checking…".into(), &[]),
+            UpdateState::Current => (
+                "InfoTransfer is up to date".into(),
+                &[("check", "Check now")],
+            ),
             UpdateState::Available(release) => (
                 format!("Version {} is available", release.version),
-                Some("Install and restart"),
+                &[("download", "Download")],
             ),
             UpdateState::Downloading {
-                version,
+                release,
                 done,
                 total,
+                cancel,
             } => (
-                format!("Installing {version} · {}%", done * 100 / (*total).max(1)),
-                None,
+                if cancel.load(Ordering::Acquire) {
+                    "Canceling…".into()
+                } else {
+                    format!(
+                        "Downloading {} · {}%",
+                        release.version,
+                        done * 100 / (*total).max(1)
+                    )
+                },
+                &[("cancel", "Cancel")],
             ),
-            UpdateState::Failed(error) => (error.clone(), Some("Try again")),
+            UpdateState::Ready { release, .. } => (
+                format!("Version {} is ready", release.version),
+                &[("install", "Install and restart")],
+            ),
+            UpdateState::ConfirmRestart { .. } => (
+                "Restarting stops the current reading".into(),
+                &[("later", "Later"), ("confirm", "Restart now")],
+            ),
+            UpdateState::Installing(version) => (format!("Installing {version}…"), &[]),
+            UpdateState::RestartPending => ("Restarts when this reading ends".into(), &[]),
+            UpdateState::Failed(error) => (error.clone(), &[("check", "Try again")]),
         };
         let mut status_row = row(&status);
-        if let Some(action) = action {
-            status_row = status_row.child(button("update-action", action).on_click(cx.listener(
-                |this, _, _, cx| {
-                    if matches!(this.update, UpdateState::Available(_)) {
-                        this.install_update(cx);
-                    } else {
-                        this.check_for_update(true, cx);
-                    }
-                },
-            )));
+        for &(kind, label) in actions {
+            let kind = kind.to_owned();
+            status_row = status_row.child(
+                button(gpui::SharedString::from(format!("update-{kind}")), label).on_click(
+                    cx.listener(move |this, _, _, cx| match kind.as_str() {
+                        "download" => this.download_update(cx),
+                        "cancel" => this.cancel_update_download(cx),
+                        "install" => this.install_update(false, cx),
+                        "confirm" => this.install_update(true, cx),
+                        "later" => this.postpone_update(cx),
+                        _ => this.check_for_update(true, cx),
+                    }),
+                ),
+            );
         }
         let automatic = switch(
             "check-updates",

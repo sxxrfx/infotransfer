@@ -106,16 +106,26 @@ def main():
                 'LSUIElement': True, 'NSHighResolutionCapable': True, 'CFBundleIconFile': 'AppIcon',
                 'NSAccessibilityUsageDescription': 'Read selected text when you tap Fn or right Option.'}
         (bundle / 'Contents/Info.plist').write_bytes(plistlib.dumps(info))
+        # Hardened runtime blocks DYLD_INSERT_LIBRARIES and similar injection, which would
+        # otherwise run foreign code with InfoTransfer's Accessibility permission. A
+        # self-signed identity has no Team ID, so library validation must allow the bundled
+        # ONNX Runtime, which is signed by the same identity.
+        entitlements = Path(temporary) / 'entitlements.plist'
+        entitlements.write_bytes(plistlib.dumps({'com.apple.security.cs.disable-library-validation': True}))
+        hardened = ['--options', 'runtime', '--entitlements', str(entitlements)]
         for library in runtime.iterdir():
             checked(['codesign', '--force', *signing, str(library)])
-        checked(['codesign', '--force', *signing, str(resources / 'phonemizer/phonemize')])
+        checked(['codesign', '--force', *signing, *hardened, str(resources / 'phonemizer/phonemize')])
         packed_manifest = resources / 'phonemizer/PROVENANCE.json'
         packed = json.loads(packed_manifest.read_text())
         packed['source_build_executable_sha256'] = packed['files']['phonemize']
         packed['files']['phonemize'] = hashlib.sha256((resources / 'phonemizer/phonemize').read_bytes()).hexdigest()
         packed_manifest.write_text(json.dumps(packed, indent=2) + '\n')
-        checked(['codesign', '--force', *signing, str(bundle)])
+        checked(['codesign', '--force', *signing, *hardened, str(bundle)])
         checked(['codesign', '--verify', '--deep', '--strict', str(bundle)])
+        flags = subprocess.run(['codesign', '-d', '-v', str(bundle)], capture_output=True, text=True).stderr
+        if 'runtime' not in flags:
+            raise RuntimeError('The bundle was signed without the hardened runtime')
         details = subprocess.run(['codesign', '-d', '-r-', str(bundle)], check=True, capture_output=True, text=True)
         requirement = next(line.split('designated => ', 1)[1] for line in (details.stdout+details.stderr).splitlines() if 'designated => ' in line)
         if not args.ui_preview and 'cdhash H' in requirement:

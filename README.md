@@ -200,7 +200,7 @@ cargo run --release --features visual-test --bin render-check
 ```
 
 - `package_app.py --ui-preview` builds an ad-hoc preview at `.cache/ui-preview/InfoTransfer.app`. This build loses Accessibility access each time you rebuild.
-- `release.py` publishes a release: the zip, the install script and a signed `latest.json` for the updater. Bump `version` in `Cargo.toml` first. It signs with the Ed25519 key at `~/Library/Application Support/InfoTransfer/signing/update-ed25519.key` (or `INFOTRANSFER_UPDATE_KEY`). Keep a backup of that key: installed copies only accept updates signed with it. To create a new key, run `cargo run --release --bin update-sign -- keygen <file>` and put the printed public key in `resources/update-public-key.txt`.
+- `release.py` publishes a release: the zip, the install script and a signed `latest.json` for the updater. Bump `version` in `Cargo.toml` and commit first; it refuses uncommitted changes and an already published version. It signs with the Ed25519 update key from the login keychain (or the file in `INFOTRANSFER_UPDATE_KEY`). Store a key file there once with `python3 scripts/release.py --import-key <file>`, keep an offline backup, and delete the file: the update key must not sit next to the code-signing keychain, or one stolen backup could ship a different app. Installed copies only accept updates signed with this key. To create a new key, run `cargo run --release --bin update-sign -- keygen <file>` and put the printed public key in `resources/update-public-key.txt`.
 - The pronunciation helper bundles a separate eSpeak NG executable under GPL-3.0-or-later, with its license and full source. See [speech notices](resources/SPEECH-NOTICES.txt).
 
 Further documentation:
