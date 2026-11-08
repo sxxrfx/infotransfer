@@ -10,6 +10,7 @@ default-run = "infotransfer"
 default = ["desktop"]
 desktop = ["dep:gpui", "dep:gpui_platform", "dep:raw-window-handle", "dep:accesskit", "gpui_platform/font-kit"]
 visual-test = ["desktop", "gpui/test-support", "gpui_platform/test-support"]
+e2e-bench = ["desktop"]
 
 [dependencies]
 anyhow = "1.0"
@@ -49,6 +50,11 @@ path = "src/bin/speech-bench.rs"
 [[bin]]
 name = "reading-bench"
 path = "src/bin/reading-bench.rs"
+
+[[bin]]
+name = "e2e-bench"
+path = "src/bin/e2e-bench.rs"
+required-features = ["e2e-bench"]
 
 [[bin]]
 name = "render-check"
