@@ -172,10 +172,22 @@ mod tests {
         struct Saved(#[serde(with = "persisted")] u32);
         assert_eq!(serde_json::to_string(&Saved(0)).unwrap(), "\"af_heart\"");
         assert_eq!(serde_json::from_str::<Saved>("\"af_heart\"").unwrap().0, 0);
-        assert_eq!(serde_json::from_str::<Saved>("\"expr-voice-2-m\"").unwrap().0, 0);
+        assert_eq!(
+            serde_json::from_str::<Saved>("\"expr-voice-2-m\"")
+                .unwrap()
+                .0,
+            0
+        );
         assert_eq!(serde_json::from_str::<Saved>("8").unwrap().0, 0);
-        assert_eq!(serde_json::from_str::<Saved>("\"bf_isabella\"").unwrap().0, 0);
-        assert!(VOICES.iter().all(|voice| voice.speaker < voice.model.speakers()));
+        assert_eq!(
+            serde_json::from_str::<Saved>("\"bf_isabella\"").unwrap().0,
+            0
+        );
+        assert!(
+            VOICES
+                .iter()
+                .all(|voice| voice.speaker < voice.model.speakers())
+        );
     }
     #[test]
     fn filtering_and_sorting_keep_catalog_identity_and_unknowns_last() {
@@ -190,7 +202,9 @@ mod tests {
                 [0]
             );
         }
-        assert!(visible_voices(VoiceFilter::Male, false, VoiceSort::Name, &[], |_| true).is_empty());
+        assert!(
+            visible_voices(VoiceFilter::Male, false, VoiceSort::Name, &[], |_| true).is_empty()
+        );
         assert!(visible_voices(VoiceFilter::All, true, VoiceSort::Name, &[], |_| false).is_empty());
     }
 }

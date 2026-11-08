@@ -116,8 +116,12 @@ static OSStatus hotkey(EventHandlerCallRef next, EventRef event, void *context) 
 static void observeKey(NSEvent *event) {
     if (!keyCallback) return;
     NSEventModifierFlags flags = event.modifierFlags;
+    // AppKit also sets the Function flag on arrows, Home/End, Page Up/Down and F-keys.
+    // Only a modifier change reports the physical Fn key, so remember that state.
+    static BOOL fnDown = NO;
+    if (event.type == NSEventTypeFlagsChanged) fnDown = (flags & NSEventModifierFlagFunction) != 0;
     uint8_t modifiers = 0;
-    if (flags & NSEventModifierFlagFunction) modifiers |= 1;
+    if (fnDown) modifiers |= 1;
     if (flags & NX_DEVICERALTKEYMASK) modifiers |= 2;
     if ((flags & (NSEventModifierFlagShift | NSEventModifierFlagControl | NSEventModifierFlagCommand | NX_DEVICELALTKEYMASK)) ||
         ((flags & NSEventModifierFlagOption) && !(flags & NX_DEVICERALTKEYMASK))) modifiers |= 4;
@@ -305,9 +309,13 @@ void it_native_access_settings(void) {
 }
 static int selectionString(AXUIElementRef element, char **output) {
     CFTypeRef role = NULL;
-    if (AXUIElementCopyAttributeValue(element, kAXSubroleAttribute, &role) == kAXErrorSuccess) {
+    AXError roleResult = AXUIElementCopyAttributeValue(element, kAXSubroleAttribute, &role);
+    if (roleResult == kAXErrorSuccess && role) {
         BOOL secure = CFGetTypeID(role) == CFStringGetTypeID() && CFEqual(role, CFSTR("AXSecureTextField"));
         CFRelease(role); if (secure) return 4;
+    } else if (roleResult != kAXErrorAttributeUnsupported && roleResult != kAXErrorNoValue && IsSecureEventInputEnabled()) {
+        // The field did not answer, and a password field may have keyboard focus.
+        return 4;
     }
     CFTypeRef value = NULL;
     AXError result = AXUIElementCopyAttributeValue(element, kAXSelectedTextAttribute, &value);
@@ -325,9 +333,13 @@ static int selectionString(AXUIElementRef element, char **output) {
     CFIndex bytes = CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8) + 1;
     char *buffer = malloc((size_t)bytes);
     if (!buffer) { CFRelease(value); return 6; }
-    BOOL valid = CFStringGetCString(value, buffer, bytes, kCFStringEncodingUTF8);
+    CFIndex used = 0;
+    CFIndex converted = CFStringGetBytes(value, CFRangeMake(0, length), kCFStringEncodingUTF8, 0, false, (UInt8 *)buffer, bytes - 1, &used);
     CFRelease(value);
-    if (!valid) { free(buffer); return 6; }
+    if (converted != length) { free(buffer); return 6; }
+    buffer[used] = 0;
+    // A NUL inside the selection would end the C string early and drop the rest.
+    for (char *nul = memchr(buffer, 0, (size_t)used); nul; nul = memchr(nul, 0, (size_t)(buffer + used - nul))) *nul = ' ';
     *output = buffer; return 0;
 }
 // Called on the capture worker. Native callbacks only enqueue small events.

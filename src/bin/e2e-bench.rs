@@ -201,7 +201,7 @@ fn main() -> Result<()> {
     let options = RuntimeOptions::default();
     let reader = Reader::with_options(paths.clone(), options.clone());
     reader.set_silent_output(true);
-    let prefs = Settings::load().map(|s| s.speech).unwrap_or_default();
+    let prefs = Settings::load().map(|(s, _)| s.speech).unwrap_or_default();
     reader.set_preferences(prefs.clone())?;
     reader.prewarm();
     let start = Instant::now();

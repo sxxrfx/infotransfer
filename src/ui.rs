@@ -189,6 +189,7 @@ enum UiEvent {
         done: u64,
         total: u64,
     },
+    UpdateDownloaded(Result<std::path::PathBuf, String>),
     UpdateInstalled(Result<(), String>),
 }
 #[derive(Clone, Default)]
@@ -199,10 +200,24 @@ enum UpdateState {
     Current,
     Available(Release),
     Downloading {
-        version: String,
+        release: Release,
         done: u64,
         total: u64,
+        cancel: Arc<AtomicBool>,
     },
+    /// Downloaded and checked; installing quits the app, so the user starts it.
+    Ready {
+        release: Release,
+        archive: std::path::PathBuf,
+    },
+    /// A reading is playing; installing would stop it.
+    ConfirmRestart {
+        release: Release,
+        archive: std::path::PathBuf,
+    },
+    Installing(String),
+    /// Installed while a reading played; restart once it ends.
+    RestartPending,
     Failed(String),
 }
 struct CaptureWorker {
@@ -287,9 +302,17 @@ impl Desktop {
         let (events, rx) = async_channel::unbounded();
         let (reports, report_rx) = async_channel::unbounded();
         let settings = match Settings::load() {
-            Ok(value) => value,
+            Ok((value, reset)) => {
+                if let Some(message) = reset {
+                    reader.notice(message);
+                }
+                value
+            }
             Err(_) => {
-                reader.notice("Settings could not be loaded. Defaults restored.".into());
+                reader.notice(
+                    "Settings could not be loaded. Defaults restored; a copy is in settings.json.bak."
+                        .into(),
+                );
                 Settings::default()
             }
         };
@@ -426,6 +449,10 @@ impl Desktop {
             self.last_phase = snapshot.phase;
             self.last_ready = snapshot.model_ready;
             self.last_notice = snapshot.notice;
+            if matches!(self.update, UpdateState::RestartPending) && !active {
+                self.restart(cx);
+                return;
+            }
             cx.notify();
         }
         self.update_player(cx);
@@ -688,7 +715,9 @@ impl Desktop {
             UiEvent::UpdateDue => {
                 let day = std::time::Duration::from_secs(24 * 60 * 60);
                 if self.settings.check_updates
-                    && self.last_update_check.is_none_or(|time| time.elapsed() >= day)
+                    && self
+                        .last_update_check
+                        .is_none_or(|time| time.elapsed() >= day)
                 {
                     self.check_for_update(false, cx);
                 }
@@ -723,12 +752,25 @@ impl Desktop {
                 }
                 cx.notify();
             }
-            UiEvent::UpdateInstalled(result) => match result {
-                Ok(()) => {
-                    self.cancel_capture();
-                    self.reader.shutdown();
-                    cx.quit();
+            UiEvent::UpdateDownloaded(result) => {
+                if let UpdateState::Downloading {
+                    release, cancel, ..
+                } = self.update.clone()
+                {
+                    self.update = match result {
+                        Ok(archive) => UpdateState::Ready { release, archive },
+                        Err(_) if cancel.load(Ordering::Acquire) => UpdateState::Available(release),
+                        Err(error) => UpdateState::Failed(error),
+                    };
+                    cx.notify();
                 }
+            }
+            UiEvent::UpdateInstalled(result) => match result {
+                Ok(()) if self.reading_active() => {
+                    self.update = UpdateState::RestartPending;
+                    cx.notify();
+                }
+                Ok(()) => self.restart(cx),
                 Err(error) => {
                     self.update = UpdateState::Failed(error);
                     cx.notify();
@@ -737,9 +779,12 @@ impl Desktop {
         }
     }
     fn check_for_update(&mut self, manual: bool, cx: &mut Context<Self>) {
-        if matches!(
+        if !matches!(
             self.update,
-            UpdateState::Checking | UpdateState::Downloading { .. }
+            UpdateState::Idle
+                | UpdateState::Current
+                | UpdateState::Available(_)
+                | UpdateState::Failed(_)
         ) {
             return;
         }
@@ -755,36 +800,98 @@ impl Desktop {
             .expect("start update check");
         cx.notify();
     }
-    /// Downloads, verifies and installs the available update, then relaunches.
-    fn install_update(&mut self, cx: &mut Context<Self>) {
+    fn reading_active(&self) -> bool {
+        matches!(
+            self.reader.snapshot().phase,
+            Phase::Preparing | Phase::Reading | Phase::Paused
+        )
+    }
+    /// Downloads and checks the available update. Installing is a separate step.
+    fn download_update(&mut self, cx: &mut Context<Self>) {
         let UpdateState::Available(release) = self.update.clone() else {
+            return;
+        };
+        let cancel = Arc::new(AtomicBool::new(false));
+        self.update = UpdateState::Downloading {
+            release: release.clone(),
+            done: 0,
+            total: release.size,
+            cancel: cancel.clone(),
+        };
+        let events = self.events.clone();
+        std::thread::Builder::new()
+            .name("update-download".into())
+            .spawn(move || {
+                let directory = assets::data_dir().join("updates");
+                let _ = std::fs::remove_dir_all(&directory);
+                let result = update::download(&release, &directory, |done, total| {
+                    let _ = events.try_send(UiEvent::UpdateProgress { done, total });
+                    !cancel.load(Ordering::Acquire)
+                })
+                .map_err(|error| error.to_string());
+                if result.is_err() {
+                    let _ = std::fs::remove_dir_all(&directory);
+                }
+                let _ = events.try_send(UiEvent::UpdateDownloaded(result));
+            })
+            .expect("start update download");
+        cx.notify();
+    }
+    fn cancel_update_download(&mut self, cx: &mut Context<Self>) {
+        if let UpdateState::Downloading { cancel, .. } = &self.update {
+            cancel.store(true, Ordering::Release);
+        }
+        cx.notify();
+    }
+    /// Installs a downloaded update, asking first if that would stop a reading.
+    fn install_update(&mut self, confirmed: bool, cx: &mut Context<Self>) {
+        let (UpdateState::Ready { release, archive }
+        | UpdateState::ConfirmRestart { release, archive }) = self.update.clone()
+        else {
             return;
         };
         let Some(bundle) = update::running_bundle() else {
             return;
         };
-        self.update = UpdateState::Downloading {
-            version: release.version.clone(),
-            done: 0,
-            total: release.size,
-        };
+        if !confirmed && self.reading_active() {
+            self.update = UpdateState::ConfirmRestart { release, archive };
+            cx.notify();
+            return;
+        }
+        self.update = UpdateState::Installing(release.version.clone());
         let events = self.events.clone();
         std::thread::Builder::new()
             .name("update-install".into())
             .spawn(move || {
-                let directory = assets::data_dir().join("updates");
-                let result = update::download(&release, &directory, |done, total| {
-                    let _ = events.try_send(UiEvent::UpdateProgress { done, total });
-                    true
-                })
-                .and_then(|archive| update::install(&archive, &release, &bundle))
-                .and_then(|()| update::relaunch_after_exit(&bundle))
-                .map_err(|error| error.to_string());
-                let _ = std::fs::remove_dir_all(&directory);
+                let result =
+                    update::install(&archive, &release, &bundle).map_err(|error| error.to_string());
+                let _ = std::fs::remove_dir_all(assets::data_dir().join("updates"));
                 let _ = events.try_send(UiEvent::UpdateInstalled(result));
             })
             .expect("start update install");
         cx.notify();
+    }
+    fn postpone_update(&mut self, cx: &mut Context<Self>) {
+        if let UpdateState::ConfirmRestart { release, archive } = self.update.clone() {
+            self.update = UpdateState::Ready { release, archive };
+            cx.notify();
+        }
+    }
+    /// Relaunches the newly installed version.
+    fn restart(&mut self, cx: &mut Context<Self>) {
+        let Some(bundle) = update::running_bundle() else {
+            return;
+        };
+        if let Err(error) = update::relaunch_after_exit(&bundle) {
+            self.update = UpdateState::Failed(format!(
+                "Updated. Quit and open InfoTransfer again to finish. ({error})"
+            ));
+            cx.notify();
+            return;
+        }
+        self.cancel_capture();
+        self.reader.shutdown();
+        cx.quit();
     }
     fn download(&mut self, cx: &mut Context<Self>) {
         self.download_voice(self.settings.speech.voice, cx);

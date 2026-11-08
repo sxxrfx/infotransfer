@@ -9,6 +9,7 @@ pub(super) struct Player {
     phase: Phase,
     capturing: bool,
     visible: bool,
+    escape: bool,
     notice: Option<String>,
     last_run: u64,
     smoothed: f32,
@@ -22,6 +23,7 @@ impl Player {
             phase: Phase::Idle,
             capturing: false,
             visible: false,
+            escape: false,
             notice: None,
             last_run: 0,
             smoothed: 0.,
@@ -42,11 +44,18 @@ impl Player {
             && !self.capture.popup_dismissed.load(Ordering::Acquire);
         if visible != self.visible {
             native::player_visible(visible);
-            if !native::escape_active(visible) {
+            self.visible = visible;
+        }
+        // Escape is taken from other apps only while something is being read. A notice
+        // or a paused reading (for example after the Mac wakes) leaves it alone.
+        let escape =
+            visible && (capturing || matches!(snapshot.phase, Phase::Preparing | Phase::Reading));
+        if escape != self.escape {
+            if !native::escape_active(escape) {
                 self.reader
                     .notice("Escape shortcut unavailable. Use Stop in the menu bar.".into());
             }
-            self.visible = visible;
+            self.escape = escape;
         }
         let changed = self.phase != snapshot.phase
             || self.capturing != capturing
@@ -160,15 +169,9 @@ pub(super) fn visual(
             )
             .into_any_element()
         } else {
-            motion::tween(
-                ("speech-level", index),
-                bar,
-                height,
-                80,
-                true,
-                |bar, height| bar.h(px(height)),
-            )
-            .into_any_element()
+            // The reader samples the level at 30 Hz. Tweening between samples would
+            // redraw at the display's 60–120 Hz for as long as speech plays.
+            bar.h(px(height)).into_any_element()
         };
         meter = meter.child(element);
     }

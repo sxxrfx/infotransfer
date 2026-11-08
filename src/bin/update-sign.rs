@@ -3,6 +3,8 @@
 //!   update-sign keygen <private-key-file>
 //!   update-sign manifest <zip> <version> <notes-file> <private-key-file> <output.json>
 //!
+//! A key file of `-` reads the key from standard input, so it never touches the disk.
+//!
 //! The private key is 32 random bytes, hex encoded, readable only by its owner. Keep a
 //! backup: without it, installed copies cannot verify future updates.
 use anyhow::{Context, Result, bail, ensure};
@@ -17,7 +19,14 @@ use std::{
 };
 
 fn read_key(path: &Path) -> Result<SigningKey> {
-    let bytes: [u8; 32] = hex::decode(fs::read_to_string(path)?.trim())
+    let text = if path == Path::new("-") {
+        let mut text = String::new();
+        std::io::stdin().read_to_string(&mut text)?;
+        text
+    } else {
+        fs::read_to_string(path)?
+    };
+    let bytes: [u8; 32] = hex::decode(text.trim())
         .ok()
         .and_then(|bytes| bytes.try_into().ok())
         .context("Private key must be 32 hex bytes")?;

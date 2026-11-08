@@ -145,8 +145,8 @@ impl SpeechAudio {
         output.clear();
         let count = self.tail.len();
         for i in 0..count {
-            let value =
-                self.tail.pop_front().unwrap() * (count - i - 1) as f32 / count.saturating_sub(1).max(1) as f32;
+            let value = self.tail.pop_front().unwrap() * (count - i - 1) as f32
+                / count.saturating_sub(1).max(1) as f32;
             self.emit(value, output);
         }
         self.position = 0;
@@ -411,7 +411,10 @@ mod tests {
             let mut shelf = Biquad::high_shelf(24_000, 7500., -3.);
             let mut fizz = Biquad::lowpass(24_000, 11_000., std::f32::consts::FRAC_1_SQRT_2);
             let input = tone(6_500., 0.3, 24_000);
-            let out: Vec<f32> = input.iter().map(|s| fizz.process(shelf.process(*s))).collect();
+            let out: Vec<f32> = input
+                .iter()
+                .map(|s| fizz.process(shelf.process(*s)))
+                .collect();
             20. * (rms(&out[4_800..20_000]) / rms(&input[4_800..20_000])).log10()
         };
         let reduction = shelf_only - gain_db(6_500., 0.3);

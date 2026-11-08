@@ -107,6 +107,9 @@ impl AssetPaths {
                     })
                 }
             });
+        if !development {
+            restore_interrupted(&speech);
+        }
         let runtime = resources.join("runtime");
         let library =
             find_library(&runtime).unwrap_or_else(|| runtime.join("libonnxruntime.dylib"));
@@ -205,12 +208,20 @@ pub fn prepare(
         total <= 200_000_000,
         "Speech manifest exceeds the accepted download budget"
     );
+    restore_interrupted(destination);
     let staging = destination.with_extension("download");
     fs::create_dir_all(&staging)?;
+    // Staging holds a copy of every file plus the generated lexicons.
+    let needed = total * 3;
+    ensure!(
+        free_space(&staging).is_none_or(|free| free >= needed),
+        "Not enough disk space. Free at least {} MB, then try again.",
+        needed.div_ceil(1_000_000)
+    );
     let client = reqwest::blocking::Client::builder()
         .connect_timeout(Duration::from_secs(20))
-        // A large model on a slow connection can legitimately take a long time.
-        .timeout(Duration::from_secs(3600))
+        // Applies to each read: a stalled connection fails, a slow one continues.
+        .timeout(Duration::from_secs(30))
         .build()?;
     let mut done = 0;
     for asset in &entries {
@@ -229,34 +240,9 @@ pub fn prepare(
             && hash_file(&target)
                 .is_ok_and(|(hash, size)| hash == asset.sha256 && size == asset.bytes);
         if !verified {
-            let partial = target.with_extension("part");
-            let mut response = client.get(&asset.url).send()?.error_for_status()?;
-            let mut file = fs::File::create(&partial)?;
-            let mut hash = Sha256::new();
-            let mut received = 0u64;
-            let mut buffer = [0u8; 64 * 1024];
-            loop {
-                if !progress(&asset.name, done + received, total) {
-                    drop(file);
-                    let _ = fs::remove_file(&partial);
-                    bail!("Download canceled");
-                }
-                let n = response.read(&mut buffer)?;
-                if n == 0 {
-                    break;
-                }
-                received += n as u64;
-                ensure!(received <= asset.bytes, "Unexpected speech asset size");
-                hash.update(&buffer[..n]);
-                file.write_all(&buffer[..n])?;
-            }
-            file.sync_all()?;
-            ensure!(
-                received == asset.bytes && hex::encode(hash.finalize()) == asset.sha256,
-                "Speech asset integrity check failed: {}",
-                asset.name
-            );
-            fs::rename(partial, &target)?;
+            download(&client, asset, &target, |received| {
+                progress(&asset.name, done + received, total)
+            })?;
         }
         done += asset.bytes;
     }
@@ -273,24 +259,117 @@ pub fn prepare(
         staging.join("LICENSE-APACHE-2.0"),
         include_str!("../vendor/sherpa-onnx/LICENSE"),
     )?;
-    let backup = destination.with_extension("previous");
-    if backup.exists() {
-        fs::remove_dir_all(&backup)?;
-    }
     if destination.exists() {
-        fs::rename(destination, &backup)?;
+        // One atomic exchange: the new files are active, and the old ones are in staging.
+        swap(&staging, destination)?;
+    } else {
+        fs::rename(&staging, destination)?;
     }
-    if let Err(error) = fs::rename(&staging, destination) {
-        if backup.exists() {
-            let _ = fs::rename(&backup, destination);
-        }
-        return Err(error.into());
-    }
-    if backup.exists() {
-        fs::remove_dir_all(backup)?;
-    }
+    // The new voice is active; a leftover old copy is harmless and replaced next time.
+    let _ = fs::remove_dir_all(&staging);
     progress("Ready", total, total);
     Ok(())
+}
+
+/// Downloads one asset to `target`, resuming a partial file when the server allows it.
+fn download(
+    client: &reqwest::blocking::Client,
+    asset: &Asset,
+    target: &Path,
+    mut progress: impl FnMut(u64) -> bool,
+) -> Result<()> {
+    let partial = target.with_extension("part");
+    let mut hash = Sha256::new();
+    let mut received = 0u64;
+    if let Ok(mut existing) = fs::File::open(&partial) {
+        let mut buffer = [0u8; 64 * 1024];
+        loop {
+            let n = existing.read(&mut buffer)?;
+            if n == 0 {
+                break;
+            }
+            hash.update(&buffer[..n]);
+            received += n as u64;
+        }
+    }
+    if received > asset.bytes {
+        (hash, received) = (Sha256::new(), 0);
+    }
+    if received < asset.bytes {
+        let mut request = client.get(&asset.url);
+        if received > 0 {
+            request = request.header(reqwest::header::RANGE, format!("bytes={received}-"));
+        }
+        let mut response = request.send()?.error_for_status()?;
+        if received > 0 && response.status() != reqwest::StatusCode::PARTIAL_CONTENT {
+            (hash, received) = (Sha256::new(), 0);
+        }
+        let mut file = fs::OpenOptions::new()
+            .create(true)
+            .write(true)
+            .append(received > 0)
+            .truncate(received == 0)
+            .open(&partial)?;
+        let mut buffer = [0u8; 64 * 1024];
+        loop {
+            if !progress(received) {
+                // The partial file stays, so the next attempt resumes from here.
+                file.sync_all()?;
+                bail!("Download canceled");
+            }
+            let n = response.read(&mut buffer)?;
+            if n == 0 {
+                break;
+            }
+            received += n as u64;
+            ensure!(received <= asset.bytes, "Unexpected speech asset size");
+            hash.update(&buffer[..n]);
+            file.write_all(&buffer[..n])?;
+        }
+        file.sync_all()?;
+    }
+    if received != asset.bytes || hex::encode(hash.finalize()) != asset.sha256 {
+        let _ = fs::remove_file(&partial);
+        bail!("Speech asset integrity check failed: {}", asset.name);
+    }
+    fs::rename(partial, target)?;
+    Ok(())
+}
+
+fn swap(new: &Path, old: &Path) -> Result<()> {
+    use std::os::unix::ffi::OsStrExt;
+    let from = std::ffi::CString::new(new.as_os_str().as_bytes())?;
+    let to = std::ffi::CString::new(old.as_os_str().as_bytes())?;
+    // Both paths are valid C strings in the same folder; RENAME_SWAP is atomic.
+    let status = unsafe { libc::renamex_np(from.as_ptr(), to.as_ptr(), libc::RENAME_SWAP) };
+    ensure!(
+        status == 0,
+        "Voices could not be replaced: {}",
+        std::io::Error::last_os_error()
+    );
+    Ok(())
+}
+
+/// Earlier versions moved the active voice aside before installing the new one. If that
+/// was interrupted, only the moved-aside copy exists; put it back.
+fn restore_interrupted(destination: &Path) {
+    let backup = destination.with_extension("previous");
+    if !destination.exists() && backup.is_dir() {
+        let _ = fs::rename(&backup, destination);
+    } else if backup.is_dir() {
+        let _ = fs::remove_dir_all(&backup);
+    }
+}
+
+fn free_space(path: &Path) -> Option<u64> {
+    use std::os::unix::ffi::OsStrExt;
+    let path = std::ffi::CString::new(path.as_os_str().as_bytes()).ok()?;
+    let mut stats = std::mem::MaybeUninit::<libc::statvfs>::zeroed();
+    // statvfs fills the struct on success and leaves it untouched on failure.
+    (unsafe { libc::statvfs(path.as_ptr(), stats.as_mut_ptr()) } == 0).then(|| {
+        let stats = unsafe { stats.assume_init() };
+        stats.f_bavail as u64 * stats.f_frsize
+    })
 }
 
 /// The phone alphabet from the model's config, one "symbol id" pair per line.
@@ -341,4 +420,34 @@ fn generate_lexicon(directory: &Path, dialect: &str) -> Result<()> {
     }
     output.flush()?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn an_interrupted_install_restores_the_previous_voice() {
+        let root = tempfile::tempdir().unwrap();
+        let active = root.path().join("speech-paradee-v1");
+        let backup = active.with_extension("previous");
+        fs::create_dir(&backup).unwrap();
+        fs::write(backup.join("model.onnx"), b"voice").unwrap();
+        restore_interrupted(&active);
+        assert_eq!(fs::read(active.join("model.onnx")).unwrap(), b"voice");
+        assert!(!backup.exists());
+    }
+    #[test]
+    fn replacing_voices_swaps_both_folders_at_once() {
+        let root = tempfile::tempdir().unwrap();
+        let (new, old) = (root.path().join("new"), root.path().join("old"));
+        fs::create_dir(&new).unwrap();
+        fs::create_dir(&old).unwrap();
+        fs::write(new.join("version"), b"2").unwrap();
+        fs::write(old.join("version"), b"1").unwrap();
+        swap(&new, &old).unwrap();
+        assert_eq!(fs::read(old.join("version")).unwrap(), b"2");
+        assert_eq!(fs::read(new.join("version")).unwrap(), b"1");
+        assert!(free_space(root.path()).is_some_and(|free| free > 0));
+    }
 }
