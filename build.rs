@@ -29,4 +29,11 @@ fn main() {
             println!("cargo:rustc-link-lib=framework={framework}");
         }
     }
+    if std::env::var_os("CARGO_FEATURE_E2E_BENCH").is_some() {
+        println!("cargo:rerun-if-changed=native/e2e_bench.m");
+        cc::Build::new()
+            .file("native/e2e_bench.m")
+            .flag("-fobjc-arc")
+            .compile("infotransfer_e2e_bench");
+    }
 }
