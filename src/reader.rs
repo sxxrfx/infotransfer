@@ -1,7 +1,7 @@
 use crate::{
     assets::{AssetPaths, SpeechModel},
     audio::{AudioBus, AudioControl, AudioOutput, PlaybackRun, clock_ns},
-    sound::{SoundSettings, SpeechAudio},
+    sound::{SoundSettings, SpeechAudio, skip_opening_quiet},
     speech::Speech,
     text::{self, Chunks},
     voices::VOICES,
@@ -760,6 +760,11 @@ fn speech_worker(
                             source.speaker(voice),
                             prefs.speed,
                             |samples| {
+                                let samples = if started {
+                                    samples
+                                } else {
+                                    skip_opening_quiet(samples, 24_000)
+                                };
                                 audio.process(samples, &mut processed);
                                 for part in processed.chunks(1024) {
                                     if !bus.push(&run, part) {

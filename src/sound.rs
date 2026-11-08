@@ -54,6 +54,18 @@ impl SoundSettings {
     }
 }
 
+/// Paradee opens every waveform with 240–290 ms of near-silence. Dropping it from a
+/// reading's first chunk starts speech sooner; 30 ms before the first sample at -50 dBFS
+/// is kept so soft onsets survive, and `process` still fades the chunk in.
+pub fn skip_opening_quiet(samples: &[f32], rate: u32) -> &[f32] {
+    const ONSET: f32 = 0.003_162_277_6;
+    let keep = rate as usize * 30 / 1000;
+    match samples.iter().position(|sample| sample.abs() >= ONSET) {
+        Some(onset) => &samples[onset.saturating_sub(keep)..],
+        None => samples,
+    }
+}
+
 pub struct SpeechAudio {
     settings: SoundSettings,
     rate: u32,
@@ -364,6 +376,15 @@ mod tests {
         audio.finish_chunk(&mut out);
         let paragraph = audio.pause_samples(Boundary::Paragraph);
         assert!((15_000..=15_600).contains(&paragraph), "{paragraph}");
+    }
+    #[test]
+    fn opening_quiet_is_skipped_but_the_onset_is_kept() {
+        let mut samples = vec![0.001; 6_000];
+        samples.extend(tone(500., 0.2, 480));
+        // The sine starts at zero, so its first sample above -50 dBFS is index 1.
+        assert_eq!(skip_opening_quiet(&samples, 24_000).len(), 480 + 720 - 1);
+        let quiet = [0.001; 100];
+        assert_eq!(skip_opening_quiet(&quiet, 24_000).len(), 100);
     }
     #[test]
     fn natural_pacing_never_inserts_silence() {
